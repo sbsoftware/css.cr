@@ -1,6 +1,6 @@
-# css
+# css.cr
 
-TODO: Write a description here
+Create CSS stylesheets in pure Crystal
 
 ## Installation
 
@@ -9,7 +9,7 @@ TODO: Write a description here
    ```yaml
    dependencies:
      css:
-       github: your-github-user/css.cr
+       github: sbsoftware/css.cr
    ```
 
 2. Run `shards install`
@@ -18,17 +18,22 @@ TODO: Write a description here
 
 ```crystal
 require "css"
+
+class Style < CSS::Stylesheet
+  rule div do
+    display :block
+  end
+end
+
+# div {
+#   display: block;
+# }
+puts Style
 ```
-
-TODO: Write usage instructions here
-
-## Development
-
-TODO: Write development instructions here
 
 ## Contributing
 
-1. Fork it (<https://github.com/your-github-user/css.cr/fork>)
+1. Fork it (<https://github.com/sbsoftware/css.cr/fork>)
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
@@ -36,4 +41,4 @@ TODO: Write development instructions here
 
 ## Contributors
 
-- [Stefan Bilharz](https://github.com/your-github-user) - creator and maintainer
+- [Stefan Bilharz](https://github.com/sbsoftware) - creator and maintainer
