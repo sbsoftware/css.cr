@@ -1,0 +1,9 @@
+name: css
+version: 0.1.0
+
+authors:
+  - Stefan Bilharz <stefan@sbsoftware.de>
+
+crystal: '>= 1.15.1'
+
+license: MIT
