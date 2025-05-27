@@ -31,6 +31,31 @@ end
 puts Style
 ```
 
+### Nested Rules
+
+Similar to modern [CSS nesting](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_nesting), the `rule` directive can be nested. The resulting CSS will print a dedicated rule with both the parent and the child selector appended, to support older browsers.
+
+```crystal
+class Style < CSS::Stylesheet
+  rule div do
+    display :block
+
+    rule p do
+      display :block
+    end
+  end
+end
+
+# div {
+#   display: block;
+# }
+#
+# div p {
+#   display: block;
+# }
+puts Style
+```
+
 ## Contributing
 
 1. Fork it (<https://github.com/sbsoftware/css.cr/fork>)
