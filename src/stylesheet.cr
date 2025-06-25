@@ -1,3 +1,4 @@
+require "./css/any_selector"
 require "./display_value"
 
 module CSS
@@ -14,7 +15,9 @@ module CSS
     end
 
     macro make_selector(expr)
-      {% if expr.is_a?(Call) %}
+      {% if expr.is_a?(Call) && expr.name == "any".id %}
+        AnySelector.new
+      {% elsif expr.is_a?(Call) %}
         {{expr.name.stringify}}
       {% else %}
         {% raise "Unknown selector expression type #{expr.class.name}" %}
