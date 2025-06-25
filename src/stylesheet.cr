@@ -1,4 +1,6 @@
 require "./css/any_selector"
+require "./css/string_selector"
+require "./css/descendant_selector"
 require "./display_value"
 
 module CSS
@@ -16,11 +18,11 @@ module CSS
 
     macro make_selector(expr)
       {% if expr.is_a?(Call) && expr.name == "any".id %}
-        AnySelector.new
-      {% elsif expr.is_a?(Call) %}
-        {{expr.name.stringify}}
+        CSS::AnySelector.new
+      {% elsif expr.is_a?(Call) && CSS::HTML_TAG_NAMES.includes?(expr.name.stringify) %}
+        CSS::StringSelector.new({{expr.name.stringify}})
       {% else %}
-        {% raise "Unknown selector expression type #{expr.class.name}" %}
+        {{expr}}.to_css_selector
       {% end %}
     end
 
@@ -31,7 +33,7 @@ module CSS
         {% if blk.body.is_a?(Expressions) %}
           {% for exp in blk.body.expressions %}
             {% if exp.is_a?(Call) && exp.name.stringify == "rule" && exp.args.size == 1 && exp.block %}
-              make_rule(%child_rule_io, {{selector}} + " " + make_selector({{exp.args.first}})) {{exp.block}}
+              make_rule(%child_rule_io, CSS::DescendantSelector.new({{selector}}, make_selector({{exp.args.first}}))) {{exp.block}}
             {% else %}
               {{io}} << "  "
               {{io}} << {{exp}}
@@ -39,7 +41,7 @@ module CSS
           {% end %}
         {% else %}
           {% if blk.body.is_a?(Call) && blk.body.name.stringify == "rule" && blk.body.args.size == 1 && blk.body.block %}
-            make_rule(%child_rule_io, {{selector}} + " " + make_selector({{blk.body.args.first}})) {{blk.body.block}}
+            make_rule(%child_rule_io, CSS::DescendantSelector.new({{selector}}, make_selector({{blk.body.args.first}}))) {{blk.body.block}}
           {% else %}
             {{io}} << "  "
             {{io}} << {{blk.body}}
