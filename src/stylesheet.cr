@@ -1,6 +1,9 @@
 require "./css/any_selector"
 require "./css/string_selector"
 require "./css/descendant_selector"
+require "./css/child_selector"
+require "./css/combined_selector"
+
 require "./display_value"
 
 module CSS
@@ -16,11 +19,28 @@ module CSS
       end
     end
 
-    macro make_selector(expr)
+    macro make_selector(expr, nested = false)
       {% if expr.is_a?(Call) && expr.name == "any".id %}
         CSS::AnySelector.new
       {% elsif expr.is_a?(Call) && CSS::HTML_TAG_NAMES.includes?(expr.name.stringify) %}
         CSS::StringSelector.new({{expr.name.stringify}})
+      {% elsif expr.is_a?(Call) && expr.name == "&&".id %}
+        make_selector({{expr.receiver}}).combine(make_selector({{expr.args.first}}))
+      {% elsif expr.is_a?(And) %}
+        # This will occurr when multiple `>` calls are concatenated.
+        # The Crystal compiler transforms `x > y > z` into `x > (__temp_136 = y) && __temp_136 > z`
+        make_selector({{expr.left}}).combine(make_selector({{expr.right}}, true))
+      {% elsif expr.is_a?(Assign) %}
+        # This can occur via Crystal's internal transformations of `x > y > z`, for example
+        make_selector({{expr.value}})
+      {% elsif expr.is_a?(Call) && expr.name == ">".id %}
+        {% if nested %}
+          CSS::NestedChildSelector.new(make_selector({{expr.args.first}}))
+        {% else %}
+          CSS::ChildSelector.new(make_selector({{expr.receiver}}), make_selector({{expr.args.first}}))
+        {% end %}
+      {% elsif expr.is_a?(Expressions) %}
+        make_selector({{expr.expressions.last}})
       {% else %}
         {{expr}}.to_css_selector
       {% end %}
