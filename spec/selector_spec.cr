@@ -1,6 +1,8 @@
 require "./spec_helper"
 
 module CSS::SelectorSpec
+  css_class Test
+
   class Style < CSS::Stylesheet
     rule any do
       display :block
@@ -8,6 +10,10 @@ module CSS::SelectorSpec
 
     rule div do
       display :flex
+    end
+
+    rule Test do
+      display :none
     end
   end
 
@@ -20,6 +26,10 @@ module CSS::SelectorSpec
 
       div {
         display: flex;
+      }
+
+      .css--selector-spec--test {
+        display: none;
       }
       CSS
 
