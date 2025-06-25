@@ -31,6 +31,18 @@ module CSS::SelectorSpec
     rule input && Test do
       display :none
     end
+
+    rule input && "[data-test]" do
+      display :none
+    end
+
+    rule "select" && CSS::AttrSelector.new("data-test") do
+      display :none
+    end
+
+    rule div && CSS::AttrSelector.new("data-test", "blah") do
+      display :none
+    end
   end
 
   describe "Style.to_s" do
@@ -61,6 +73,18 @@ module CSS::SelectorSpec
       }
 
       input.css--selector-spec--test {
+        display: none;
+      }
+
+      input[data-test] {
+        display: none;
+      }
+
+      select[data-test] {
+        display: none;
+      }
+
+      div[data-test="blah"] {
         display: none;
       }
       CSS
