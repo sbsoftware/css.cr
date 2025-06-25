@@ -43,6 +43,22 @@ module CSS::SelectorSpec
     rule div && CSS::AttrSelector.new("data-test", "blah") do
       display :none
     end
+
+    rule div <= :before do
+      display :flex
+    end
+
+    rule div <= CSS::NthOfType.new(3) do
+      display :none
+    end
+
+    rule div <= CSS::NthOfType.new(:odd) do
+      display :none
+    end
+
+    rule div <= CSS::NthOfType.new("2n+2") do
+      display :none
+    end
   end
 
   describe "Style.to_s" do
@@ -85,6 +101,22 @@ module CSS::SelectorSpec
       }
 
       div[data-test="blah"] {
+        display: none;
+      }
+
+      div:before {
+        display: flex;
+      }
+
+      div:nth-of-type(3) {
+        display: none;
+      }
+
+      div:nth-of-type(odd) {
+        display: none;
+      }
+
+      div:nth-of-type(2n+2) {
         display: none;
       }
       CSS

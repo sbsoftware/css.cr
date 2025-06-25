@@ -3,7 +3,8 @@ require "./css/string_selector"
 require "./css/descendant_selector"
 require "./css/child_selector"
 require "./css/combined_selector"
-
+require "./css/attr_selector"
+require "./css/pseudoclass_selector"
 require "./display_value"
 
 module CSS
@@ -24,6 +25,8 @@ module CSS
         CSS::AnySelector.new
       {% elsif expr.is_a?(Call) && CSS::HTML_TAG_NAMES.includes?(expr.name.stringify) %}
         CSS::StringSelector.new({{expr.name.stringify}})
+      {% elsif expr.is_a?(Call) && expr.name == "<=".id %}
+        CSS::PseudoclassSelector.new(make_selector({{expr.receiver}}), {{expr.args.first.expressions.last}})
       {% elsif expr.is_a?(Call) && expr.name == "&&".id %}
         make_selector({{expr.receiver}}).combine(make_selector({{expr.args.first}}))
       {% elsif expr.is_a?(And) %}
