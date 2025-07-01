@@ -6,6 +6,7 @@ require "./css/combined_selector"
 require "./css/attr_selector"
 require "./css/pseudoclass_selector"
 require "./display_value"
+require "./css/named_color"
 
 module CSS
   class Stylesheet
@@ -100,5 +101,7 @@ module CSS
     prop height : CSS::LengthValue
     prop max_height : CSS::LengthValue
     prop min_height : CSS::LengthValue
+    prop background_color : CSS::NamedColor | String
+    prop border_color : CSS::NamedColor | String
   end
 end
