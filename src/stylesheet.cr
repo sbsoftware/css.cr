@@ -54,13 +54,14 @@ module CSS
         {{io}} << {{selector}}
         {{io}} << " {\n"
         {% if blk.body.is_a?(Expressions) %}
+          {% prop_exprs = blk.body.expressions.reject { |exp| exp.is_a?(Call) && exp.name.stringify == "rule" && exp.args.size == 1 && exp.block } %}
           {% for exp, i in blk.body.expressions %}
             {% if exp.is_a?(Call) && exp.name.stringify == "rule" && exp.args.size == 1 && exp.block %}
               make_rule(%child_rule_io, CSS::DescendantSelector.new({{selector}}, make_selector({{exp.args.first}}))) {{exp.block}}
             {% else %}
               {{io}} << "  "
               {{io}} << {{exp}}
-              {% if blk.body.expressions.size > 2 && i < blk.body.expressions.size - 1 %}
+              {% if prop_exprs.size > 1 && i < prop_exprs.size - 1 %}
                 {{io}} << "\n"
               {% end %}
             {% end %}
