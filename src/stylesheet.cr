@@ -83,6 +83,30 @@ module CSS
       prop("display", value)
     end
 
+    def self.width(value : CSS::LengthValue)
+      prop("width", value)
+    end
+
+    def self.max_width(value : CSS::LengthValue)
+      prop("max-width", value)
+    end
+
+    def self.min_width(value : CSS::LengthValue)
+      prop("min-width", value)
+    end
+
+    def self.height(value : CSS::LengthValue)
+      prop("height", value)
+    end
+
+    def self.max_height(value : CSS::LengthValue)
+      prop("max-height", value)
+    end
+
+    def self.min_height(value : CSS::LengthValue)
+      prop("min-height", value)
+    end
+
     def self.prop(name, value)
       "#{name}: #{value.to_s.underscore.gsub(/_/, "-")};"
     end
