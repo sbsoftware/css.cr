@@ -83,36 +83,22 @@ module CSS
       end
     end
 
-    def self.display(value : CSS::DisplayValue)
-      prop("display", value)
+    macro prop(decl)
+      def self.{{decl.var.id}}(value : {{decl.type}})
+        property({{decl.var.stringify.gsub(/_/, "-")}}, value)
+      end
     end
 
-    def self.width(value : CSS::LengthValue)
-      prop("width", value)
-    end
-
-    def self.max_width(value : CSS::LengthValue)
-      prop("max-width", value)
-    end
-
-    def self.min_width(value : CSS::LengthValue)
-      prop("min-width", value)
-    end
-
-    def self.height(value : CSS::LengthValue)
-      prop("height", value)
-    end
-
-    def self.max_height(value : CSS::LengthValue)
-      prop("max-height", value)
-    end
-
-    def self.min_height(value : CSS::LengthValue)
-      prop("min-height", value)
-    end
-
-    def self.prop(name, value)
+    def self.property(name, value)
       "#{name}: #{value.to_s.underscore.gsub(/_/, "-")};"
     end
+
+    prop display : CSS::DisplayValue
+    prop width : CSS::LengthValue
+    prop max_width : CSS::LengthValue
+    prop min_width : CSS::LengthValue
+    prop height : CSS::LengthValue
+    prop max_height : CSS::LengthValue
+    prop min_height : CSS::LengthValue
   end
 end
