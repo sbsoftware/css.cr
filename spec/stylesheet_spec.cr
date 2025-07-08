@@ -4,16 +4,21 @@ module CSS::StylesheetTest
   class SingleRuleStylesheet < CSS::Stylesheet
     rule a do
       display :inline_block
+      z_index 3
+      font_weight "bold"
     end
   end
 
   class MultiRuleStylesheet < CSS::Stylesheet
     rule div do
       display :block
+      opacity 7
+      font_weight 400
     end
 
     rule h1 do
       display :none
+      opacity 63.4
     end
   end
 
@@ -24,6 +29,8 @@ module CSS::StylesheetTest
           expected = <<-CSS
           a {
             display: inline-block;
+            z-index: 3;
+            font-weight: bold;
           }
           CSS
 
@@ -36,10 +43,13 @@ module CSS::StylesheetTest
           expected = <<-CSS
           div {
             display: block;
+            opacity: 7;
+            font-weight: 400;
           }
 
           h1 {
             display: none;
+            opacity: 63.4;
           }
           CSS
 

@@ -106,7 +106,7 @@ module CSS
     prop animation_direction : String
     prop animation_duration : String
     prop animation_fill_mode : String
-    prop animation_iteration_count : String
+    prop animation_iteration_count : Int | String
     prop animation_name : String
     prop animation_play_state : String
     prop animation_timing_function : String
@@ -206,7 +206,7 @@ module CSS
     prop color : String
     prop color_interpolation_filters : String
     prop color_scheme : String
-    prop column_count : String
+    prop column_count : Int
     prop column_fill : String
     prop column_gap : String
     prop column_rule : String
@@ -227,8 +227,8 @@ module CSS
     prop container_type : String
     prop content : String
     prop content_visibility : String
-    prop counter_increment : String
-    prop counter_reset : String
+    prop counter_increment : Int | String
+    prop counter_reset : Int | String
     prop counter_set : String
     prop cursor : String
     prop cx : String
@@ -246,8 +246,8 @@ module CSS
     prop flex_basis : String
     prop flex_direction : String
     prop flex_flow : String
-    prop flex_grow : String
-    prop flex_shrink : String
+    prop flex_grow : Int
+    prop flex_shrink : Int
     prop flex_wrap : String
     prop float : String
     prop flood_color : String
@@ -275,7 +275,7 @@ module CSS
     prop font_variant_numeric : String
     prop font_variant_position : String
     prop font_variation_settings : String
-    prop font_weight : String
+    prop font_weight : Int | String
     prop forced_color_adjust : String
     prop gap : String
     prop grid : String
@@ -283,12 +283,12 @@ module CSS
     prop grid_auto_columns : String
     prop grid_auto_flow : String
     prop grid_auto_rows : String
-    prop grid_column : String
-    prop grid_column_end : String
-    prop grid_column_start : String
-    prop grid_row : String
-    prop grid_row_end : String
-    prop grid_row_start : String
+    prop grid_column : Int
+    prop grid_column_end : Int
+    prop grid_column_start : Int
+    prop grid_row : Int
+    prop grid_row_end : Int
+    prop grid_row_start : Int
     prop grid_template : String
     prop grid_template_areas : String
     prop grid_template_columns : String
@@ -317,7 +317,7 @@ module CSS
     prop letter_spacing : String
     prop lighting_color : String
     prop line_break : String
-    prop line_clamp : String
+    prop line_clamp : Int | String
     prop line_height : String
     prop list_style : String
     prop list_style_image : String
@@ -374,9 +374,9 @@ module CSS
     prop offset_path : String
     prop offset_position : String
     prop offset_rotate : String
-    prop opacity : String
-    prop order : String
-    prop orphans : String
+    prop opacity : Int | Float
+    prop order : Int
+    prop orphans : Int
     prop outline : String
     prop outline_color : String
     prop outline_offset : String
@@ -471,7 +471,7 @@ module CSS
     prop stroke_miterlimit : String
     prop stroke_opacity : String
     prop stroke_width : String
-    prop tab_size : String
+    prop tab_size : Int
     prop table_layout : String
     prop text_align : String
     prop text_align_last : String
@@ -524,7 +524,7 @@ module CSS
     prop visibility : String
     prop white_space : String
     prop white_space_collapse : String
-    prop widows : String
+    prop widows : Int
     prop width : CSS::LengthValue
     prop will_change : String
     prop word_break : String
@@ -533,7 +533,7 @@ module CSS
     prop writing_mode : String
     prop x : String
     prop y : String
-    prop z_index : String
+    prop z_index : Int
     prop zoom : String
   end
 end
