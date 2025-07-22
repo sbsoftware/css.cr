@@ -90,6 +90,12 @@ module CSS
       end
     end
 
+    macro prop2(name, type1, type2)
+      def self.{{name.id}}(value1 : {{type1}} | CSS::Enums::Global, value2 : {{type2}} | CSS::Enums::Global)
+        property({{name.stringify.gsub(/_/, "-")}}, "#{value1} #{value2}")
+      end
+    end
+
     def self.property(name, value)
       "#{name}: #{value.to_s.underscore.gsub(/_/, "-")};"
     end
@@ -245,7 +251,8 @@ module CSS
     prop flex, String
     prop flex_basis, String
     prop flex_direction, CSS::Enums::FlexDirection
-    prop flex_flow, String
+    prop flex_flow, CSS::Enums::FlexDirection | CSS::Enums::FlexWrap
+    prop2 flex_flow, CSS::Enums::FlexDirection, CSS::Enums::FlexWrap
     prop flex_grow, Int
     prop flex_shrink, Int
     prop flex_wrap, CSS::Enums::FlexWrap

@@ -6,11 +6,13 @@ module CSS::FlexSpec
       display :flex
       flex_direction :row_reverse
       flex_wrap :wrap_reverse
+      flex_flow :row
 
       rule div do
         display :inherit
         flex_direction :unset
         flex_wrap :revert
+        flex_flow :column_reverse, :nowrap
       end
     end
   end
@@ -22,12 +24,14 @@ module CSS::FlexSpec
         display: flex;
         flex-direction: row-reverse;
         flex-wrap: wrap-reverse;
+        flex-flow: row;
       }
 
       div div {
         display: inherit;
         flex-direction: unset;
         flex-wrap: revert;
+        flex-flow: column-reverse nowrap;
       }
       CSS
 

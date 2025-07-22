@@ -1,7 +1,7 @@
 module CSS::Enums
   enum FlexWrap
     Wrap
-    NoWrap
+    Nowrap
     WrapReverse
   end
 end
