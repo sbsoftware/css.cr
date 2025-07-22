@@ -5,7 +5,7 @@ require "./css/child_selector"
 require "./css/combined_selector"
 require "./css/attr_selector"
 require "./css/pseudoclass_selector"
-require "./display_value"
+require "./css/display_value"
 require "./css/named_color"
 
 module CSS
