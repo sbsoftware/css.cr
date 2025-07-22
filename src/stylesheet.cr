@@ -85,7 +85,7 @@ module CSS
     end
 
     macro prop(name, type)
-      def self.{{name.id}}(value : {{type}})
+      def self.{{name.id}}(value : {{type}} | CSS::Enums::Global)
         property({{name.stringify.gsub(/_/, "-")}}, value)
       end
     end
@@ -235,7 +235,7 @@ module CSS
     prop cy, String
     prop d, String
     prop direction, String
-    prop display, CSS::Enums::Display | CSS::Enums::Global
+    prop display, CSS::Enums::Display
     prop dominant_baseline, String
     prop empty_cells, String
     prop fill, String
@@ -244,11 +244,11 @@ module CSS
     prop filter, String
     prop flex, String
     prop flex_basis, String
-    prop flex_direction, CSS::Enums::FlexDirection | CSS::Enums::Global
+    prop flex_direction, CSS::Enums::FlexDirection
     prop flex_flow, String
     prop flex_grow, Int
     prop flex_shrink, Int
-    prop flex_wrap, CSS::Enums::FlexWrap | CSS::Enums::Global
+    prop flex_wrap, CSS::Enums::FlexWrap
     prop float, String
     prop flood_color, String
     prop flood_opacity, String
