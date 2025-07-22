@@ -39,12 +39,5 @@ module CSS::Enums
     InlineTable
     InlineFlex
     InlineGrid
-
-    # Global
-    Inherit
-    Initial
-    Revert
-    RevertLayer
-    Unset
   end
 end
