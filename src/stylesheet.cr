@@ -317,7 +317,8 @@ module CSS
     prop inset_inline_end, String
     prop inset_inline_start, String
     prop isolation, String
-    prop justify_content, String
+    prop justify_content, CSS::Enums::JustifyContent | CSS::Enums::JustifyContentPositional
+    prop2 justify_content, CSS::Enums::JustifyContentOverflow, CSS::Enums::JustifyContentPositional
     prop justify_items, String
     prop justify_self, String
     prop left, String

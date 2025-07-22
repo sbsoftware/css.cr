@@ -7,12 +7,14 @@ module CSS::FlexSpec
       flex_direction :row_reverse
       flex_wrap :wrap_reverse
       flex_flow :row
+      justify_content :space_between
 
       rule div do
         display :inherit
         flex_direction :unset
         flex_wrap :revert
         flex_flow :column_reverse, :nowrap
+        justify_content :unsafe, :right
       end
     end
   end
@@ -25,6 +27,7 @@ module CSS::FlexSpec
         flex-direction: row-reverse;
         flex-wrap: wrap-reverse;
         flex-flow: row;
+        justify-content: space-between;
       }
 
       div div {
@@ -32,6 +35,7 @@ module CSS::FlexSpec
         flex-direction: unset;
         flex-wrap: revert;
         flex-flow: column-reverse nowrap;
+        justify-content: unsafe right;
       }
       CSS
 
