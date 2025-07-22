@@ -244,7 +244,7 @@ module CSS
     prop filter : String
     prop flex : String
     prop flex_basis : String
-    prop flex_direction : String
+    prop flex_direction : CSS::Enums::FlexDirection
     prop flex_flow : String
     prop flex_grow : Int
     prop flex_shrink : Int
