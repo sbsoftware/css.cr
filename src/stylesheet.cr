@@ -248,7 +248,7 @@ module CSS
     prop flex_flow : String
     prop flex_grow : Int
     prop flex_shrink : Int
-    prop flex_wrap : String
+    prop flex_wrap : CSS::Enums::FlexWrap
     prop float : String
     prop flood_color : String
     prop flood_opacity : String

@@ -5,6 +5,7 @@ module CSS::FlexSpec
     rule div do
       display :flex
       flex_direction :row_reverse
+      flex_wrap :wrap_reverse
     end
   end
 
@@ -14,6 +15,7 @@ module CSS::FlexSpec
       div {
         display: flex;
         flex-direction: row-reverse;
+        flex-wrap: wrap-reverse;
       }
       CSS
 
