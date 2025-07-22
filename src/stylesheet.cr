@@ -5,8 +5,8 @@ require "./css/child_selector"
 require "./css/combined_selector"
 require "./css/attr_selector"
 require "./css/pseudoclass_selector"
-require "./css/display_value"
 require "./css/named_color"
+require "./css/enums/**"
 
 module CSS
   class Stylesheet
@@ -235,7 +235,7 @@ module CSS
     prop cy : String
     prop d : String
     prop direction : String
-    prop display : CSS::DisplayValue
+    prop display : CSS::Enums::Display
     prop dominant_baseline : String
     prop empty_cells : String
     prop fill : String

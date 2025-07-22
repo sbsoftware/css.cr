@@ -1,5 +1,5 @@
-module CSS
-  enum DisplayValue
+module CSS::Enums
+  enum Display
     # Outside
     Block
     Inline
