@@ -101,8 +101,10 @@ module CSS
     end
 
     prop accent_color, String
-    prop align_content, String
-    prop align_items, CSS::Enums::AlignItems | CSS::Enums::AlignmentBaseline | CSS::Enums::AlignItemsPositional
+    prop align_content, CSS::Enums::AlignContent | CSS::Enums::AlignContentPositional | CSS::Enums::AlignmentBaseline
+    prop2 align_content, CSS::Enums::Safety, CSS::Enums::AlignContentPositional
+    prop2 align_content, CSS::Enums::FirstLast, CSS::Enums::AlignmentBaseline
+    prop align_items, CSS::Enums::AlignItems | CSS::Enums::AlignItemsPositional | CSS::Enums::AlignmentBaseline
     prop2 align_items, CSS::Enums::Safety, CSS::Enums::AlignItemsPositional
     prop2 align_items, CSS::Enums::FirstLast, CSS::Enums::AlignmentBaseline
     prop align_self, String

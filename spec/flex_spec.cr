@@ -9,6 +9,7 @@ module CSS::FlexSpec
       flex_flow :row
       justify_content :space_between
       align_items :normal
+      align_content :stretch
 
       rule div do
         display :inherit
@@ -17,11 +18,13 @@ module CSS::FlexSpec
         flex_flow :column_reverse, :nowrap
         justify_content :unsafe, :right
         align_items :first, :baseline
+        align_content :unsafe, :flex_end
       end
     end
 
     rule header do
       align_items :safe, :anchor_center
+      align_content :baseline
     end
   end
 
@@ -35,6 +38,7 @@ module CSS::FlexSpec
         flex-flow: row;
         justify-content: space-between;
         align-items: normal;
+        align-content: stretch;
       }
 
       div div {
@@ -44,10 +48,12 @@ module CSS::FlexSpec
         flex-flow: column-reverse nowrap;
         justify-content: unsafe right;
         align-items: first baseline;
+        align-content: unsafe flex-end;
       }
 
       header {
         align-items: safe anchor-center;
+        align-content: baseline;
       }
       CSS
 
