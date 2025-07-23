@@ -1,5 +1,5 @@
 module CSS::Enums
-  enum AlignItemsBaseline
+  enum AlignmentBaseline
     Baseline
   end
 end
