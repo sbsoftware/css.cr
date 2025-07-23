@@ -10,6 +10,7 @@ module CSS::FlexSpec
       justify_content :space_between
       align_items :normal
       align_content :stretch
+      flex_grow :inherit
 
       rule div do
         display :inherit
@@ -19,12 +20,14 @@ module CSS::FlexSpec
         justify_content :unsafe, :right
         align_items :first, :baseline
         align_content :unsafe, :flex_end
+        flex_grow 2
       end
     end
 
     rule header do
       align_items :safe, :anchor_center
       align_content :baseline
+      flex_grow 0.6
     end
   end
 
@@ -39,6 +42,7 @@ module CSS::FlexSpec
         justify-content: space-between;
         align-items: normal;
         align-content: stretch;
+        flex-grow: inherit;
       }
 
       div div {
@@ -49,11 +53,13 @@ module CSS::FlexSpec
         justify-content: unsafe right;
         align-items: first baseline;
         align-content: unsafe flex-end;
+        flex-grow: 2;
       }
 
       header {
         align-items: safe anchor-center;
         align-content: baseline;
+        flex-grow: 0.6;
       }
       CSS
 

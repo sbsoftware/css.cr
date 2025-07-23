@@ -257,7 +257,7 @@ module CSS
     prop flex_direction, CSS::Enums::FlexDirection
     prop flex_flow, CSS::Enums::FlexDirection | CSS::Enums::FlexWrap
     prop2 flex_flow, CSS::Enums::FlexDirection, CSS::Enums::FlexWrap
-    prop flex_grow, Int
+    prop flex_grow, Number
     prop flex_shrink, Int
     prop flex_wrap, CSS::Enums::FlexWrap
     prop float, String
