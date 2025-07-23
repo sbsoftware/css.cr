@@ -91,7 +91,7 @@ module CSS
     end
 
     macro prop2(name, type1, type2)
-      def self.{{name.id}}(value1 : {{type1}} | CSS::Enums::Global, value2 : {{type2}} | CSS::Enums::Global)
+      def self.{{name.id}}(value1 : {{type1}}, value2 : {{type2}})
         property({{name.stringify.gsub(/_/, "-")}}, "#{value1} #{value2}")
       end
     end
