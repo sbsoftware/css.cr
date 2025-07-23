@@ -1,5 +1,5 @@
 module CSS::Enums
-  enum JustifyContentOverflow
+  enum Safety
     Safe
     Unsafe
   end
