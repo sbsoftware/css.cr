@@ -152,13 +152,19 @@ module CSS
     end
 
     prop accent_color, String
+
     prop align_content, CSS::Enums::AlignContent | CSS::Enums::AlignContentPositional | CSS::Enums::AlignmentBaseline
     prop2 align_content, CSS::Enums::Safety, CSS::Enums::AlignContentPositional
     prop2 align_content, CSS::Enums::FirstLast, CSS::Enums::AlignmentBaseline
+
     prop align_items, CSS::Enums::AlignItems | CSS::Enums::AlignItemsPositional | CSS::Enums::AlignmentBaseline
     prop2 align_items, CSS::Enums::Safety, CSS::Enums::AlignItemsPositional
     prop2 align_items, CSS::Enums::FirstLast, CSS::Enums::AlignmentBaseline
-    prop align_self, String
+
+    prop align_self, CSS::Enums::Auto | CSS::Enums::AlignItems | CSS::Enums::AlignItemsPositional | CSS::Enums::AlignmentBaseline
+    prop2 align_self, CSS::Enums::Safety, CSS::Enums::AlignItemsPositional
+    prop2 align_self, CSS::Enums::FirstLast, CSS::Enums::AlignmentBaseline
+
     prop alignment_baseline, String
     prop all, String
     prop animation, String

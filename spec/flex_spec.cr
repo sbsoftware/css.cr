@@ -14,6 +14,7 @@ module CSS::FlexSpec
       flex_shrink :unset
       flex_basis :auto
       flex 0
+      align_self :stretch
 
       rule div do
         display :inherit
@@ -27,6 +28,7 @@ module CSS::FlexSpec
         flex_shrink 0.7
         flex_basis :min_content
         flex :content
+        align_self :self_end
       end
     end
 
@@ -37,9 +39,11 @@ module CSS::FlexSpec
       flex_shrink 1
       flex_basis 200.px
       flex 1, 1
+      align_self :unsafe, :center
 
       rule div do
         flex 2, 0, 75.px
+        align_self :last, :baseline
       end
     end
   end
@@ -59,6 +63,7 @@ module CSS::FlexSpec
         flex-shrink: unset;
         flex-basis: auto;
         flex: 0;
+        align-self: stretch;
       }
 
       div div {
@@ -73,6 +78,7 @@ module CSS::FlexSpec
         flex-shrink: 0.7;
         flex-basis: min-content;
         flex: content;
+        align-self: self-end;
       }
 
       header {
@@ -82,10 +88,12 @@ module CSS::FlexSpec
         flex-shrink: 1;
         flex-basis: 200px;
         flex: 1 1;
+        align-self: unsafe center;
       }
 
       header div {
         flex: 2 0 75px;
+        align-self: last baseline;
       }
       CSS
 
