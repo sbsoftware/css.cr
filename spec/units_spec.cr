@@ -18,6 +18,11 @@ module CSS::UnitsSpec
       min_height 7.fr
       max_height 4.ex
     end
+
+    rule h1 do
+      width 0
+      height 0
+    end
   end
 
   describe "Style.to_s" do
@@ -38,6 +43,11 @@ module CSS::UnitsSpec
         height: 100dvh;
         min-height: 7fr;
         max-height: 4ex;
+      }
+
+      h1 {
+        width: 0;
+        height: 0;
       }
       CSS
 

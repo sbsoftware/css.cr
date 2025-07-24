@@ -84,14 +84,34 @@ module CSS
       end
     end
 
-    macro prop(name, type)
-      def self.{{name.id}}(value : {{type}} | CSS::Enums::Global)
+    macro prop(name, type, *, enforce_unit = true)
+      macro {{name.id}}(value)
+        {% if enforce_unit %}
+          \{% if value.is_a?(NumberLiteral) && value != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value}.px"}}
+          \{% end %}
+        {% end %}
+
+        _{{name.id}}(\{{value}})
+      end
+
+      def self._{{name.id}}(value : {{type}} | CSS::Enums::Global)
         property({{name.stringify.gsub(/_/, "-")}}, value)
       end
     end
 
-    macro prop2(name, type1, type2)
-      def self.{{name.id}}(value1 : {{type1}}, value2 : {{type2}})
+    macro prop2(name, type1, type2, *, enforce_unit = true)
+      macro {{name.id}}(value1, value2)
+        {% if enforce_unit %}
+          \{% if value1.is_a?(NumberLiteral) && value1 != 0 || value2.is_a?(NumberLiteral) && value2 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value}.px"}}
+          \{% end %}
+        {% end %}
+
+        _{{name.id}}(\{{value1}}, \{{value2}})
+      end
+
+      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}})
         property({{name.stringify.gsub(/_/, "-")}}, "#{value1} #{value2}")
       end
     end
@@ -257,8 +277,8 @@ module CSS
     prop flex_direction, CSS::Enums::FlexDirection
     prop flex_flow, CSS::Enums::FlexDirection | CSS::Enums::FlexWrap
     prop2 flex_flow, CSS::Enums::FlexDirection, CSS::Enums::FlexWrap
-    prop flex_grow, Number
-    prop flex_shrink, Number
+    prop flex_grow, Number, enforce_unit: false
+    prop flex_shrink, Number, enforce_unit: false
     prop flex_wrap, CSS::Enums::FlexWrap
     prop float, String
     prop flood_color, String
@@ -286,7 +306,7 @@ module CSS
     prop font_variant_numeric, String
     prop font_variant_position, String
     prop font_variation_settings, String
-    prop font_weight, Int | String
+    prop font_weight, Int32 | Float64 | String, enforce_unit: false
     prop forced_color_adjust, String
     prop gap, String
     prop grid, String
@@ -386,7 +406,7 @@ module CSS
     prop offset_path, String
     prop offset_position, String
     prop offset_rotate, String
-    prop opacity, Int | Float
+    prop opacity, Number, enforce_unit: false
     prop order, Int
     prop orphans, Int
     prop outline, String
@@ -545,7 +565,7 @@ module CSS
     prop writing_mode, String
     prop x, String
     prop y, String
-    prop z_index, Int
+    prop z_index, Int, enforce_unit: false
     prop zoom, String
   end
 end
