@@ -16,6 +16,7 @@ module CSS::FlexSpec
       flex 0
       align_self :stretch
       order :inherit
+      gap 2.cm
 
       rule div do
         display :inherit
@@ -31,6 +32,7 @@ module CSS::FlexSpec
         flex :content
         align_self :self_end
         order 5
+        gap 20.percent
       end
     end
 
@@ -43,11 +45,13 @@ module CSS::FlexSpec
       flex 1, 1
       align_self :unsafe, :center
       order -1
+      gap 3.vmax, 3.vmin
 
       rule div do
         flex 2, 0, 75.px
         align_self :last, :baseline
         order 0
+        gap 3.px, 10.percent
       end
     end
   end
@@ -69,6 +73,7 @@ module CSS::FlexSpec
         flex: 0;
         align-self: stretch;
         order: inherit;
+        gap: 2cm;
       }
 
       div div {
@@ -85,6 +90,7 @@ module CSS::FlexSpec
         flex: content;
         align-self: self-end;
         order: 5;
+        gap: 20%;
       }
 
       header {
@@ -96,12 +102,14 @@ module CSS::FlexSpec
         flex: 1 1;
         align-self: unsafe center;
         order: -1;
+        gap: 3vmax 3vmin;
       }
 
       header div {
         flex: 2 0 75px;
         align-self: last baseline;
         order: 0;
+        gap: 3px 10%;
       }
       CSS
 

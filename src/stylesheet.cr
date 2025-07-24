@@ -350,7 +350,8 @@ module CSS
     prop font_variation_settings, String
     prop font_weight, Int32 | Float64 | String, enforce_unit: false
     prop forced_color_adjust, String
-    prop gap, String
+    prop gap, CSS::LengthValue
+    prop2 gap, CSS::LengthValue, CSS::LengthValue
     prop grid, String
     prop grid_area, String
     prop grid_auto_columns, String
