@@ -96,15 +96,20 @@ module CSS
       end
 
       def self._{{name.id}}(value : {{type}} | CSS::Enums::Global)
-        property({{name.stringify.gsub(/_/, "-")}}, value)
+        property({{name.stringify}}, value)
       end
     end
 
-    macro prop2(name, type1, type2, *, enforce_unit = true)
+    macro prop2(name, type1, type2, *, enforce_unit1 = true, enforce_unit2 = true)
       macro {{name.id}}(value1, value2)
-        {% if enforce_unit %}
-          \{% if value1.is_a?(NumberLiteral) && value1 != 0 || value2.is_a?(NumberLiteral) && value2 != 0 %}
-            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value}.px"}}
+        {% if enforce_unit1 %}
+          \{% if value1.is_a?(NumberLiteral) && value1 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value1}.px"}}
+          \{% end %}
+        {% end %}
+        {% if enforce_unit2 %}
+          \{% if value2.is_a?(NumberLiteral) && value2 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value2}.px"}}
           \{% end %}
         {% end %}
 
@@ -112,12 +117,38 @@ module CSS
       end
 
       def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}})
-        property({{name.stringify.gsub(/_/, "-")}}, "#{value1} #{value2}")
+        property({{name.stringify}}, "#{value1} #{value2}")
+      end
+    end
+
+    macro prop3(name, type1, type2, type3, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true)
+      macro {{name.id}}(value1, value2, value3)
+        {% if enforce_unit1 %}
+          \{% if value1.is_a?(NumberLiteral) && value1 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value1}.px"}}
+          \{% end %}
+        {% end %}
+        {% if enforce_unit2 %}
+          \{% if value2.is_a?(NumberLiteral) && value2 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value2}.px"}}
+          \{% end %}
+        {% end %}
+        {% if enforce_unit3 %}
+          \{% if value3.is_a?(NumberLiteral) && value3 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value3}.px"}}
+          \{% end %}
+        {% end %}
+
+        _{{name.id}}(\{{value1}}, \{{value2}}, \{{value3}})
+      end
+
+      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}})
+        property({{name.stringify}}, "#{value1} #{value2} #{value3}")
       end
     end
 
     def self.property(name, value)
-      "#{name}: #{value.to_s.underscore.gsub(/_/, "-")};"
+      "#{name.gsub(/_/, "-")}: #{value.to_s.underscore.gsub(/_/, "-")};"
     end
 
     prop accent_color, String
@@ -272,7 +303,12 @@ module CSS
     prop fill_opacity, String
     prop fill_rule, String
     prop filter, String
-    prop flex, String
+    prop flex, CSS::Enums::Flex # keyword or global value
+    prop flex, Number, enforce_unit: false # flex-grow only
+    prop flex, CSS::LengthValue | CSS::Enums::FlexBasis # flex-basis only
+    prop2 flex, Number, CSS::LengthValue | CSS::Enums::FlexBasis, enforce_unit1: false # flex-grow and flex-basis
+    prop2 flex, Number, Number, enforce_unit1: false, enforce_unit2: false # flex-grow and flex-shrink
+    prop3 flex, Number, Number, CSS::LengthValue | CSS::Enums::FlexBasis, enforce_unit1: false, enforce_unit2: false # flex-grow, flex-shrink and flex-basis
     prop flex_basis, CSS::LengthValue | CSS::Enums::FlexBasis
     prop flex_direction, CSS::Enums::FlexDirection
     prop flex_flow, CSS::Enums::FlexDirection | CSS::Enums::FlexWrap

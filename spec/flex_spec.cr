@@ -13,6 +13,7 @@ module CSS::FlexSpec
       flex_grow :inherit
       flex_shrink :unset
       flex_basis :auto
+      flex 0
 
       rule div do
         display :inherit
@@ -25,6 +26,7 @@ module CSS::FlexSpec
         flex_grow 2
         flex_shrink 0.7
         flex_basis :min_content
+        flex :content
       end
     end
 
@@ -34,6 +36,11 @@ module CSS::FlexSpec
       flex_grow 0.6
       flex_shrink 1
       flex_basis 200.px
+      flex 1, 1
+
+      rule div do
+        flex 2, 0, 75.px
+      end
     end
   end
 
@@ -51,6 +58,7 @@ module CSS::FlexSpec
         flex-grow: inherit;
         flex-shrink: unset;
         flex-basis: auto;
+        flex: 0;
       }
 
       div div {
@@ -64,6 +72,7 @@ module CSS::FlexSpec
         flex-grow: 2;
         flex-shrink: 0.7;
         flex-basis: min-content;
+        flex: content;
       }
 
       header {
@@ -72,6 +81,11 @@ module CSS::FlexSpec
         flex-grow: 0.6;
         flex-shrink: 1;
         flex-basis: 200px;
+        flex: 1 1;
+      }
+
+      header div {
+        flex: 2 0 75px;
       }
       CSS
 
