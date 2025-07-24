@@ -11,6 +11,7 @@ module CSS::FlexSpec
       align_items :normal
       align_content :stretch
       flex_grow :inherit
+      flex_shrink :unset
 
       rule div do
         display :inherit
@@ -21,6 +22,7 @@ module CSS::FlexSpec
         align_items :first, :baseline
         align_content :unsafe, :flex_end
         flex_grow 2
+        flex_shrink 0.7
       end
     end
 
@@ -28,6 +30,7 @@ module CSS::FlexSpec
       align_items :safe, :anchor_center
       align_content :baseline
       flex_grow 0.6
+      flex_shrink 1
     end
   end
 
@@ -43,6 +46,7 @@ module CSS::FlexSpec
         align-items: normal;
         align-content: stretch;
         flex-grow: inherit;
+        flex-shrink: unset;
       }
 
       div div {
@@ -54,12 +58,14 @@ module CSS::FlexSpec
         align-items: first baseline;
         align-content: unsafe flex-end;
         flex-grow: 2;
+        flex-shrink: 0.7;
       }
 
       header {
         align-items: safe anchor-center;
         align-content: baseline;
         flex-grow: 0.6;
+        flex-shrink: 1;
       }
       CSS
 
