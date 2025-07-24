@@ -15,6 +15,7 @@ module CSS::FlexSpec
       flex_basis :auto
       flex 0
       align_self :stretch
+      order :inherit
 
       rule div do
         display :inherit
@@ -29,6 +30,7 @@ module CSS::FlexSpec
         flex_basis :min_content
         flex :content
         align_self :self_end
+        order 5
       end
     end
 
@@ -40,10 +42,12 @@ module CSS::FlexSpec
       flex_basis 200.px
       flex 1, 1
       align_self :unsafe, :center
+      order -1
 
       rule div do
         flex 2, 0, 75.px
         align_self :last, :baseline
+        order 0
       end
     end
   end
@@ -64,6 +68,7 @@ module CSS::FlexSpec
         flex-basis: auto;
         flex: 0;
         align-self: stretch;
+        order: inherit;
       }
 
       div div {
@@ -79,6 +84,7 @@ module CSS::FlexSpec
         flex-basis: min-content;
         flex: content;
         align-self: self-end;
+        order: 5;
       }
 
       header {
@@ -89,11 +95,13 @@ module CSS::FlexSpec
         flex-basis: 200px;
         flex: 1 1;
         align-self: unsafe center;
+        order: -1;
       }
 
       header div {
         flex: 2 0 75px;
         align-self: last baseline;
+        order: 0;
       }
       CSS
 
