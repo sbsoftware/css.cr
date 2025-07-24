@@ -12,6 +12,7 @@ module CSS::FlexSpec
       align_content :stretch
       flex_grow :inherit
       flex_shrink :unset
+      flex_basis :auto
 
       rule div do
         display :inherit
@@ -23,6 +24,7 @@ module CSS::FlexSpec
         align_content :unsafe, :flex_end
         flex_grow 2
         flex_shrink 0.7
+        flex_basis :min_content
       end
     end
 
@@ -31,6 +33,7 @@ module CSS::FlexSpec
       align_content :baseline
       flex_grow 0.6
       flex_shrink 1
+      flex_basis 200.px
     end
   end
 
@@ -47,6 +50,7 @@ module CSS::FlexSpec
         align-content: stretch;
         flex-grow: inherit;
         flex-shrink: unset;
+        flex-basis: auto;
       }
 
       div div {
@@ -59,6 +63,7 @@ module CSS::FlexSpec
         align-content: unsafe flex-end;
         flex-grow: 2;
         flex-shrink: 0.7;
+        flex-basis: min-content;
       }
 
       header {
@@ -66,6 +71,7 @@ module CSS::FlexSpec
         align-content: baseline;
         flex-grow: 0.6;
         flex-shrink: 1;
+        flex-basis: 200px;
       }
       CSS
 

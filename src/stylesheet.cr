@@ -273,7 +273,7 @@ module CSS
     prop fill_rule, String
     prop filter, String
     prop flex, String
-    prop flex_basis, String
+    prop flex_basis, CSS::LengthValue | CSS::Enums::FlexBasis
     prop flex_direction, CSS::Enums::FlexDirection
     prop flex_flow, CSS::Enums::FlexDirection | CSS::Enums::FlexWrap
     prop2 flex_flow, CSS::Enums::FlexDirection, CSS::Enums::FlexWrap
