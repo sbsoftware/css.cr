@@ -275,7 +275,7 @@ module CSS
     prop color_scheme, String
     prop column_count, Int
     prop column_fill, String
-    prop column_gap, String
+    prop column_gap, CSS::Enums::Gap | CSS::LengthValue
     prop column_rule, String
     prop column_rule_color, String
     prop column_rule_style, String
@@ -496,7 +496,7 @@ module CSS
     prop resize, String
     prop right, String
     prop rotate, String
-    prop row_gap, String
+    prop row_gap, CSS::Enums::Gap | CSS::LengthValue
     prop ruby_align, String
     prop ruby_overhang, String
     prop ruby_position, String

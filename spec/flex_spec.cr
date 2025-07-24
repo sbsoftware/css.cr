@@ -17,6 +17,8 @@ module CSS::FlexSpec
       align_self :stretch
       order :inherit
       gap 2.cm
+      column_gap :normal
+      row_gap 12.px
 
       rule div do
         display :inherit
@@ -33,6 +35,8 @@ module CSS::FlexSpec
         align_self :self_end
         order 5
         gap 20.percent
+        column_gap 3.em
+        row_gap :normal
       end
     end
 
@@ -74,6 +78,8 @@ module CSS::FlexSpec
         align-self: stretch;
         order: inherit;
         gap: 2cm;
+        column-gap: normal;
+        row-gap: 12px;
       }
 
       div div {
@@ -91,6 +97,8 @@ module CSS::FlexSpec
         align-self: self-end;
         order: 5;
         gap: 20%;
+        column-gap: 3em;
+        row-gap: normal;
       }
 
       header {
