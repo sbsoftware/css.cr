@@ -290,7 +290,7 @@ module CSS
     prop bottom, String
     prop box_decoration_break, String
     prop box_shadow, String
-    prop box_sizing, String
+    prop box_sizing, CSS::Enums::BoxSizing
     prop break_after, String
     prop break_before, String
     prop break_inside, String
