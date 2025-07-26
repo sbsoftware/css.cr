@@ -147,6 +147,37 @@ module CSS
       end
     end
 
+    macro prop4(name, type1, type2, type3, type4, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, enforce_unit4 = true)
+      macro {{name.id}}(value1, value2, value3, value4)
+        {% if enforce_unit1 %}
+          \{% if value1.is_a?(NumberLiteral) && value1 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value1}.px"}}
+          \{% end %}
+        {% end %}
+        {% if enforce_unit2 %}
+          \{% if value2.is_a?(NumberLiteral) && value2 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value2}.px"}}
+          \{% end %}
+        {% end %}
+        {% if enforce_unit3 %}
+          \{% if value3.is_a?(NumberLiteral) && value3 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value3}.px"}}
+          \{% end %}
+        {% end %}
+        {% if enforce_unit4 %}
+          \{% if value4.is_a?(NumberLiteral) && value4 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value4}.px"}}
+          \{% end %}
+        {% end %}
+
+        _{{name.id}}(\{{value1}}, \{{value2}}, \{{value3}}, \{{value4}})
+      end
+
+      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}})
+        property({{name.stringify}}, "#{value1} #{value2} #{value3} #{value4}")
+      end
+    end
+
     def self.property(name, value)
       "#{name.gsub(/_/, "-")}: #{value.to_s.underscore.gsub(/_/, "-")};"
     end
@@ -470,17 +501,29 @@ module CSS
     prop overscroll_behavior_inline, String
     prop overscroll_behavior_x, String
     prop overscroll_behavior_y, String
-    prop padding, String
-    prop padding_block, String
-    prop padding_block_end, String
-    prop padding_block_start, String
-    prop padding_bottom, String
-    prop padding_inline, String
-    prop padding_inline_end, String
-    prop padding_inline_start, String
-    prop padding_left, String
-    prop padding_right, String
-    prop padding_top, String
+
+    prop padding, CSS::LengthValue
+    prop2 padding, CSS::LengthValue, CSS::LengthValue
+    prop3 padding, CSS::LengthValue, CSS::LengthValue, CSS::LengthValue
+    prop4 padding, CSS::LengthValue, CSS::LengthValue, CSS::LengthValue, CSS::LengthValue
+
+    prop padding_block, CSS::LengthValue
+    prop2 padding_block, CSS::LengthValue, CSS::LengthValue
+
+    prop padding_block_end, CSS::LengthValue
+    prop padding_block_start, CSS::LengthValue
+
+    prop padding_bottom, CSS::LengthValue
+
+    prop padding_inline, CSS::LengthValue
+    prop2 padding_inline, CSS::LengthValue, CSS::LengthValue
+
+    prop padding_inline_end, CSS::LengthValue
+    prop padding_inline_start, CSS::LengthValue
+    prop padding_left, CSS::LengthValue
+    prop padding_right, CSS::LengthValue
+    prop padding_top, CSS::LengthValue
+
     prop page, String
     prop paint_order, String
     prop perspective, String
