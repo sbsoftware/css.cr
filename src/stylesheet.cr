@@ -429,17 +429,29 @@ module CSS
     prop list_style_image, String
     prop list_style_position, String
     prop list_style_type, String
-    prop margin, String
-    prop margin_block, String
-    prop margin_block_end, String
-    prop margin_block_start, String
-    prop margin_bottom, String
-    prop margin_inline, String
-    prop margin_inline_end, String
-    prop margin_inline_start, String
-    prop margin_left, String
-    prop margin_right, String
-    prop margin_top, String
+
+    prop margin, CSS::LengthValue
+    prop2 margin, CSS::LengthValue, CSS::LengthValue
+    prop3 margin, CSS::LengthValue, CSS::LengthValue, CSS::LengthValue
+    prop4 margin, CSS::LengthValue, CSS::LengthValue, CSS::LengthValue, CSS::LengthValue
+
+    prop margin_block, CSS::LengthValue
+    prop2 margin_block, CSS::LengthValue, CSS::LengthValue
+
+    prop margin_block_end, CSS::LengthValue
+    prop margin_block_start, CSS::LengthValue
+
+    prop margin_bottom, CSS::LengthValue
+
+    prop margin_inline, CSS::LengthValue
+    prop2 margin_inline, CSS::LengthValue, CSS::LengthValue
+
+    prop margin_inline_end, CSS::LengthValue
+    prop margin_inline_start, CSS::LengthValue
+    prop margin_left, CSS::LengthValue
+    prop margin_right, CSS::LengthValue
+    prop margin_top, CSS::LengthValue
+
     prop marker, String
     prop marker_end, String
     prop marker_mid, String
