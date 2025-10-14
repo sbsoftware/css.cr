@@ -225,7 +225,7 @@ module CSS
     prop background_repeat, String
     prop background_size, String
     prop baseline_shift, String
-    prop block_size, String
+    prop block_size, CSS::LengthValue | CSS::Enums::Size
     prop border, String
     prop border_block, String
     prop border_block_color, String
@@ -310,9 +310,9 @@ module CSS
     prop column_rule, String
     prop column_rule_color, String
     prop column_rule_style, String
-    prop column_rule_width, String
+    prop column_rule_width, CSS::LengthValue
     prop column_span, String
-    prop column_width, String
+    prop column_width, CSS::LengthValue | CSS::Enums::Size
     prop columns, String
     prop contain, String
     prop contain_intrinsic_block_size, String
@@ -399,14 +399,14 @@ module CSS
     prop grid_template_columns, String
     prop grid_template_rows, String
     prop hanging_punctuation, String
-    prop height, CSS::LengthValue
+    prop height, CSS::LengthValue | CSS::Enums::Size
     prop hyphenate_character, String
     prop hyphenate_limit_chars, String
     prop hyphens, String
     prop image_orientation, String
     prop image_rendering, String
     prop initial_letter, String
-    prop inline_size, String
+    prop inline_size, CSS::LengthValue | CSS::Enums::Size
     prop inset, String
     prop inset_block, String
     prop inset_block_end, String
@@ -475,14 +475,14 @@ module CSS
     prop mask_type, String
     prop math_depth, String
     prop math_style, String
-    prop max_block_size, String
-    prop max_height, CSS::LengthValue
-    prop max_inline_size, String
-    prop max_width, CSS::LengthValue
-    prop min_block_size, String
-    prop min_height, CSS::LengthValue
-    prop min_inline_size, String
-    prop min_width, CSS::LengthValue
+    prop max_block_size, CSS::LengthValue | CSS::Enums::Size
+    prop max_height, CSS::LengthValue | CSS::Enums::Size
+    prop max_inline_size, CSS::LengthValue | CSS::Enums::Size
+    prop max_width, CSS::LengthValue | CSS::Enums::Size
+    prop min_block_size, CSS::LengthValue | CSS::Enums::Size
+    prop min_height, CSS::LengthValue | CSS::Enums::Size
+    prop min_inline_size, CSS::LengthValue | CSS::Enums::Size
+    prop min_width, CSS::LengthValue | CSS::Enums::Size
     prop mix_blend_mode, String
     prop object_fit, String
     prop object_position, String
@@ -655,7 +655,7 @@ module CSS
     prop white_space, String
     prop white_space_collapse, String
     prop widows, Int
-    prop width, CSS::LengthValue
+    prop width, CSS::LengthValue | CSS::Enums::Size
     prop will_change, String
     prop word_break, String
     prop word_spacing, String
