@@ -287,7 +287,7 @@ module CSS
     prop border_top_style, String
     prop border_top_width, String
     prop border_width, String
-    prop bottom, String
+    prop bottom, CSS::LengthValue
     prop box_decoration_break, String
     prop box_shadow, String
     prop box_sizing, CSS::Enums::BoxSizing
@@ -407,19 +407,29 @@ module CSS
     prop image_rendering, String
     prop initial_letter, String
     prop inline_size, CSS::LengthValue | CSS::Enums::Size
-    prop inset, String
-    prop inset_block, String
-    prop inset_block_end, String
-    prop inset_block_start, String
-    prop inset_inline, String
-    prop inset_inline_end, String
-    prop inset_inline_start, String
+
+    prop inset, CSS::LengthValue
+    prop2 inset, CSS::LengthValue, CSS::LengthValue
+    prop3 inset, CSS::LengthValue, CSS::LengthValue, CSS::LengthValue
+    prop4 inset, CSS::LengthValue, CSS::LengthValue, CSS::LengthValue, CSS::LengthValue
+
+    prop inset_block, CSS::LengthValue
+    prop2 inset_block, CSS::LengthValue, CSS::LengthValue
+
+    prop inset_block_end, CSS::LengthValue
+    prop inset_block_start, CSS::LengthValue
+
+    prop inset_inline, CSS::LengthValue
+    prop2 inset_inline, CSS::LengthValue, CSS::LengthValue
+
+    prop inset_inline_end, CSS::LengthValue
+    prop inset_inline_start, CSS::LengthValue
     prop isolation, String
     prop justify_content, CSS::Enums::JustifyContent | CSS::Enums::JustifyContentPositional
     prop2 justify_content, CSS::Enums::Safety, CSS::Enums::JustifyContentPositional
     prop justify_items, String
     prop justify_self, String
-    prop left, String
+    prop left, CSS::LengthValue
     prop letter_spacing, String
     prop lighting_color, String
     prop line_break, String
@@ -544,12 +554,12 @@ module CSS
     prop place_items, String
     prop place_self, String
     prop pointer_events, String
-    prop position, String
+    prop position, CSS::Enums::Position
     prop print_color_adjust, String
     prop quotes, String
     prop r, String
     prop resize, String
-    prop right, String
+    prop right, CSS::LengthValue
     prop rotate, String
     prop row_gap, CSS::Enums::Gap | CSS::LengthValue
     prop ruby_align, String
@@ -632,7 +642,7 @@ module CSS
     prop text_wrap, String
     prop text_wrap_mode, String
     prop text_wrap_style, String
-    prop top, String
+    prop top, CSS::LengthValue
     prop touch_action, String
     prop transform, String
     prop transform_box, String
