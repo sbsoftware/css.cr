@@ -1,6 +1,4 @@
-module CSS::Enums
-  enum Safety
-    Safe
-    Unsafe
-  end
+css_enum Safety do
+  Safe
+  Unsafe
 end

@@ -1,5 +1,3 @@
-module CSS::Enums
-  enum Gap
-    Normal
-  end
+css_enum Gap do
+  Normal
 end

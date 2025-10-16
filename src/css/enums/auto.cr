@@ -1,5 +1,3 @@
-module CSS::Enums
-  enum Auto
-    Auto
-  end
+css_enum Auto do
+  Auto
 end

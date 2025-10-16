@@ -1,9 +1,7 @@
-module CSS::Enums
-  enum AlignContentPositional
-    Start
-    Center
-    End
-    FlexStart
-    FlexEnd
-  end
+css_enum AlignContentPositional do
+  Start
+  Center
+  End
+  FlexStart
+  FlexEnd
 end

@@ -1,12 +1,10 @@
-module CSS::Enums
-  enum JustifyContent
-    # Normal
-    Normal
+css_enum JustifyContent do
+  # Normal
+  Normal
 
-    # Distributed
-    SpaceBetween
-    SpaceAround
-    SpaceEvenly
-    Stretch
-  end
+  # Distributed
+  SpaceBetween
+  SpaceAround
+  SpaceEvenly
+  Stretch
 end

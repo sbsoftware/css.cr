@@ -1,5 +1,3 @@
-module CSS::Enums
-  enum AlignmentBaseline
-    Baseline
-  end
+css_enum AlignmentBaseline do
+  Baseline
 end

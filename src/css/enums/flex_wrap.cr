@@ -1,7 +1,5 @@
-module CSS::Enums
-  enum FlexWrap
-    Wrap
-    Nowrap
-    WrapReverse
-  end
+css_enum FlexWrap do
+  Wrap
+  Nowrap
+  WrapReverse
 end

@@ -1,9 +1,7 @@
-module CSS::Enums
-  enum Position
-    Static
-    Absolute
-    Relative
-    Fixed
-    Sticky
-  end
+css_enum Position do
+  Static
+  Absolute
+  Relative
+  Fixed
+  Sticky
 end

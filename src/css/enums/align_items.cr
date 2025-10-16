@@ -1,6 +1,4 @@
-module CSS::Enums
-  enum AlignItems
-    Normal
-    Stretch
-  end
+css_enum AlignItems do
+  Normal
+  Stretch
 end

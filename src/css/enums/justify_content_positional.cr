@@ -1,11 +1,9 @@
-module CSS::Enums
-  enum JustifyContentPositional
-    Center
-    Start
-    End
-    FlexStart
-    FlexEnd
-    Left
-    Right
-  end
+css_enum JustifyContentPositional do
+  Center
+  Start
+  End
+  FlexStart
+  FlexEnd
+  Left
+  Right
 end

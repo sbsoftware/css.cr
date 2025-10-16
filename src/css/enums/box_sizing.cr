@@ -1,6 +1,4 @@
-module CSS::Enums
-  enum BoxSizing
-    BorderBox
-    ContentBox
-  end
+css_enum BoxSizing do
+  BorderBox
+  ContentBox
 end

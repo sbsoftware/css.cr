@@ -1,11 +1,9 @@
-module CSS::Enums
-  enum AlignContent
-    Normal
+css_enum AlignContent do
+  Normal
 
-    # Distributed
-    SpaceBetween
-    SpaceAround
-    SpaceEvenly
-    Stretch
-  end
+  # Distributed
+  SpaceBetween
+  SpaceAround
+  SpaceEvenly
+  Stretch
 end

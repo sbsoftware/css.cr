@@ -1,8 +1,6 @@
-module CSS::Enums
-  enum Size
-    MaxContent
-    MinContent
-    FitContent
-    Stretch
-  end
+css_enum Size do
+  MaxContent
+  MinContent
+  FitContent
+  Stretch
 end

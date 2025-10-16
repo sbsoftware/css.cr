@@ -1,6 +1,4 @@
-module CSS::Enums
-  enum FirstLast
-    First
-    Last
-  end
+css_enum FirstLast do
+  First
+  Last
 end

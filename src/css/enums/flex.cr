@@ -1,5 +1,3 @@
-module CSS::Enums
-  enum Flex
-    None
-  end
+css_enum Flex do
+  None
 end

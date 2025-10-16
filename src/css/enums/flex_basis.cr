@@ -1,8 +1,6 @@
-module CSS::Enums
-  enum FlexBasis
-    MaxContent
-    MinContent
-    FitContent
-    Content
-  end
+css_enum FlexBasis do
+  MaxContent
+  MinContent
+  FitContent
+  Content
 end

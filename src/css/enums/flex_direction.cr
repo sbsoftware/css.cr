@@ -1,8 +1,6 @@
-module CSS::Enums
-  enum FlexDirection
-    Row
-    Column
-    RowReverse
-    ColumnReverse
-  end
+css_enum FlexDirection do
+  Row
+  Column
+  RowReverse
+  ColumnReverse
 end

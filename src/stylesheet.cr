@@ -5,7 +5,7 @@ require "./css/child_selector"
 require "./css/combined_selector"
 require "./css/attr_selector"
 require "./css/pseudoclass_selector"
-require "./css/named_color"
+require "./css/css_enum"
 require "./css/enums/**"
 
 module CSS
@@ -179,7 +179,7 @@ module CSS
     end
 
     def self.property(name, value)
-      "#{name.gsub(/_/, "-")}: #{value.to_s.underscore.gsub(/_/, "-")};"
+      "#{name.gsub(/_/, "-")}: #{value};"
     end
 
     prop accent_color, String
@@ -216,7 +216,7 @@ module CSS
     prop background_attachment, String
     prop background_blend_mode, String
     prop background_clip, String
-    prop background_color, CSS::NamedColor | String
+    prop background_color, CSS::Enums::NamedColor | String
     prop background_image, String
     prop background_origin, String
     prop background_position, String
@@ -246,7 +246,7 @@ module CSS
     prop border_bottom_style, String
     prop border_bottom_width, String
     prop border_collapse, String
-    prop border_color, CSS::NamedColor | String
+    prop border_color, CSS::Enums::NamedColor | String
     prop border_end_end_radius, String
     prop border_end_start_radius, String
     prop border_image, String

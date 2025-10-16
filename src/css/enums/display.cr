@@ -1,43 +1,41 @@
-module CSS::Enums
-  enum Display
-    # Outside
-    Block
-    Inline
-    RunIn
+css_enum Display do
+  # Outside
+  Block
+  Inline
+  RunIn
 
-    # Inside
-    Flow
-    FlowRoot
-    Table
-    Flex
-    Grid
-    Ruby
+  # Inside
+  Flow
+  FlowRoot
+  Table
+  Flex
+  Grid
+  Ruby
 
-    # Box generation
-    Contents
-    None
+  # Box generation
+  Contents
+  None
 
-    # List item
-    ListItem
+  # List item
+  ListItem
 
-    # Internal
-    TableRowGroup
-    TableHeaderGroup
-    TableFooterGroup
-    TableRow
-    TableCell
-    TableColumnGroup
-    TableColumn
-    TableCaption
-    RubyBase
-    RubyText
-    RubyBaseContainer
-    RubyTextContainer
+  # Internal
+  TableRowGroup
+  TableHeaderGroup
+  TableFooterGroup
+  TableRow
+  TableCell
+  TableColumnGroup
+  TableColumn
+  TableCaption
+  RubyBase
+  RubyText
+  RubyBaseContainer
+  RubyTextContainer
 
-    # Legacy
-    InlineBlock
-    InlineTable
-    InlineFlex
-    InlineGrid
-  end
+  # Legacy
+  InlineBlock
+  InlineTable
+  InlineFlex
+  InlineGrid
 end
