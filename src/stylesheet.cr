@@ -7,6 +7,7 @@ require "./css/attr_selector"
 require "./css/pseudoclass_selector"
 require "./css/css_enum"
 require "./css/enums/**"
+require "./css/url_function_call"
 
 module CSS
   class Stylesheet
@@ -212,18 +213,39 @@ module CSS
     prop aspect_ratio, String
     prop backdrop_filter, String
     prop backface_visibility, String
-    prop background, String
-    prop background_attachment, String
-    prop background_blend_mode, String
-    prop background_clip, String
+
+    alias BackgroundTypes = CSS::Enums::NamedColor | String | CSS::UrlFunctionCall | CSS::Enums::VisualBox | CSS::Enums::BackgroundAttachment | CSS::Enums::BackgroundRepeat | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter | CSS::LengthValue
+    prop background, BackgroundTypes
+    prop2 background, BackgroundTypes, BackgroundTypes
+    prop3 background, BackgroundTypes, BackgroundTypes, BackgroundTypes
+    prop4 background, BackgroundTypes, BackgroundTypes, BackgroundTypes, BackgroundTypes
+
+    prop background_attachment, CSS::Enums::BackgroundAttachment
+    prop background_blend_mode, CSS::Enums::BlendMode
+    prop background_clip, CSS::Enums::VisualBox | CSS::Enums::BackgroundClip
     prop background_color, CSS::Enums::NamedColor | String
-    prop background_image, String
-    prop background_origin, String
-    prop background_position, String
-    prop background_position_x, String
-    prop background_position_y, String
-    prop background_repeat, String
-    prop background_size, String
+    prop background_image, CSS::UrlFunctionCall
+    prop background_origin, CSS::Enums::VisualBox
+
+    prop background_position, CSS::LengthValue | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter
+    prop2 background_position, CSS::LengthValue | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter, CSS::LengthValue | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter
+    prop2 background_position, CSS::LengthValue | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter, CSS::LengthValue | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter
+    prop3 background_position, CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter, CSS::LengthValue, CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter
+    prop3 background_position, CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter, CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter, CSS::LengthValue
+    prop3 background_position, CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter, CSS::LengthValue, CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter
+    prop3 background_position, CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter, CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter, CSS::LengthValue
+    prop4 background_position, CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter, CSS::LengthValue, CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter, CSS::LengthValue
+    prop4 background_position, CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter, CSS::LengthValue, CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter, CSS::LengthValue
+
+    prop background_position_x, CSS::LengthValue | CSS::Enums::BackgroundPositionX
+    prop background_position_y, CSS::LengthValue | CSS::Enums::BackgroundPositionY
+
+    prop background_repeat, CSS::Enums::BackgroundRepeat
+    prop2 background_repeat, CSS::Enums::BackgroundRepeat, CSS::Enums::BackgroundRepeat
+
+    prop background_size, CSS::LengthValue | CSS::Enums::BackgroundSize
+    prop2 background_size, CSS::LengthValue, CSS::LengthValue
+
     prop baseline_shift, String
     prop block_size, CSS::LengthValue | CSS::Enums::Size
     prop border, String
@@ -675,5 +697,9 @@ module CSS
     prop y, String
     prop z_index, Int, enforce_unit: false
     prop zoom, String
+
+    def self.url(value)
+      UrlFunctionCall.new(value)
+    end
   end
 end
