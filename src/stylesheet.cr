@@ -524,7 +524,7 @@ module CSS
     prop offset_path, String
     prop offset_position, String
     prop offset_rotate, String
-    prop opacity, Number, enforce_unit: false
+    prop opacity, Number | CSS::PercentValue, enforce_unit: false
     prop order, Int, enforce_unit: false
     prop orphans, Int
     prop outline, String

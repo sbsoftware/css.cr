@@ -55,6 +55,11 @@ module CSS::BackgroundSpec
       background_size :cover
       background_size :contain
       background_size 100.percent
+
+      opacity 1
+      opacity 0.75
+      opacity 90.percent
+      opacity 0
     end
   end
 
@@ -103,6 +108,10 @@ module CSS::BackgroundSpec
         background-size: cover;
         background-size: contain;
         background-size: 100%;
+        opacity: 1;
+        opacity: 0.75;
+        opacity: 90%;
+        opacity: 0;
       }
       CSS
 
