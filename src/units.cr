@@ -45,5 +45,6 @@ end
 {% end %}
 
 module CSS
-  alias LengthValue = (PercentValue | CmValue | MmValue | InValue | PxValue | PtValue | PcValue | EmValue | RemValue | ExValue | ChValue | LhValue | RlhValue | VhValue | VwValue | VmaxValue | VminValue | SvwValue | LvwValue | LvhValue | DvwValue | DvhValue | FrValue | CSS::Enums::Auto | Int32)
+  alias Length = CmValue | MmValue | InValue | PxValue | PtValue | PcValue | EmValue | RemValue | ExValue | ChValue | LhValue | RlhValue | VhValue | VwValue | VmaxValue | VminValue | SvwValue | LvwValue | LvhValue | DvwValue | DvhValue | FrValue | CSS::Enums::Auto | Int32
+  alias LengthPercentage = Length | PercentValue
 end

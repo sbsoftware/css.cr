@@ -214,7 +214,7 @@ module CSS
     prop backdrop_filter, String
     prop backface_visibility, String
 
-    alias BackgroundTypes = CSS::Enums::NamedColor | String | CSS::UrlFunctionCall | CSS::Enums::VisualBox | CSS::Enums::BackgroundAttachment | CSS::Enums::BackgroundRepeat | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter | CSS::LengthValue
+    alias BackgroundTypes = CSS::Enums::NamedColor | String | CSS::UrlFunctionCall | CSS::Enums::VisualBox | CSS::Enums::BackgroundAttachment | CSS::Enums::BackgroundRepeat | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter | CSS::LengthPercentage
     prop background, BackgroundTypes
     prop2 background, BackgroundTypes, BackgroundTypes
     prop3 background, BackgroundTypes, BackgroundTypes, BackgroundTypes
@@ -227,27 +227,27 @@ module CSS
     prop background_image, CSS::UrlFunctionCall
     prop background_origin, CSS::Enums::VisualBox
 
-    prop background_position, CSS::LengthValue | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter
-    prop2 background_position, CSS::LengthValue | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter, CSS::LengthValue | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter
-    prop2 background_position, CSS::LengthValue | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter, CSS::LengthValue | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter
-    prop3 background_position, CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter, CSS::LengthValue, CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter
-    prop3 background_position, CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter, CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter, CSS::LengthValue
-    prop3 background_position, CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter, CSS::LengthValue, CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter
-    prop3 background_position, CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter, CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter, CSS::LengthValue
-    prop4 background_position, CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter, CSS::LengthValue, CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter, CSS::LengthValue
-    prop4 background_position, CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter, CSS::LengthValue, CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter, CSS::LengthValue
+    prop background_position, CSS::LengthPercentage | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter
+    prop2 background_position, CSS::LengthPercentage | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter, CSS::LengthPercentage | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter
+    prop2 background_position, CSS::LengthPercentage | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter, CSS::LengthPercentage | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter
+    prop3 background_position, CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter, CSS::LengthPercentage, CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter
+    prop3 background_position, CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter, CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter, CSS::LengthPercentage
+    prop3 background_position, CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter, CSS::LengthPercentage, CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter
+    prop3 background_position, CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter, CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter, CSS::LengthPercentage
+    prop4 background_position, CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter, CSS::LengthPercentage, CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter, CSS::LengthPercentage
+    prop4 background_position, CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter, CSS::LengthPercentage, CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionCenter, CSS::LengthPercentage
 
-    prop background_position_x, CSS::LengthValue | CSS::Enums::BackgroundPositionX
-    prop background_position_y, CSS::LengthValue | CSS::Enums::BackgroundPositionY
+    prop background_position_x, CSS::LengthPercentage | CSS::Enums::BackgroundPositionX
+    prop background_position_y, CSS::LengthPercentage | CSS::Enums::BackgroundPositionY
 
     prop background_repeat, CSS::Enums::BackgroundRepeat
     prop2 background_repeat, CSS::Enums::BackgroundRepeat, CSS::Enums::BackgroundRepeat
 
-    prop background_size, CSS::LengthValue | CSS::Enums::BackgroundSize
-    prop2 background_size, CSS::LengthValue, CSS::LengthValue
+    prop background_size, CSS::LengthPercentage | CSS::Enums::BackgroundSize
+    prop2 background_size, CSS::LengthPercentage, CSS::LengthPercentage
 
     prop baseline_shift, String
-    prop block_size, CSS::LengthValue | CSS::Enums::Size
+    prop block_size, CSS::LengthPercentage | CSS::Enums::Size
     prop border, String
     prop border_block, String
     prop border_block_color, String
@@ -309,7 +309,7 @@ module CSS
     prop border_top_style, String
     prop border_top_width, String
     prop border_width, String
-    prop bottom, CSS::LengthValue
+    prop bottom, CSS::LengthPercentage
     prop box_decoration_break, String
     prop box_shadow, String
     prop box_sizing, CSS::Enums::BoxSizing
@@ -328,13 +328,13 @@ module CSS
     prop color_scheme, String
     prop column_count, Int
     prop column_fill, String
-    prop column_gap, CSS::Enums::Gap | CSS::LengthValue
+    prop column_gap, CSS::Enums::Gap | CSS::LengthPercentage
     prop column_rule, String
     prop column_rule_color, String
     prop column_rule_style, String
-    prop column_rule_width, CSS::LengthValue
+    prop column_rule_width, CSS::LengthPercentage
     prop column_span, String
-    prop column_width, CSS::LengthValue | CSS::Enums::Size
+    prop column_width, CSS::LengthPercentage | CSS::Enums::Size
     prop columns, String
     prop contain, String
     prop contain_intrinsic_block_size, String
@@ -364,11 +364,11 @@ module CSS
     prop filter, String
     prop flex, CSS::Enums::Flex # keyword or global value
     prop flex, Number, enforce_unit: false # flex-grow only
-    prop flex, CSS::LengthValue | CSS::Enums::FlexBasis # flex-basis only
-    prop2 flex, Number, CSS::LengthValue | CSS::Enums::FlexBasis, enforce_unit1: false # flex-grow and flex-basis
+    prop flex, CSS::LengthPercentage | CSS::Enums::FlexBasis # flex-basis only
+    prop2 flex, Number, CSS::LengthPercentage | CSS::Enums::FlexBasis, enforce_unit1: false # flex-grow and flex-basis
     prop2 flex, Number, Number, enforce_unit1: false, enforce_unit2: false # flex-grow and flex-shrink
-    prop3 flex, Number, Number, CSS::LengthValue | CSS::Enums::FlexBasis, enforce_unit1: false, enforce_unit2: false # flex-grow, flex-shrink and flex-basis
-    prop flex_basis, CSS::LengthValue | CSS::Enums::FlexBasis
+    prop3 flex, Number, Number, CSS::LengthPercentage | CSS::Enums::FlexBasis, enforce_unit1: false, enforce_unit2: false # flex-grow, flex-shrink and flex-basis
+    prop flex_basis, CSS::LengthPercentage | CSS::Enums::FlexBasis
     prop flex_direction, CSS::Enums::FlexDirection
     prop flex_flow, CSS::Enums::FlexDirection | CSS::Enums::FlexWrap
     prop2 flex_flow, CSS::Enums::FlexDirection, CSS::Enums::FlexWrap
@@ -403,8 +403,8 @@ module CSS
     prop font_variation_settings, String
     prop font_weight, Int32 | Float64 | String, enforce_unit: false
     prop forced_color_adjust, String
-    prop gap, CSS::LengthValue
-    prop2 gap, CSS::LengthValue, CSS::LengthValue
+    prop gap, CSS::LengthPercentage
+    prop2 gap, CSS::LengthPercentage, CSS::LengthPercentage
     prop grid, String
     prop grid_area, String
     prop grid_auto_columns, String
@@ -421,37 +421,37 @@ module CSS
     prop grid_template_columns, String
     prop grid_template_rows, String
     prop hanging_punctuation, String
-    prop height, CSS::LengthValue | CSS::Enums::Size
+    prop height, CSS::LengthPercentage | CSS::Enums::Size
     prop hyphenate_character, String
     prop hyphenate_limit_chars, String
     prop hyphens, String
     prop image_orientation, String
     prop image_rendering, String
     prop initial_letter, String
-    prop inline_size, CSS::LengthValue | CSS::Enums::Size
+    prop inline_size, CSS::LengthPercentage | CSS::Enums::Size
 
-    prop inset, CSS::LengthValue
-    prop2 inset, CSS::LengthValue, CSS::LengthValue
-    prop3 inset, CSS::LengthValue, CSS::LengthValue, CSS::LengthValue
-    prop4 inset, CSS::LengthValue, CSS::LengthValue, CSS::LengthValue, CSS::LengthValue
+    prop inset, CSS::LengthPercentage
+    prop2 inset, CSS::LengthPercentage, CSS::LengthPercentage
+    prop3 inset, CSS::LengthPercentage, CSS::LengthPercentage, CSS::LengthPercentage
+    prop4 inset, CSS::LengthPercentage, CSS::LengthPercentage, CSS::LengthPercentage, CSS::LengthPercentage
 
-    prop inset_block, CSS::LengthValue
-    prop2 inset_block, CSS::LengthValue, CSS::LengthValue
+    prop inset_block, CSS::LengthPercentage
+    prop2 inset_block, CSS::LengthPercentage, CSS::LengthPercentage
 
-    prop inset_block_end, CSS::LengthValue
-    prop inset_block_start, CSS::LengthValue
+    prop inset_block_end, CSS::LengthPercentage
+    prop inset_block_start, CSS::LengthPercentage
 
-    prop inset_inline, CSS::LengthValue
-    prop2 inset_inline, CSS::LengthValue, CSS::LengthValue
+    prop inset_inline, CSS::LengthPercentage
+    prop2 inset_inline, CSS::LengthPercentage, CSS::LengthPercentage
 
-    prop inset_inline_end, CSS::LengthValue
-    prop inset_inline_start, CSS::LengthValue
+    prop inset_inline_end, CSS::LengthPercentage
+    prop inset_inline_start, CSS::LengthPercentage
     prop isolation, String
     prop justify_content, CSS::Enums::JustifyContent | CSS::Enums::JustifyContentPositional
     prop2 justify_content, CSS::Enums::Safety, CSS::Enums::JustifyContentPositional
     prop justify_items, String
     prop justify_self, String
-    prop left, CSS::LengthValue
+    prop left, CSS::LengthPercentage
     prop letter_spacing, String
     prop lighting_color, String
     prop line_break, String
@@ -462,27 +462,27 @@ module CSS
     prop list_style_position, String
     prop list_style_type, String
 
-    prop margin, CSS::LengthValue
-    prop2 margin, CSS::LengthValue, CSS::LengthValue
-    prop3 margin, CSS::LengthValue, CSS::LengthValue, CSS::LengthValue
-    prop4 margin, CSS::LengthValue, CSS::LengthValue, CSS::LengthValue, CSS::LengthValue
+    prop margin, CSS::LengthPercentage
+    prop2 margin, CSS::LengthPercentage, CSS::LengthPercentage
+    prop3 margin, CSS::LengthPercentage, CSS::LengthPercentage, CSS::LengthPercentage
+    prop4 margin, CSS::LengthPercentage, CSS::LengthPercentage, CSS::LengthPercentage, CSS::LengthPercentage
 
-    prop margin_block, CSS::LengthValue
-    prop2 margin_block, CSS::LengthValue, CSS::LengthValue
+    prop margin_block, CSS::LengthPercentage
+    prop2 margin_block, CSS::LengthPercentage, CSS::LengthPercentage
 
-    prop margin_block_end, CSS::LengthValue
-    prop margin_block_start, CSS::LengthValue
+    prop margin_block_end, CSS::LengthPercentage
+    prop margin_block_start, CSS::LengthPercentage
 
-    prop margin_bottom, CSS::LengthValue
+    prop margin_bottom, CSS::LengthPercentage
 
-    prop margin_inline, CSS::LengthValue
-    prop2 margin_inline, CSS::LengthValue, CSS::LengthValue
+    prop margin_inline, CSS::LengthPercentage
+    prop2 margin_inline, CSS::LengthPercentage, CSS::LengthPercentage
 
-    prop margin_inline_end, CSS::LengthValue
-    prop margin_inline_start, CSS::LengthValue
-    prop margin_left, CSS::LengthValue
-    prop margin_right, CSS::LengthValue
-    prop margin_top, CSS::LengthValue
+    prop margin_inline_end, CSS::LengthPercentage
+    prop margin_inline_start, CSS::LengthPercentage
+    prop margin_left, CSS::LengthPercentage
+    prop margin_right, CSS::LengthPercentage
+    prop margin_top, CSS::LengthPercentage
 
     prop marker, String
     prop marker_end, String
@@ -507,14 +507,14 @@ module CSS
     prop mask_type, String
     prop math_depth, String
     prop math_style, String
-    prop max_block_size, CSS::LengthValue | CSS::Enums::Size
-    prop max_height, CSS::LengthValue | CSS::Enums::Size
-    prop max_inline_size, CSS::LengthValue | CSS::Enums::Size
-    prop max_width, CSS::LengthValue | CSS::Enums::Size
-    prop min_block_size, CSS::LengthValue | CSS::Enums::Size
-    prop min_height, CSS::LengthValue | CSS::Enums::Size
-    prop min_inline_size, CSS::LengthValue | CSS::Enums::Size
-    prop min_width, CSS::LengthValue | CSS::Enums::Size
+    prop max_block_size, CSS::LengthPercentage | CSS::Enums::Size
+    prop max_height, CSS::LengthPercentage | CSS::Enums::Size
+    prop max_inline_size, CSS::LengthPercentage | CSS::Enums::Size
+    prop max_width, CSS::LengthPercentage | CSS::Enums::Size
+    prop min_block_size, CSS::LengthPercentage | CSS::Enums::Size
+    prop min_height, CSS::LengthPercentage | CSS::Enums::Size
+    prop min_inline_size, CSS::LengthPercentage | CSS::Enums::Size
+    prop min_width, CSS::LengthPercentage | CSS::Enums::Size
     prop mix_blend_mode, String
     prop object_fit, String
     prop object_position, String
@@ -546,27 +546,27 @@ module CSS
     prop overscroll_behavior_x, String
     prop overscroll_behavior_y, String
 
-    prop padding, CSS::LengthValue
-    prop2 padding, CSS::LengthValue, CSS::LengthValue
-    prop3 padding, CSS::LengthValue, CSS::LengthValue, CSS::LengthValue
-    prop4 padding, CSS::LengthValue, CSS::LengthValue, CSS::LengthValue, CSS::LengthValue
+    prop padding, CSS::LengthPercentage
+    prop2 padding, CSS::LengthPercentage, CSS::LengthPercentage
+    prop3 padding, CSS::LengthPercentage, CSS::LengthPercentage, CSS::LengthPercentage
+    prop4 padding, CSS::LengthPercentage, CSS::LengthPercentage, CSS::LengthPercentage, CSS::LengthPercentage
 
-    prop padding_block, CSS::LengthValue
-    prop2 padding_block, CSS::LengthValue, CSS::LengthValue
+    prop padding_block, CSS::LengthPercentage
+    prop2 padding_block, CSS::LengthPercentage, CSS::LengthPercentage
 
-    prop padding_block_end, CSS::LengthValue
-    prop padding_block_start, CSS::LengthValue
+    prop padding_block_end, CSS::LengthPercentage
+    prop padding_block_start, CSS::LengthPercentage
 
-    prop padding_bottom, CSS::LengthValue
+    prop padding_bottom, CSS::LengthPercentage
 
-    prop padding_inline, CSS::LengthValue
-    prop2 padding_inline, CSS::LengthValue, CSS::LengthValue
+    prop padding_inline, CSS::LengthPercentage
+    prop2 padding_inline, CSS::LengthPercentage, CSS::LengthPercentage
 
-    prop padding_inline_end, CSS::LengthValue
-    prop padding_inline_start, CSS::LengthValue
-    prop padding_left, CSS::LengthValue
-    prop padding_right, CSS::LengthValue
-    prop padding_top, CSS::LengthValue
+    prop padding_inline_end, CSS::LengthPercentage
+    prop padding_inline_start, CSS::LengthPercentage
+    prop padding_left, CSS::LengthPercentage
+    prop padding_right, CSS::LengthPercentage
+    prop padding_top, CSS::LengthPercentage
 
     prop page, String
     prop paint_order, String
@@ -581,9 +581,9 @@ module CSS
     prop quotes, String
     prop r, String
     prop resize, String
-    prop right, CSS::LengthValue
+    prop right, CSS::LengthPercentage
     prop rotate, String
-    prop row_gap, CSS::Enums::Gap | CSS::LengthValue
+    prop row_gap, CSS::Enums::Gap | CSS::LengthPercentage
     prop ruby_align, String
     prop ruby_overhang, String
     prop ruby_position, String
@@ -664,7 +664,7 @@ module CSS
     prop text_wrap, String
     prop text_wrap_mode, String
     prop text_wrap_style, String
-    prop top, CSS::LengthValue
+    prop top, CSS::LengthPercentage
     prop touch_action, String
     prop transform, String
     prop transform_box, String
@@ -687,7 +687,7 @@ module CSS
     prop white_space, String
     prop white_space_collapse, String
     prop widows, Int
-    prop width, CSS::LengthValue | CSS::Enums::Size
+    prop width, CSS::LengthPercentage | CSS::Enums::Size
     prop will_change, String
     prop word_break, String
     prop word_spacing, String
