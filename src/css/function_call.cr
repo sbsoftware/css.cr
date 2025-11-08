@@ -1,15 +1,12 @@
 module CSS
-  abstract struct FunctionCall(T)
+  abstract struct FunctionCall
     abstract def function_name : String
-
-    getter value : T
-
-    def initialize(@value); end
+    abstract def arguments : String
 
     def to_s(io : IO)
       io << function_name
       io << "("
-      io << value
+      io << arguments
       io << ")"
     end
   end

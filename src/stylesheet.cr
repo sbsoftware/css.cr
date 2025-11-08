@@ -7,6 +7,7 @@ require "./css/attr_selector"
 require "./css/pseudoclass_selector"
 require "./css/css_enum"
 require "./css/enums/**"
+require "./css/rgb_function_call"
 require "./css/url_function_call"
 
 module CSS
@@ -179,9 +180,53 @@ module CSS
       end
     end
 
+    macro prop5(name, type1, type2, type3, type4, type5, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, enforce_unit4 = true, enforce_unit5 = true)
+      macro {{name.id}}(value1, value2, value3, value4, value5)
+        {% if enforce_unit1 %}
+          \{% if value1.is_a?(NumberLiteral) && value1 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value1}.px"}}
+          \{% end %}
+        {% end %}
+        {% if enforce_unit2 %}
+          \{% if value2.is_a?(NumberLiteral) && value2 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value2}.px"}}
+          \{% end %}
+        {% end %}
+        {% if enforce_unit3 %}
+          \{% if value3.is_a?(NumberLiteral) && value3 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value3}.px"}}
+          \{% end %}
+        {% end %}
+        {% if enforce_unit4 %}
+          \{% if value4.is_a?(NumberLiteral) && value4 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value4}.px"}}
+          \{% end %}
+        {% end %}
+        {% if enforce_unit5 %}
+          \{% if value5.is_a?(NumberLiteral) && value5 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value5}.px"}}
+          \{% end %}
+        {% end %}
+
+        _{{name.id}}(\{{value1}}, \{{value2}}, \{{value3}}, \{{value4}}, \{{value5}})
+      end
+
+      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}}, value5 : {{type5}})
+        property({{name.stringify}}, "#{value1} #{value2} #{value3} #{value4} #{value5}")
+      end
+    end
+
     def self.property(name, value)
       "#{name.gsub(/_/, "-")}: #{value};"
     end
+
+    alias BackgroundTypes = Color | CSS::UrlFunctionCall | CSS::Enums::VisualBox | CSS::Enums::BackgroundAttachment | CSS::Enums::BackgroundRepeat | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter | CSS::LengthPercentage
+    alias Color = CSS::Enums::CurrentColor | CSS::Enums::NamedColor | String | CSS::RgbFunctionCall
+    alias BorderWidth = CSS::Length | CSS::Enums::BorderWidth
+    alias BorderImageSource = CSS::UrlFunctionCall | CSS::Enums::None
+    alias BorderImageWidth = CSS::LengthPercentage | Int32 | Float32 | CSS::Enums::Auto
+    alias BorderImageOutset = CSS::Length | Int32 | Float32
+    alias BorderImage = BorderImageSource | CSS::NumberPercentage | CSS::Enums::BorderImageRepeat
 
     prop accent_color, String
 
@@ -214,7 +259,6 @@ module CSS
     prop backdrop_filter, String
     prop backface_visibility, String
 
-    alias BackgroundTypes = CSS::Enums::NamedColor | String | CSS::UrlFunctionCall | CSS::Enums::VisualBox | CSS::Enums::BackgroundAttachment | CSS::Enums::BackgroundRepeat | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter | CSS::LengthPercentage
     prop background, BackgroundTypes
     prop2 background, BackgroundTypes, BackgroundTypes
     prop3 background, BackgroundTypes, BackgroundTypes, BackgroundTypes
@@ -223,7 +267,7 @@ module CSS
     prop background_attachment, CSS::Enums::BackgroundAttachment
     prop background_blend_mode, CSS::Enums::BlendMode
     prop background_clip, CSS::Enums::VisualBox | CSS::Enums::BackgroundClip
-    prop background_color, CSS::Enums::NamedColor | String
+    prop background_color, Color
     prop background_image, CSS::UrlFunctionCall
     prop background_origin, CSS::Enums::VisualBox
 
@@ -248,67 +292,315 @@ module CSS
 
     prop baseline_shift, String
     prop block_size, CSS::LengthPercentage | CSS::Enums::Size
-    prop border, String
-    prop border_block, String
-    prop border_block_color, String
-    prop border_block_end, String
-    prop border_block_end_color, String
-    prop border_block_end_style, String
-    prop border_block_end_width, String
-    prop border_block_start, String
-    prop border_block_start_color, String
-    prop border_block_start_style, String
-    prop border_block_start_width, String
-    prop border_block_style, String
-    prop border_block_width, String
-    prop border_bottom, String
-    prop border_bottom_color, String
-    prop border_bottom_left_radius, String
-    prop border_bottom_right_radius, String
-    prop border_bottom_style, String
-    prop border_bottom_width, String
-    prop border_collapse, String
-    prop border_color, CSS::Enums::NamedColor | String
-    prop border_end_end_radius, String
-    prop border_end_start_radius, String
-    prop border_image, String
-    prop border_image_outset, String
-    prop border_image_repeat, String
-    prop border_image_slice, String
-    prop border_image_source, String
-    prop border_image_width, String
-    prop border_inline, String
-    prop border_inline_color, String
-    prop border_inline_end, String
-    prop border_inline_end_color, String
-    prop border_inline_end_style, String
-    prop border_inline_end_width, String
-    prop border_inline_start, String
-    prop border_inline_start_color, String
-    prop border_inline_start_style, String
-    prop border_inline_start_width, String
-    prop border_inline_style, String
-    prop border_inline_width, String
-    prop border_left, String
-    prop border_left_color, String
-    prop border_left_style, String
-    prop border_left_width, String
-    prop border_radius, String
-    prop border_right, String
-    prop border_right_color, String
-    prop border_right_style, String
-    prop border_right_width, String
-    prop border_spacing, String
-    prop border_start_end_radius, String
-    prop border_start_start_radius, String
-    prop border_style, String
-    prop border_top, String
-    prop border_top_color, String
-    prop border_top_left_radius, String
-    prop border_top_right_radius, String
-    prop border_top_style, String
-    prop border_top_width, String
-    prop border_width, String
+
+    prop border, Color
+    prop border, BorderWidth
+    prop border, CSS::Enums::LineStyle
+    prop2 border, Color, BorderWidth
+    prop2 border, Color, CSS::Enums::LineStyle
+    prop2 border, BorderWidth, Color
+    prop2 border, BorderWidth, CSS::Enums::LineStyle
+    prop2 border, CSS::Enums::LineStyle, Color
+    prop2 border, CSS::Enums::LineStyle, BorderWidth
+    prop3 border, Color, BorderWidth, CSS::Enums::LineStyle
+    prop3 border, Color, CSS::Enums::LineStyle, BorderWidth
+    prop3 border, BorderWidth, Color, CSS::Enums::LineStyle
+    prop3 border, BorderWidth, CSS::Enums::LineStyle, Color
+    prop3 border, CSS::Enums::LineStyle, Color, BorderWidth
+    prop3 border, CSS::Enums::LineStyle, BorderWidth, Color
+
+    prop border_block, Color
+    prop border_block, BorderWidth
+    prop border_block, CSS::Enums::LineStyle
+    prop2 border_block, Color, BorderWidth
+    prop2 border_block, Color, CSS::Enums::LineStyle
+    prop2 border_block, BorderWidth, Color
+    prop2 border_block, BorderWidth, CSS::Enums::LineStyle
+    prop2 border_block, CSS::Enums::LineStyle, Color
+    prop2 border_block, CSS::Enums::LineStyle, BorderWidth
+    prop3 border_block, Color, BorderWidth, CSS::Enums::LineStyle
+    prop3 border_block, Color, CSS::Enums::LineStyle, BorderWidth
+    prop3 border_block, BorderWidth, Color, CSS::Enums::LineStyle
+    prop3 border_block, BorderWidth, CSS::Enums::LineStyle, Color
+    prop3 border_block, CSS::Enums::LineStyle, Color, BorderWidth
+    prop3 border_block, CSS::Enums::LineStyle, BorderWidth, Color
+
+    prop border_block_color, Color
+    prop2 border_block_color, Color, Color
+
+    prop border_block_end, Color
+    prop border_block_end, BorderWidth
+    prop border_block_end, CSS::Enums::LineStyle
+    prop2 border_block_end, Color, BorderWidth
+    prop2 border_block_end, Color, CSS::Enums::LineStyle
+    prop2 border_block_end, BorderWidth, Color
+    prop2 border_block_end, BorderWidth, CSS::Enums::LineStyle
+    prop2 border_block_end, CSS::Enums::LineStyle, Color
+    prop2 border_block_end, CSS::Enums::LineStyle, BorderWidth
+    prop3 border_block_end, Color, BorderWidth, CSS::Enums::LineStyle
+    prop3 border_block_end, Color, CSS::Enums::LineStyle, BorderWidth
+    prop3 border_block_end, BorderWidth, Color, CSS::Enums::LineStyle
+    prop3 border_block_end, BorderWidth, CSS::Enums::LineStyle, Color
+    prop3 border_block_end, CSS::Enums::LineStyle, Color, BorderWidth
+    prop3 border_block_end, CSS::Enums::LineStyle, BorderWidth, Color
+
+    prop border_block_end_color, Color
+    prop border_block_end_style, CSS::Enums::LineStyle
+    prop border_block_end_width, BorderWidth
+
+    prop border_block_start, Color
+    prop border_block_start, BorderWidth
+    prop border_block_start, CSS::Enums::LineStyle
+    prop2 border_block_start, Color, BorderWidth
+    prop2 border_block_start, Color, CSS::Enums::LineStyle
+    prop2 border_block_start, BorderWidth, Color
+    prop2 border_block_start, BorderWidth, CSS::Enums::LineStyle
+    prop2 border_block_start, CSS::Enums::LineStyle, Color
+    prop2 border_block_start, CSS::Enums::LineStyle, BorderWidth
+    prop3 border_block_start, Color, BorderWidth, CSS::Enums::LineStyle
+    prop3 border_block_start, Color, CSS::Enums::LineStyle, BorderWidth
+    prop3 border_block_start, BorderWidth, Color, CSS::Enums::LineStyle
+    prop3 border_block_start, BorderWidth, CSS::Enums::LineStyle, Color
+    prop3 border_block_start, CSS::Enums::LineStyle, Color, BorderWidth
+    prop3 border_block_start, CSS::Enums::LineStyle, BorderWidth, Color
+
+    prop border_block_start_color, Color
+    prop border_block_start_style, CSS::Enums::LineStyle
+    prop border_block_start_width, BorderWidth
+
+    prop border_block_style, CSS::Enums::LineStyle
+    prop2 border_block_style, CSS::Enums::LineStyle, CSS::Enums::LineStyle
+
+    prop border_block_width, BorderWidth
+    prop2 border_block_width, BorderWidth, BorderWidth
+
+    prop border_bottom, Color
+    prop border_bottom, BorderWidth
+    prop border_bottom, CSS::Enums::LineStyle
+    prop2 border_bottom, Color, BorderWidth
+    prop2 border_bottom, Color, CSS::Enums::LineStyle
+    prop2 border_bottom, BorderWidth, Color
+    prop2 border_bottom, BorderWidth, CSS::Enums::LineStyle
+    prop2 border_bottom, CSS::Enums::LineStyle, Color
+    prop2 border_bottom, CSS::Enums::LineStyle, BorderWidth
+    prop3 border_bottom, Color, BorderWidth, CSS::Enums::LineStyle
+    prop3 border_bottom, Color, CSS::Enums::LineStyle, BorderWidth
+    prop3 border_bottom, BorderWidth, Color, CSS::Enums::LineStyle
+    prop3 border_bottom, BorderWidth, CSS::Enums::LineStyle, Color
+    prop3 border_bottom, CSS::Enums::LineStyle, Color, BorderWidth
+    prop3 border_bottom, CSS::Enums::LineStyle, BorderWidth, Color
+
+    prop border_bottom_color, Color
+
+    prop border_bottom_left_radius, CSS::LengthPercentage
+    prop2 border_bottom_left_radius, CSS::LengthPercentage, CSS::LengthPercentage
+
+    prop border_bottom_right_radius, CSS::LengthPercentage
+    prop2 border_bottom_right_radius, CSS::LengthPercentage, CSS::LengthPercentage
+
+    prop border_bottom_style, CSS::Enums::LineStyle
+    prop border_bottom_width, BorderWidth
+    prop border_collapse, CSS::Enums::BorderCollapse
+
+    prop border_color, Color
+    prop2 border_color, Color, Color
+    prop3 border_color, Color, Color, Color
+    prop4 border_color, Color, Color, Color, Color
+
+    prop border_end_end_radius, CSS::LengthPercentage
+    prop2 border_end_end_radius, CSS::LengthPercentage, CSS::LengthPercentage
+
+    prop border_end_start_radius, CSS::LengthPercentage
+    prop2 border_end_start_radius, CSS::LengthPercentage, CSS::LengthPercentage
+
+    prop border_image, BorderImage, enforce_unit: false
+    prop2 border_image, BorderImage, BorderImage, enforce_unit1: false, enforce_unit2: false
+    prop3 border_image, BorderImage, BorderImage, BorderImage, enforce_unit1: false, enforce_unit2: false, enforce_unit3: false
+
+    prop border_image_outset, BorderImageOutset, enforce_unit: false
+    prop2 border_image_outset, BorderImageOutset, BorderImageOutset, enforce_unit1: false, enforce_unit2: false
+    prop3 border_image_outset, BorderImageOutset, BorderImageOutset, BorderImageOutset, enforce_unit1: false, enforce_unit2: false, enforce_unit3: false
+    prop4 border_image_outset, BorderImageOutset, BorderImageOutset, BorderImageOutset, BorderImageOutset, enforce_unit1: false, enforce_unit2: false, enforce_unit3: false, enforce_unit4: false
+
+    prop border_image_repeat, CSS::Enums::BorderImageRepeat
+    prop2 border_image_repeat, CSS::Enums::BorderImageRepeat, CSS::Enums::BorderImageRepeat
+
+    prop border_image_slice, CSS::NumberPercentage, enforce_unit: false
+    prop2 border_image_slice, CSS::NumberPercentage, CSS::Enums::Fill, enforce_unit1: false
+    prop2 border_image_slice, CSS::Enums::Fill, CSS::NumberPercentage, enforce_unit2: false
+    prop2 border_image_slice, CSS::NumberPercentage, CSS::NumberPercentage, enforce_unit1: false, enforce_unit2: false
+    prop3 border_image_slice, CSS::NumberPercentage, CSS::NumberPercentage, CSS::Enums::Fill, enforce_unit1: false, enforce_unit2: false
+    prop3 border_image_slice, CSS::Enums::Fill, CSS::NumberPercentage, CSS::NumberPercentage, enforce_unit2: false, enforce_unit3: false
+    prop3 border_image_slice, CSS::NumberPercentage, CSS::NumberPercentage, CSS::NumberPercentage, enforce_unit1: false, enforce_unit2: false, enforce_unit3: false
+    prop4 border_image_slice, CSS::NumberPercentage, CSS::NumberPercentage, CSS::NumberPercentage, CSS::Enums::Fill, enforce_unit1: false, enforce_unit2: false, enforce_unit3: false
+    prop4 border_image_slice, CSS::Enums::Fill, CSS::NumberPercentage, CSS::NumberPercentage, CSS::NumberPercentage, enforce_unit2: false, enforce_unit3: false, enforce_unit4: false
+    prop4 border_image_slice, CSS::NumberPercentage, CSS::NumberPercentage, CSS::NumberPercentage, CSS::NumberPercentage, enforce_unit1: false, enforce_unit2: false, enforce_unit3: false, enforce_unit4: false
+    prop5 border_image_slice, CSS::NumberPercentage, CSS::NumberPercentage, CSS::NumberPercentage, CSS::NumberPercentage, CSS::Enums::Fill, enforce_unit1: false, enforce_unit2: false, enforce_unit3: false, enforce_unit4: false
+    prop5 border_image_slice, CSS::Enums::Fill, CSS::NumberPercentage, CSS::NumberPercentage, CSS::NumberPercentage, CSS::NumberPercentage, enforce_unit2: false, enforce_unit3: false, enforce_unit4: false, enforce_unit5: false
+
+    prop border_image_source, BorderImageSource
+
+    prop border_image_width, BorderImageWidth, enforce_unit: false
+    prop2 border_image_width, BorderImageWidth, BorderImageWidth, enforce_unit1: false, enforce_unit2: false
+    prop3 border_image_width, BorderImageWidth, BorderImageWidth, BorderImageWidth, enforce_unit1: false, enforce_unit2: false, enforce_unit3: false
+    prop4 border_image_width, BorderImageWidth, BorderImageWidth, BorderImageWidth, BorderImageWidth, enforce_unit1: false, enforce_unit2: false, enforce_unit3: false, enforce_unit4: false
+
+    prop border_inline, Color
+    prop border_inline, BorderWidth
+    prop border_inline, CSS::Enums::LineStyle
+    prop2 border_inline, Color, BorderWidth
+    prop2 border_inline, Color, CSS::Enums::LineStyle
+    prop2 border_inline, BorderWidth, Color
+    prop2 border_inline, BorderWidth, CSS::Enums::LineStyle
+    prop2 border_inline, CSS::Enums::LineStyle, Color
+    prop2 border_inline, CSS::Enums::LineStyle, BorderWidth
+    prop3 border_inline, Color, BorderWidth, CSS::Enums::LineStyle
+    prop3 border_inline, Color, CSS::Enums::LineStyle, BorderWidth
+    prop3 border_inline, BorderWidth, Color, CSS::Enums::LineStyle
+    prop3 border_inline, BorderWidth, CSS::Enums::LineStyle, Color
+    prop3 border_inline, CSS::Enums::LineStyle, Color, BorderWidth
+    prop3 border_inline, CSS::Enums::LineStyle, BorderWidth, Color
+
+    prop border_inline_color, Color
+    prop2 border_inline_color, Color, Color
+
+    prop border_inline_end, Color
+    prop border_inline_end, BorderWidth
+    prop border_inline_end, CSS::Enums::LineStyle
+    prop2 border_inline_end, Color, BorderWidth
+    prop2 border_inline_end, Color, CSS::Enums::LineStyle
+    prop2 border_inline_end, BorderWidth, Color
+    prop2 border_inline_end, BorderWidth, CSS::Enums::LineStyle
+    prop2 border_inline_end, CSS::Enums::LineStyle, Color
+    prop2 border_inline_end, CSS::Enums::LineStyle, BorderWidth
+    prop3 border_inline_end, Color, BorderWidth, CSS::Enums::LineStyle
+    prop3 border_inline_end, Color, CSS::Enums::LineStyle, BorderWidth
+    prop3 border_inline_end, BorderWidth, Color, CSS::Enums::LineStyle
+    prop3 border_inline_end, BorderWidth, CSS::Enums::LineStyle, Color
+    prop3 border_inline_end, CSS::Enums::LineStyle, Color, BorderWidth
+    prop3 border_inline_end, CSS::Enums::LineStyle, BorderWidth, Color
+
+    prop border_inline_end_color, Color
+    prop border_inline_end_style, CSS::Enums::LineStyle
+    prop border_inline_end_width, BorderWidth
+
+    prop border_inline_start, Color
+    prop border_inline_start, BorderWidth
+    prop border_inline_start, CSS::Enums::LineStyle
+    prop2 border_inline_start, Color, BorderWidth
+    prop2 border_inline_start, Color, CSS::Enums::LineStyle
+    prop2 border_inline_start, BorderWidth, Color
+    prop2 border_inline_start, BorderWidth, CSS::Enums::LineStyle
+    prop2 border_inline_start, CSS::Enums::LineStyle, Color
+    prop2 border_inline_start, CSS::Enums::LineStyle, BorderWidth
+    prop3 border_inline_start, Color, BorderWidth, CSS::Enums::LineStyle
+    prop3 border_inline_start, Color, CSS::Enums::LineStyle, BorderWidth
+    prop3 border_inline_start, BorderWidth, Color, CSS::Enums::LineStyle
+    prop3 border_inline_start, BorderWidth, CSS::Enums::LineStyle, Color
+    prop3 border_inline_start, CSS::Enums::LineStyle, Color, BorderWidth
+    prop3 border_inline_start, CSS::Enums::LineStyle, BorderWidth, Color
+
+    prop border_inline_start_color, Color
+    prop border_inline_start_style, CSS::Enums::LineStyle
+    prop border_inline_start_width, BorderWidth
+
+    prop border_inline_style, CSS::Enums::LineStyle
+    prop2 border_inline_style, CSS::Enums::LineStyle, CSS::Enums::LineStyle
+
+    prop border_inline_width, BorderWidth
+    prop2 border_inline_width, BorderWidth, BorderWidth
+
+    prop border_left, Color
+    prop border_left, BorderWidth
+    prop border_left, CSS::Enums::LineStyle
+    prop2 border_left, Color, BorderWidth
+    prop2 border_left, Color, CSS::Enums::LineStyle
+    prop2 border_left, BorderWidth, Color
+    prop2 border_left, BorderWidth, CSS::Enums::LineStyle
+    prop2 border_left, CSS::Enums::LineStyle, Color
+    prop2 border_left, CSS::Enums::LineStyle, BorderWidth
+    prop3 border_left, Color, BorderWidth, CSS::Enums::LineStyle
+    prop3 border_left, Color, CSS::Enums::LineStyle, BorderWidth
+    prop3 border_left, BorderWidth, Color, CSS::Enums::LineStyle
+    prop3 border_left, BorderWidth, CSS::Enums::LineStyle, Color
+    prop3 border_left, CSS::Enums::LineStyle, Color, BorderWidth
+    prop3 border_left, CSS::Enums::LineStyle, BorderWidth, Color
+
+    prop border_left_color, Color
+    prop border_left_style, CSS::Enums::LineStyle
+    prop border_left_width, BorderWidth
+
+    prop border_radius, CSS::LengthPercentage
+    prop2 border_radius, CSS::LengthPercentage, CSS::LengthPercentage
+    prop3 border_radius, CSS::LengthPercentage, CSS::LengthPercentage, CSS::LengthPercentage
+    prop4 border_radius, CSS::LengthPercentage, CSS::LengthPercentage, CSS::LengthPercentage, CSS::LengthPercentage
+
+    prop border_right, Color
+    prop border_right, BorderWidth
+    prop border_right, CSS::Enums::LineStyle
+    prop2 border_right, Color, BorderWidth
+    prop2 border_right, Color, CSS::Enums::LineStyle
+    prop2 border_right, BorderWidth, Color
+    prop2 border_right, BorderWidth, CSS::Enums::LineStyle
+    prop2 border_right, CSS::Enums::LineStyle, Color
+    prop2 border_right, CSS::Enums::LineStyle, BorderWidth
+    prop3 border_right, Color, BorderWidth, CSS::Enums::LineStyle
+    prop3 border_right, Color, CSS::Enums::LineStyle, BorderWidth
+    prop3 border_right, BorderWidth, Color, CSS::Enums::LineStyle
+    prop3 border_right, BorderWidth, CSS::Enums::LineStyle, Color
+    prop3 border_right, CSS::Enums::LineStyle, Color, BorderWidth
+    prop3 border_right, CSS::Enums::LineStyle, BorderWidth, Color
+
+    prop border_right_color, Color
+    prop border_right_style, CSS::Enums::LineStyle
+    prop border_right_width, BorderWidth
+
+    prop border_spacing, CSS::Length
+    prop2 border_spacing, CSS::Length, CSS::Length
+
+    prop border_start_end_radius, CSS::LengthPercentage
+    prop2 border_start_end_radius, CSS::LengthPercentage, CSS::LengthPercentage
+
+    prop border_start_start_radius, CSS::LengthPercentage
+    prop2 border_start_start_radius, CSS::LengthPercentage, CSS::LengthPercentage
+
+    prop border_style, CSS::Enums::LineStyle
+    prop2 border_style, CSS::Enums::LineStyle, CSS::Enums::LineStyle
+    prop3 border_style, CSS::Enums::LineStyle, CSS::Enums::LineStyle, CSS::Enums::LineStyle
+    prop4 border_style, CSS::Enums::LineStyle, CSS::Enums::LineStyle, CSS::Enums::LineStyle, CSS::Enums::LineStyle
+
+    prop border_top, Color
+    prop border_top, BorderWidth
+    prop border_top, CSS::Enums::LineStyle
+    prop2 border_top, Color, BorderWidth
+    prop2 border_top, Color, CSS::Enums::LineStyle
+    prop2 border_top, BorderWidth, Color
+    prop2 border_top, BorderWidth, CSS::Enums::LineStyle
+    prop2 border_top, CSS::Enums::LineStyle, Color
+    prop2 border_top, CSS::Enums::LineStyle, BorderWidth
+    prop3 border_top, Color, BorderWidth, CSS::Enums::LineStyle
+    prop3 border_top, Color, CSS::Enums::LineStyle, BorderWidth
+    prop3 border_top, BorderWidth, Color, CSS::Enums::LineStyle
+    prop3 border_top, BorderWidth, CSS::Enums::LineStyle, Color
+    prop3 border_top, CSS::Enums::LineStyle, Color, BorderWidth
+    prop3 border_top, CSS::Enums::LineStyle, BorderWidth, Color
+
+    prop border_top_color, Color
+
+    prop border_top_left_radius, CSS::LengthPercentage
+    prop2 border_top_left_radius, CSS::LengthPercentage, CSS::LengthPercentage
+
+    prop border_top_right_radius, CSS::LengthPercentage
+    prop2 border_top_right_radius, CSS::LengthPercentage, CSS::LengthPercentage
+
+    prop border_top_style, CSS::Enums::LineStyle
+    prop border_top_width, BorderWidth
+
+    prop border_width, BorderWidth
+    prop2 border_width, BorderWidth, BorderWidth
+    prop3 border_width, BorderWidth, BorderWidth, BorderWidth
+    prop4 border_width, BorderWidth, BorderWidth, BorderWidth, BorderWidth
+
     prop bottom, CSS::LengthPercentage
     prop box_decoration_break, String
     prop box_shadow, String
@@ -697,6 +989,10 @@ module CSS
     prop y, String
     prop z_index, Int, enforce_unit: false
     prop zoom, String
+
+    def self.rgb(r, g, b, *, alpha = nil, from = nil)
+      RgbFunctionCall.new(r, g, b, alpha: alpha, from: from)
+    end
 
     def self.url(value)
       UrlFunctionCall.new(value)
