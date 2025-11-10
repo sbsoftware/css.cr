@@ -216,6 +216,47 @@ module CSS
       end
     end
 
+    macro prop6(name, type1, type2, type3, type4, type5, type6, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, enforce_unit4 = true, enforce_unit5 = true, enforce_unit6 = true)
+      macro {{name.id}}(value1, value2, value3, value4, value5, value6)
+        {% if enforce_unit1 %}
+          \{% if value1.is_a?(NumberLiteral) && value1 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value1}.px"}}
+          \{% end %}
+        {% end %}
+        {% if enforce_unit2 %}
+          \{% if value2.is_a?(NumberLiteral) && value2 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value2}.px"}}
+          \{% end %}
+        {% end %}
+        {% if enforce_unit3 %}
+          \{% if value3.is_a?(NumberLiteral) && value3 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value3}.px"}}
+          \{% end %}
+        {% end %}
+        {% if enforce_unit4 %}
+          \{% if value4.is_a?(NumberLiteral) && value4 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value4}.px"}}
+          \{% end %}
+        {% end %}
+        {% if enforce_unit5 %}
+          \{% if value5.is_a?(NumberLiteral) && value5 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value5}.px"}}
+          \{% end %}
+        {% end %}
+        {% if enforce_unit6 %}
+          \{% if value6.is_a?(NumberLiteral) && value6 != 0 %}
+            \{{raise "Non-zero number values have to be specified with a unit, for example: #{value6}.px"}}
+          \{% end %}
+        {% end %}
+
+        _{{name.id}}(\{{value1}}, \{{value2}}, \{{value3}}, \{{value4}}, \{{value5}}, \{{value6}})
+      end
+
+      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}}, value5 : {{type5}}, value6 : {{type6}})
+        property({{name.stringify}}, "#{value1} #{value2} #{value3} #{value4} #{value5} #{value6}")
+      end
+    end
+
     def self.property(name, value)
       "#{name.gsub(/_/, "-")}: #{value};"
     end
@@ -603,7 +644,34 @@ module CSS
 
     prop bottom, CSS::LengthPercentage
     prop box_decoration_break, String
-    prop box_shadow, String
+
+    # No length
+    prop box_shadow, CSS::Enums::None
+    # 2 Lengths
+    prop2 box_shadow, CSS::Length, CSS::Length
+    prop3 box_shadow, Color, CSS::Length, CSS::Length
+    prop3 box_shadow, CSS::Enums::BoxShadowPosition, CSS::Length, CSS::Length
+    prop3 box_shadow, CSS::Length, CSS::Length, Color
+    prop3 box_shadow, CSS::Length, CSS::Length, CSS::Enums::BoxShadowPosition
+    prop4 box_shadow, Color, CSS::Length, CSS::Length, CSS::Enums::BoxShadowPosition
+    prop4 box_shadow, CSS::Enums::BoxShadowPosition, CSS::Length, CSS::Length, Color
+    # 3 Lengths
+    prop3 box_shadow, CSS::Length, CSS::Length, CSS::Length
+    prop4 box_shadow, Color, CSS::Length, CSS::Length, CSS::Length
+    prop4 box_shadow, CSS::Enums::BoxShadowPosition, CSS::Length, CSS::Length, CSS::Length
+    prop4 box_shadow, CSS::Length, CSS::Length, CSS::Length, Color
+    prop4 box_shadow, CSS::Length, CSS::Length, CSS::Length, CSS::Enums::BoxShadowPosition
+    prop5 box_shadow, CSS::Enums::BoxShadowPosition, CSS::Length, CSS::Length, CSS::Length, Color
+    prop5 box_shadow, Color, CSS::Length, CSS::Length, CSS::Length, CSS::Enums::BoxShadowPosition
+    # 4 Lengths
+    prop4 box_shadow, CSS::Length, CSS::Length, CSS::Length, CSS::Length
+    prop5 box_shadow, Color, CSS::Length, CSS::Length, CSS::Length, CSS::Length
+    prop5 box_shadow, CSS::Enums::BoxShadowPosition, CSS::Length, CSS::Length, CSS::Length, CSS::Length
+    prop5 box_shadow, CSS::Length, CSS::Length, CSS::Length, CSS::Length, Color
+    prop5 box_shadow, CSS::Length, CSS::Length, CSS::Length, CSS::Length, CSS::Enums::BoxShadowPosition
+    prop6 box_shadow, CSS::Enums::BoxShadowPosition, CSS::Length, CSS::Length, CSS::Length, CSS::Length, Color
+    prop6 box_shadow, Color, CSS::Length, CSS::Length, CSS::Length, CSS::Length, CSS::Enums::BoxShadowPosition
+
     prop box_sizing, CSS::Enums::BoxSizing
     prop break_after, String
     prop break_before, String
