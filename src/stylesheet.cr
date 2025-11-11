@@ -900,11 +900,12 @@ module CSS
     prop overflow_wrap, String
     prop overflow_x, String
     prop overflow_y, String
-    prop overscroll_behavior, String
-    prop overscroll_behavior_block, String
-    prop overscroll_behavior_inline, String
-    prop overscroll_behavior_x, String
-    prop overscroll_behavior_y, String
+    prop overscroll_behavior, CSS::Enums::OverscrollBehavior
+    prop2 overscroll_behavior, CSS::Enums::OverscrollBehavior, CSS::Enums::OverscrollBehavior
+    prop overscroll_behavior_block, CSS::Enums::OverscrollBehavior
+    prop overscroll_behavior_inline, CSS::Enums::OverscrollBehavior
+    prop overscroll_behavior_x, CSS::Enums::OverscrollBehavior
+    prop overscroll_behavior_y, CSS::Enums::OverscrollBehavior
 
     prop padding, CSS::LengthPercentage
     prop2 padding, CSS::LengthPercentage, CSS::LengthPercentage
