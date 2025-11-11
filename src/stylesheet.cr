@@ -892,14 +892,22 @@ module CSS
     prop outline_offset, String
     prop outline_style, String
     prop outline_width, String
-    prop overflow, String
-    prop overflow_anchor, String
-    prop overflow_block, String
-    prop overflow_clip_margin, String
-    prop overflow_inline, String
-    prop overflow_wrap, String
-    prop overflow_x, String
-    prop overflow_y, String
+
+    prop overflow, CSS::Enums::Overflow
+    prop2 overflow, CSS::Enums::Overflow, CSS::Enums::Overflow
+
+    prop overflow_anchor, CSS::Enums::OverflowAnchor
+    prop overflow_block, CSS::Enums::Overflow
+
+    prop overflow_clip_margin, CSS::Length
+    prop overflow_clip_margin, CSS::Enums::VisualBox
+    prop2 overflow_clip_margin, CSS::Enums::VisualBox, CSS::Length
+    prop2 overflow_clip_margin, CSS::Length, CSS::Enums::VisualBox
+
+    prop overflow_inline, CSS::Enums::Overflow
+    prop overflow_wrap, CSS::Enums::OverflowWrap
+    prop overflow_x, CSS::Enums::Overflow
+    prop overflow_y, CSS::Enums::Overflow
     prop overscroll_behavior, CSS::Enums::OverscrollBehavior
     prop2 overscroll_behavior, CSS::Enums::OverscrollBehavior, CSS::Enums::OverscrollBehavior
     prop overscroll_behavior_block, CSS::Enums::OverscrollBehavior
