@@ -2,6 +2,9 @@ require "./spec_helper"
 
 class OverflowStyle < CSS::Stylesheet
   rule div do
+    hyphens :none
+    hyphens :manual
+
     overflow :visible
     overflow :hidden, :visible
 
@@ -35,6 +38,8 @@ describe "OverflowStyle.to_s" do
   it "should return the correct CSS" do
     expected = <<-CSS
     div {
+      hyphens: none;
+      hyphens: manual;
       overflow: visible;
       overflow: hidden visible;
       overflow-anchor: auto;

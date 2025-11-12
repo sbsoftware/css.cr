@@ -784,7 +784,7 @@ module CSS
     prop height, CSS::LengthPercentage | CSS::Enums::Size
     prop hyphenate_character, String
     prop hyphenate_limit_chars, String
-    prop hyphens, String
+    prop hyphens, CSS::Enums::Hyphens
     prop image_orientation, String
     prop image_rendering, String
     prop initial_letter, String
