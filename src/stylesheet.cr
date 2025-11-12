@@ -86,7 +86,7 @@ module CSS
       end
     end
 
-    macro prop(name, type, *, enforce_unit = true)
+    macro prop(name, type, *, enforce_unit = true, css_string = false)
       macro {{name.id}}(value)
         {% if enforce_unit %}
           \{% if value.is_a?(NumberLiteral) && value != 0 %}
@@ -98,11 +98,20 @@ module CSS
       end
 
       def self._{{name.id}}(value : {{type}} | CSS::Enums::Global)
-        property({{name.stringify}}, value)
+        %value = nil
+
+        {% if css_string %}
+          if value.is_a?(String)
+            %value = value.dump
+          end
+        {% end %}
+        %value ||= value
+
+        property({{name.stringify}}, %value)
       end
     end
 
-    macro prop2(name, type1, type2, *, enforce_unit1 = true, enforce_unit2 = true)
+    macro prop2(name, type1, type2, *, enforce_unit1 = true, enforce_unit2 = true, css_string1 = false, css_string2 = false, separator = " ")
       macro {{name.id}}(value1, value2)
         {% if enforce_unit1 %}
           \{% if value1.is_a?(NumberLiteral) && value1 != 0 %}
@@ -119,11 +128,27 @@ module CSS
       end
 
       def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}})
-        property({{name.stringify}}, "#{value1} #{value2}")
+        %value1 = %value2 = nil
+
+        {% if css_string1 %}
+          if value1.is_a?(String)
+            %value1 = value1.dump
+          end
+        {% end %}
+        %value1 ||= value1
+
+        {% if css_string2 %}
+          if value2.is_a?(String)
+            %value2 = value2.dump
+          end
+        {% end %}
+        %value2 ||= value2
+
+        property({{name.stringify}}, "#{%value1}#{{{separator}}}#{%value2}")
       end
     end
 
-    macro prop3(name, type1, type2, type3, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true)
+    macro prop3(name, type1, type2, type3, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, css_string1 = false, css_string2 = false, css_string3 = false, separator = " ")
       macro {{name.id}}(value1, value2, value3)
         {% if enforce_unit1 %}
           \{% if value1.is_a?(NumberLiteral) && value1 != 0 %}
@@ -145,11 +170,34 @@ module CSS
       end
 
       def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}})
-        property({{name.stringify}}, "#{value1} #{value2} #{value3}")
+        %value1 = %value2 = %value3 = nil
+
+        {% if css_string1 %}
+          if value1.is_a?(String)
+            %value1 = value1.dump
+          end
+        {% end %}
+        %value1 ||= value1
+
+        {% if css_string2 %}
+          if value2.is_a?(String)
+            %value2 = value2.dump
+          end
+        {% end %}
+        %value2 ||= value2
+
+        {% if css_string3 %}
+          if value3.is_a?(String)
+            %value3 = value3.dump
+          end
+        {% end %}
+        %value3 ||= value3
+
+        property({{name.stringify}}, "#{%value1}#{{{separator}}}#{%value2}#{{{separator}}}#{%value3}")
       end
     end
 
-    macro prop4(name, type1, type2, type3, type4, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, enforce_unit4 = true)
+    macro prop4(name, type1, type2, type3, type4, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, enforce_unit4 = true, css_string1 = false, css_string2 = false, css_string3 = false, css_string4 = false, separator = " ")
       macro {{name.id}}(value1, value2, value3, value4)
         {% if enforce_unit1 %}
           \{% if value1.is_a?(NumberLiteral) && value1 != 0 %}
@@ -176,11 +224,41 @@ module CSS
       end
 
       def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}})
-        property({{name.stringify}}, "#{value1} #{value2} #{value3} #{value4}")
+        %value1 = %value2 = %value3 = %value4 = nil
+
+        {% if css_string1 %}
+          if value1.is_a?(String)
+            %value1 = value1.dump
+          end
+        {% end %}
+        %value1 ||= value1
+
+        {% if css_string2 %}
+          if value2.is_a?(String)
+            %value2 = value2.dump
+          end
+        {% end %}
+        %value2 ||= value2
+
+        {% if css_string3 %}
+          if value3.is_a?(String)
+            %value3 = value3.dump
+          end
+        {% end %}
+        %value3 ||= value3
+
+        {% if css_string4 %}
+          if value4.is_a?(String)
+            %value4 = value4.dump
+          end
+        {% end %}
+        %value4 ||= value4
+
+        property({{name.stringify}}, "#{%value1}#{{{separator}}}#{%value2}#{{{separator}}}#{%value3}#{{{separator}}}#{%value4}")
       end
     end
 
-    macro prop5(name, type1, type2, type3, type4, type5, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, enforce_unit4 = true, enforce_unit5 = true)
+    macro prop5(name, type1, type2, type3, type4, type5, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, enforce_unit4 = true, enforce_unit5 = true, css_string1 = false, css_string2 = false, css_string3 = false, css_string4 = false, css_string5 = false, separator = " ")
       macro {{name.id}}(value1, value2, value3, value4, value5)
         {% if enforce_unit1 %}
           \{% if value1.is_a?(NumberLiteral) && value1 != 0 %}
@@ -212,11 +290,48 @@ module CSS
       end
 
       def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}}, value5 : {{type5}})
-        property({{name.stringify}}, "#{value1} #{value2} #{value3} #{value4} #{value5}")
+        %value1 = %value2 = %value3 = %value4 = %value5 = nil
+
+        {% if css_string1 %}
+          if value1.is_a?(String)
+            %value1 = value1.dump
+          end
+        {% end %}
+        %value1 ||= value1
+
+        {% if css_string2 %}
+          if value2.is_a?(String)
+            %value2 = value2.dump
+          end
+        {% end %}
+        %value2 ||= value2
+
+        {% if css_string3 %}
+          if value3.is_a?(String)
+            %value3 = value3.dump
+          end
+        {% end %}
+        %value3 ||= value3
+
+        {% if css_string4 %}
+          if value4.is_a?(String)
+            %value4 = value4.dump
+          end
+        {% end %}
+        %value4 ||= value4
+
+        {% if css_string5 %}
+          if value5.is_a?(String)
+            %value5 = value5.dump
+          end
+        {% end %}
+        %value5 ||= value5
+
+        property({{name.stringify}}, "#{%value1}#{{{separator}}}#{%value2}#{{{separator}}}#{%value3}#{{{separator}}}#{%value4}#{{{separator}}}#{%value5}")
       end
     end
 
-    macro prop6(name, type1, type2, type3, type4, type5, type6, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, enforce_unit4 = true, enforce_unit5 = true, enforce_unit6 = true)
+    macro prop6(name, type1, type2, type3, type4, type5, type6, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, enforce_unit4 = true, enforce_unit5 = true, enforce_unit6 = true, css_string1 = false, css_string2 = false, css_string3 = false, css_string4 = false, css_string5 = false, css_string6 = false, separator = " ")
       macro {{name.id}}(value1, value2, value3, value4, value5, value6)
         {% if enforce_unit1 %}
           \{% if value1.is_a?(NumberLiteral) && value1 != 0 %}
@@ -253,7 +368,51 @@ module CSS
       end
 
       def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}}, value5 : {{type5}}, value6 : {{type6}})
-        property({{name.stringify}}, "#{value1} #{value2} #{value3} #{value4} #{value5} #{value6}")
+        %value1 = %value2 = %value3 = %value4 = %value5 = %value6 = nil
+
+        {% if css_string1 %}
+          if value1.is_a?(String)
+            %value1 = value1.dump
+          end
+        {% end %}
+        %value1 ||= value1
+
+        {% if css_string2 %}
+          if value2.is_a?(String)
+            %value2 = value2.dump
+          end
+        {% end %}
+        %value2 ||= value2
+
+        {% if css_string3 %}
+          if value3.is_a?(String)
+            %value3 = value3.dump
+          end
+        {% end %}
+        %value3 ||= value3
+
+        {% if css_string4 %}
+          if value4.is_a?(String)
+            %value4 = value4.dump
+          end
+        {% end %}
+        %value4 ||= value4
+
+        {% if css_string5 %}
+          if value5.is_a?(String)
+            %value5 = value5.dump
+          end
+        {% end %}
+        %value5 ||= value5
+
+        {% if css_string6 %}
+          if value6.is_a?(String)
+            %value6 = value6.dump
+          end
+        {% end %}
+        %value6 ||= value6
+
+        property({{name.stringify}}, "#{%value1}#{{{separator}}}#{%value2}#{{{separator}}}#{%value3}#{{{separator}}}#{%value4}#{{{separator}}}#{%value5}#{{{separator}}}#{%value6}")
       end
     end
 
@@ -268,6 +427,8 @@ module CSS
     alias BorderImageWidth = CSS::LengthPercentage | Int32 | Float32 | CSS::Enums::Auto
     alias BorderImageOutset = CSS::Length | Int32 | Float32
     alias BorderImage = BorderImageSource | CSS::NumberPercentage | CSS::Enums::BorderImageRepeat
+    alias FontFamily = String | CSS::Enums::GenericFontFamily
+    alias TextDecoration = CSS::Enums::TextDecorationLine | CSS::Enums::SpellingError | CSS::Enums::GrammarError | CSS::Enums::TextDecorationStyle | CSS::Enums::FromFont | CSS::Enums::Auto | CSS::LengthPercentage | Color
 
     prop accent_color, String
 
@@ -683,7 +844,7 @@ module CSS
     prop clear, String
     prop clip_path, String
     prop clip_rule, String
-    prop color, String
+    prop color, Color
     prop color_interpolation_filters, String
     prop color_scheme, String
     prop column_count, Int
@@ -739,29 +900,47 @@ module CSS
     prop flood_color, String
     prop flood_opacity, String
     prop font, String
-    prop font_family, String
+
+    prop font_family, FontFamily
+    prop2 font_family, FontFamily, FontFamily, css_string1: true, css_string2: true, separator: ", "
+    prop3 font_family, FontFamily, FontFamily, FontFamily, css_string1: true, css_string2: true, css_string3: true, separator: ", "
+    prop4 font_family, FontFamily, FontFamily, FontFamily, FontFamily, css_string1: true, css_string2: true, css_string3: true, css_string4: true, separator: ", "
+    prop5 font_family, FontFamily, FontFamily, FontFamily, FontFamily, FontFamily, css_string1: true, css_string2: true, css_string3: true, css_string4: true, css_string5: true, separator: ", "
+    prop6 font_family, FontFamily, FontFamily, FontFamily, FontFamily, FontFamily, FontFamily, css_string1: true, css_string2: true, css_string3: true, css_string4: true, css_string5: true, css_string6: true, separator: ", "
+
     prop font_feature_settings, String
-    prop font_kerning, String
+    prop font_kerning, CSS::Enums::FontKerning
     prop font_language_override, String
-    prop font_optical_sizing, String
+    prop font_optical_sizing, CSS::Enums::Auto | CSS::Enums::None
     prop font_palette, String
-    prop font_size, String
-    prop font_size_adjust, String
-    prop font_style, String
-    prop font_synthesis, String
-    prop font_synthesis_small_caps, String
-    prop font_synthesis_style, String
-    prop font_synthesis_weight, String
+    prop font_size, CSS::Enums::RelativeSize | CSS::Enums::AbsoluteSize | CSS::LengthPercentage | CSS::Enums::Math
+
+    prop font_size_adjust, CSS::Enums::None | CSS::Enums::FromFont | Int32 | Float32, enforce_unit: false
+    prop2 font_size_adjust, CSS::Enums::FontMetric, CSS::Enums::FromFont | Int32 | Float32, enforce_unit2: false
+
+    prop font_style, CSS::Enums::FontStyle | CSS::Enums::Oblique
+    prop2 font_style, CSS::Enums::Oblique, CSS::DegValue
+
+    prop font_synthesis, CSS::Enums::None | CSS::Enums::FontSynthesis
+    prop2 font_synthesis, CSS::Enums::FontSynthesis, CSS::Enums::FontSynthesis
+    prop3 font_synthesis, CSS::Enums::FontSynthesis, CSS::Enums::FontSynthesis, CSS::Enums::FontSynthesis
+
+    prop font_synthesis_small_caps, CSS::Enums::Auto | CSS::Enums::None
+    prop font_synthesis_style, CSS::Enums::Auto | CSS::Enums::None
+    prop font_synthesis_weight, CSS::Enums::Auto | CSS::Enums::None
     prop font_variant, String
     prop font_variant_alternates, String
-    prop font_variant_caps, String
+    prop font_variant_caps, CSS::Enums::FontVariantCaps
     prop font_variant_east_asian, String
     prop font_variant_emoji, String
     prop font_variant_ligatures, String
     prop font_variant_numeric, String
     prop font_variant_position, String
-    prop font_variation_settings, String
-    prop font_weight, Int32 | Float64 | String, enforce_unit: false
+
+    prop font_variation_settings, CSS::Enums::FontVariationSettings
+    prop2 font_variation_settings, String, Number, enforce_unit2: false, css_string1: true
+
+    prop font_weight, Int32 | Float64 | CSS::Enums::FontWeight, enforce_unit: false
     prop forced_color_adjust, String
     prop gap, CSS::LengthPercentage
     prop2 gap, CSS::LengthPercentage, CSS::LengthPercentage
@@ -816,7 +995,7 @@ module CSS
     prop lighting_color, String
     prop line_break, String
     prop line_clamp, Int | String
-    prop line_height, String
+    prop line_height, CSS::Enums::LineHeight | Int32 | Float64 | CSS::LengthPercentage, enforce_unit: false
     prop list_style, String
     prop list_style_image, String
     prop list_style_position, String
@@ -1004,19 +1183,31 @@ module CSS
     prop stroke_width, String
     prop tab_size, Int
     prop table_layout, String
-    prop text_align, String
-    prop text_align_last, String
+
+    prop text_align, CSS::Enums::TextAlign | String, css_string: true
+    prop2 text_align, String, CSS::Enums::TextAlign, css_string1: true
+
+    prop text_align_last, CSS::Enums::TextAlignLast
     prop text_anchor, String
     prop text_box, String
     prop text_box_edge, String
     prop text_box_trim, String
     prop text_combine_upright, String
-    prop text_decoration, String
-    prop text_decoration_color, String
-    prop text_decoration_line, String
-    prop text_decoration_skip_ink, String
-    prop text_decoration_style, String
-    prop text_decoration_thickness, String
+
+    prop text_decoration, CSS::Enums::None | TextDecoration
+    prop2 text_decoration, TextDecoration, TextDecoration
+    prop3 text_decoration, TextDecoration, TextDecoration, TextDecoration
+    prop4 text_decoration, TextDecoration, TextDecoration, TextDecoration, TextDecoration
+
+    prop text_decoration_color, Color
+
+    prop text_decoration_line, CSS::Enums::None | CSS::Enums::TextDecorationLine | CSS::Enums::SpellingError | CSS::Enums::GrammarError
+    prop2 text_decoration_line, CSS::Enums::TextDecorationLine, CSS::Enums::TextDecorationLine
+    prop3 text_decoration_line, CSS::Enums::TextDecorationLine, CSS::Enums::TextDecorationLine, CSS::Enums::TextDecorationLine
+
+    prop text_decoration_skip_ink, CSS::Enums::TextDecorationSkipInk
+    prop text_decoration_style, CSS::Enums::TextDecorationStyle
+    prop text_decoration_thickness, CSS::Enums::FromFont | CSS::Enums::Auto | CSS::LengthPercentage
     prop text_emphasis, String
     prop text_emphasis_color, String
     prop text_emphasis_position, String

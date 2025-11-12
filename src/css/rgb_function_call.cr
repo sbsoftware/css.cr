@@ -5,7 +5,7 @@ module CSS
     getter red : Int32
     getter green : Int32
     getter blue : Int32
-    getter alpha : (Int32 | CSS::PercentValue)?
+    getter alpha : (Int32 | Float64 | CSS::PercentValue)?
     getter from : String?
 
     def initialize(@red, @green, @blue, *, @alpha = nil, @from = nil)

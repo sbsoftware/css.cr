@@ -140,4 +140,6 @@ css_enum NamedColor do
   Whitesmoke
   Yellow
   Yellowgreen
+
+  Transparent
 end

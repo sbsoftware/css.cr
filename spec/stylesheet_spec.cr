@@ -5,7 +5,7 @@ module CSS::StylesheetTest
     rule a do
       display :inline_block
       z_index 3
-      font_weight "bold"
+      font_weight :bold
     end
   end
 
