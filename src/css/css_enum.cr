@@ -3,9 +3,9 @@ macro css_enum(name, &blk)
     enum {{name}}
       {{blk.body}}
 
-      def to_s(io : IO)
-        io << String.build do |str|
-          super(str)
+      def to_css_value
+        String.build do |str|
+          to_s(str)
         end.underscore.gsub('_', '-')
       end
     end

@@ -7,8 +7,10 @@ require "./css/attr_selector"
 require "./css/pseudoclass_selector"
 require "./css/css_enum"
 require "./css/enums/**"
+require "./css/color_string"
 require "./css/rgb_function_call"
 require "./css/url_function_call"
+require "./font_face"
 
 module CSS
   class Stylesheet
@@ -86,7 +88,7 @@ module CSS
       end
     end
 
-    macro prop(name, type, *, enforce_unit = true, css_string = false)
+    macro prop(name, type, *, enforce_unit = true, transform_string = nil)
       macro {{name.id}}(value)
         {% if enforce_unit %}
           \{% if value.is_a?(NumberLiteral) && value != 0 %}
@@ -100,18 +102,18 @@ module CSS
       def self._{{name.id}}(value : {{type}} | CSS::Enums::Global)
         %value = nil
 
-        {% if css_string %}
+        {% if transform_string %}
           if value.is_a?(String)
-            %value = value.dump
+            %value = {{transform_string}}.new(value)
           end
         {% end %}
         %value ||= value
 
-        property({{name.stringify}}, %value)
+        property({{name.stringify}}, %value.to_css_value)
       end
     end
 
-    macro prop2(name, type1, type2, *, enforce_unit1 = true, enforce_unit2 = true, css_string1 = false, css_string2 = false, separator = " ")
+    macro prop2(name, type1, type2, *, enforce_unit1 = true, enforce_unit2 = true, transform_string1 = nil, transform_string2 = nil, separator = " ")
       macro {{name.id}}(value1, value2)
         {% if enforce_unit1 %}
           \{% if value1.is_a?(NumberLiteral) && value1 != 0 %}
@@ -130,25 +132,25 @@ module CSS
       def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}})
         %value1 = %value2 = nil
 
-        {% if css_string1 %}
+        {% if transform_string1 %}
           if value1.is_a?(String)
-            %value1 = value1.dump
+            %value1 = {{transform_string1}}.new(value1)
           end
         {% end %}
         %value1 ||= value1
 
-        {% if css_string2 %}
+        {% if transform_string2 %}
           if value2.is_a?(String)
-            %value2 = value2.dump
+            %value2 = {{transform_string2}}.new(value2)
           end
         {% end %}
         %value2 ||= value2
 
-        property({{name.stringify}}, "#{%value1}#{{{separator}}}#{%value2}")
+        property({{name.stringify}}, "#{%value1.to_css_value}#{{{separator}}}#{%value2.to_css_value}")
       end
     end
 
-    macro prop3(name, type1, type2, type3, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, css_string1 = false, css_string2 = false, css_string3 = false, separator = " ")
+    macro prop3(name, type1, type2, type3, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, transform_string1 = nil, transform_string2 = nil, transform_string3 = nil, separator = " ")
       macro {{name.id}}(value1, value2, value3)
         {% if enforce_unit1 %}
           \{% if value1.is_a?(NumberLiteral) && value1 != 0 %}
@@ -172,32 +174,32 @@ module CSS
       def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}})
         %value1 = %value2 = %value3 = nil
 
-        {% if css_string1 %}
+        {% if transform_string1 %}
           if value1.is_a?(String)
-            %value1 = value1.dump
+            %value1 = {{transform_string1}}.new(value1)
           end
         {% end %}
         %value1 ||= value1
 
-        {% if css_string2 %}
+        {% if transform_string2 %}
           if value2.is_a?(String)
-            %value2 = value2.dump
+            %value2 = {{transform_string2}}.new(value2)
           end
         {% end %}
         %value2 ||= value2
 
-        {% if css_string3 %}
+        {% if transform_string3 %}
           if value3.is_a?(String)
-            %value3 = value3.dump
+            %value3 = {{transform_string3}}.new(value3)
           end
         {% end %}
         %value3 ||= value3
 
-        property({{name.stringify}}, "#{%value1}#{{{separator}}}#{%value2}#{{{separator}}}#{%value3}")
+        property({{name.stringify}}, "#{%value1.to_css_value}#{{{separator}}}#{%value2.to_css_value}#{{{separator}}}#{%value3.to_css_value}")
       end
     end
 
-    macro prop4(name, type1, type2, type3, type4, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, enforce_unit4 = true, css_string1 = false, css_string2 = false, css_string3 = false, css_string4 = false, separator = " ")
+    macro prop4(name, type1, type2, type3, type4, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, enforce_unit4 = true, transform_string1 = nil, transform_string2 = nil, transform_string3 = nil, transform_string4 = nil, separator = " ")
       macro {{name.id}}(value1, value2, value3, value4)
         {% if enforce_unit1 %}
           \{% if value1.is_a?(NumberLiteral) && value1 != 0 %}
@@ -226,39 +228,39 @@ module CSS
       def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}})
         %value1 = %value2 = %value3 = %value4 = nil
 
-        {% if css_string1 %}
+        {% if transform_string1 %}
           if value1.is_a?(String)
-            %value1 = value1.dump
+            %value1 = {{transform_string1}}.new(value1)
           end
         {% end %}
         %value1 ||= value1
 
-        {% if css_string2 %}
+        {% if transform_string2 %}
           if value2.is_a?(String)
-            %value2 = value2.dump
+            %value2 = {{transform_string2}}.new(value2)
           end
         {% end %}
         %value2 ||= value2
 
-        {% if css_string3 %}
+        {% if transform_string3 %}
           if value3.is_a?(String)
-            %value3 = value3.dump
+            %value3 = {{transform_string3}}.new(value3)
           end
         {% end %}
         %value3 ||= value3
 
-        {% if css_string4 %}
+        {% if transform_string4 %}
           if value4.is_a?(String)
-            %value4 = value4.dump
+            %value4 = {{transform_string4}}.new(value4)
           end
         {% end %}
         %value4 ||= value4
 
-        property({{name.stringify}}, "#{%value1}#{{{separator}}}#{%value2}#{{{separator}}}#{%value3}#{{{separator}}}#{%value4}")
+        property({{name.stringify}}, "#{%value1.to_css_value}#{{{separator}}}#{%value2.to_css_value}#{{{separator}}}#{%value3.to_css_value}#{{{separator}}}#{%value4.to_css_value}")
       end
     end
 
-    macro prop5(name, type1, type2, type3, type4, type5, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, enforce_unit4 = true, enforce_unit5 = true, css_string1 = false, css_string2 = false, css_string3 = false, css_string4 = false, css_string5 = false, separator = " ")
+    macro prop5(name, type1, type2, type3, type4, type5, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, enforce_unit4 = true, enforce_unit5 = true, transform_string1 = nil, transform_string2 = nil, transform_string3 = nil, transform_string4 = nil, transform_string5 = nil, separator = " ")
       macro {{name.id}}(value1, value2, value3, value4, value5)
         {% if enforce_unit1 %}
           \{% if value1.is_a?(NumberLiteral) && value1 != 0 %}
@@ -292,46 +294,46 @@ module CSS
       def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}}, value5 : {{type5}})
         %value1 = %value2 = %value3 = %value4 = %value5 = nil
 
-        {% if css_string1 %}
+        {% if transform_string1 %}
           if value1.is_a?(String)
-            %value1 = value1.dump
+            %value1 = {{transform_string1}}.new(value1)
           end
         {% end %}
         %value1 ||= value1
 
-        {% if css_string2 %}
+        {% if transform_string2 %}
           if value2.is_a?(String)
-            %value2 = value2.dump
+            %value2 = {{transform_string2}}.new(value2)
           end
         {% end %}
         %value2 ||= value2
 
-        {% if css_string3 %}
+        {% if transform_string3 %}
           if value3.is_a?(String)
-            %value3 = value3.dump
+            %value3 = {{transform_string3}}.new(value3)
           end
         {% end %}
         %value3 ||= value3
 
-        {% if css_string4 %}
+        {% if transform_string4 %}
           if value4.is_a?(String)
-            %value4 = value4.dump
+            %value4 = {{transform_string4}}.new(value4)
           end
         {% end %}
         %value4 ||= value4
 
-        {% if css_string5 %}
+        {% if transform_string5 %}
           if value5.is_a?(String)
-            %value5 = value5.dump
+            %value5 = {{transform_string5}}.new(value5)
           end
         {% end %}
         %value5 ||= value5
 
-        property({{name.stringify}}, "#{%value1}#{{{separator}}}#{%value2}#{{{separator}}}#{%value3}#{{{separator}}}#{%value4}#{{{separator}}}#{%value5}")
+        property({{name.stringify}}, "#{%value1.to_css_value}#{{{separator}}}#{%value2.to_css_value}#{{{separator}}}#{%value3.to_css_value}#{{{separator}}}#{%value4.to_css_value}#{{{separator}}}#{%value5.to_css_value}")
       end
     end
 
-    macro prop6(name, type1, type2, type3, type4, type5, type6, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, enforce_unit4 = true, enforce_unit5 = true, enforce_unit6 = true, css_string1 = false, css_string2 = false, css_string3 = false, css_string4 = false, css_string5 = false, css_string6 = false, separator = " ")
+    macro prop6(name, type1, type2, type3, type4, type5, type6, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, enforce_unit4 = true, enforce_unit5 = true, enforce_unit6 = true, transform_string1 = nil, transform_string2 = nil, transform_string3 = nil, transform_string4 = nil, transform_string5 = nil, transform_string6 = nil, separator = " ")
       macro {{name.id}}(value1, value2, value3, value4, value5, value6)
         {% if enforce_unit1 %}
           \{% if value1.is_a?(NumberLiteral) && value1 != 0 %}
@@ -370,49 +372,49 @@ module CSS
       def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}}, value5 : {{type5}}, value6 : {{type6}})
         %value1 = %value2 = %value3 = %value4 = %value5 = %value6 = nil
 
-        {% if css_string1 %}
+        {% if transform_string1 %}
           if value1.is_a?(String)
-            %value1 = value1.dump
+            %value1 = {{transform_string1}}.new(value1)
           end
         {% end %}
         %value1 ||= value1
 
-        {% if css_string2 %}
+        {% if transform_string2 %}
           if value2.is_a?(String)
-            %value2 = value2.dump
+            %value2 = {{transform_string2}}.new(value2)
           end
         {% end %}
         %value2 ||= value2
 
-        {% if css_string3 %}
+        {% if transform_string3 %}
           if value3.is_a?(String)
-            %value3 = value3.dump
+            %value3 = {{transform_string3}}.new(value3)
           end
         {% end %}
         %value3 ||= value3
 
-        {% if css_string4 %}
+        {% if transform_string4 %}
           if value4.is_a?(String)
-            %value4 = value4.dump
+            %value4 = {{transform_string4}}.new(value4)
           end
         {% end %}
         %value4 ||= value4
 
-        {% if css_string5 %}
+        {% if transform_string5 %}
           if value5.is_a?(String)
-            %value5 = value5.dump
+            %value5 = {{transform_string5}}.new(value5)
           end
         {% end %}
         %value5 ||= value5
 
-        {% if css_string6 %}
+        {% if transform_string6 %}
           if value6.is_a?(String)
-            %value6 = value6.dump
+            %value6 = {{transform_string6}}.new(value6)
           end
         {% end %}
         %value6 ||= value6
 
-        property({{name.stringify}}, "#{%value1}#{{{separator}}}#{%value2}#{{{separator}}}#{%value3}#{{{separator}}}#{%value4}#{{{separator}}}#{%value5}#{{{separator}}}#{%value6}")
+        property({{name.stringify}}, "#{%value1.to_css_value}#{{{separator}}}#{%value2.to_css_value}#{{{separator}}}#{%value3.to_css_value}#{{{separator}}}#{%value4.to_css_value}#{{{separator}}}#{%value5.to_css_value}#{{{separator}}}#{%value6.to_css_value}")
       end
     end
 
@@ -427,7 +429,7 @@ module CSS
     alias BorderImageWidth = CSS::LengthPercentage | Int32 | Float32 | CSS::Enums::Auto
     alias BorderImageOutset = CSS::Length | Int32 | Float32
     alias BorderImage = BorderImageSource | CSS::NumberPercentage | CSS::Enums::BorderImageRepeat
-    alias FontFamily = String | CSS::Enums::GenericFontFamily
+    alias FontFamily = String | CSS::Enums::GenericFontFamily | CSS::FontFace.class
     alias TextDecoration = CSS::Enums::TextDecorationLine | CSS::Enums::SpellingError | CSS::Enums::GrammarError | CSS::Enums::TextDecorationStyle | CSS::Enums::FromFont | CSS::Enums::Auto | CSS::LengthPercentage | Color
 
     prop accent_color, String
@@ -461,15 +463,15 @@ module CSS
     prop backdrop_filter, String
     prop backface_visibility, String
 
-    prop background, BackgroundTypes
-    prop2 background, BackgroundTypes, BackgroundTypes
-    prop3 background, BackgroundTypes, BackgroundTypes, BackgroundTypes
-    prop4 background, BackgroundTypes, BackgroundTypes, BackgroundTypes, BackgroundTypes
+    prop background, BackgroundTypes, transform_string: CSS::ColorString
+    prop2 background, BackgroundTypes, BackgroundTypes, transform_string1: CSS::ColorString, transform_string2: CSS::ColorString
+    prop3 background, BackgroundTypes, BackgroundTypes, BackgroundTypes, transform_string1: CSS::ColorString, transform_string2: CSS::ColorString, transform_string3: CSS::ColorString
+    prop4 background, BackgroundTypes, BackgroundTypes, BackgroundTypes, BackgroundTypes, transform_string1: CSS::ColorString, transform_string2: CSS::ColorString, transform_string3: CSS::ColorString, transform_string4: CSS::ColorString
 
     prop background_attachment, CSS::Enums::BackgroundAttachment
     prop background_blend_mode, CSS::Enums::BlendMode
     prop background_clip, CSS::Enums::VisualBox | CSS::Enums::BackgroundClip
-    prop background_color, Color
+    prop background_color, Color, transform_string: CSS::ColorString
     prop background_image, CSS::UrlFunctionCall
     prop background_origin, CSS::Enums::VisualBox
 
@@ -495,78 +497,78 @@ module CSS
     prop baseline_shift, String
     prop block_size, CSS::LengthPercentage | CSS::Enums::Size
 
-    prop border, Color
+    prop border, Color, transform_string: CSS::ColorString
     prop border, BorderWidth
     prop border, CSS::Enums::LineStyle
-    prop2 border, Color, BorderWidth
-    prop2 border, Color, CSS::Enums::LineStyle
-    prop2 border, BorderWidth, Color
+    prop2 border, Color, BorderWidth, transform_string1: CSS::ColorString
+    prop2 border, Color, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop2 border, BorderWidth, Color, transform_string2: CSS::ColorString
     prop2 border, BorderWidth, CSS::Enums::LineStyle
-    prop2 border, CSS::Enums::LineStyle, Color
+    prop2 border, CSS::Enums::LineStyle, Color, transform_string2: CSS::ColorString
     prop2 border, CSS::Enums::LineStyle, BorderWidth
-    prop3 border, Color, BorderWidth, CSS::Enums::LineStyle
-    prop3 border, Color, CSS::Enums::LineStyle, BorderWidth
-    prop3 border, BorderWidth, Color, CSS::Enums::LineStyle
-    prop3 border, BorderWidth, CSS::Enums::LineStyle, Color
-    prop3 border, CSS::Enums::LineStyle, Color, BorderWidth
-    prop3 border, CSS::Enums::LineStyle, BorderWidth, Color
+    prop3 border, Color, BorderWidth, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop3 border, Color, CSS::Enums::LineStyle, BorderWidth, transform_string1: CSS::ColorString
+    prop3 border, BorderWidth, Color, CSS::Enums::LineStyle, transform_string2: CSS::ColorString
+    prop3 border, BorderWidth, CSS::Enums::LineStyle, Color, transform_string3: CSS::ColorString
+    prop3 border, CSS::Enums::LineStyle, Color, BorderWidth, transform_string2: CSS::ColorString
+    prop3 border, CSS::Enums::LineStyle, BorderWidth, Color, transform_string3: CSS::ColorString
 
-    prop border_block, Color
+    prop border_block, Color, transform_string: CSS::ColorString
     prop border_block, BorderWidth
     prop border_block, CSS::Enums::LineStyle
-    prop2 border_block, Color, BorderWidth
-    prop2 border_block, Color, CSS::Enums::LineStyle
-    prop2 border_block, BorderWidth, Color
+    prop2 border_block, Color, BorderWidth, transform_string1: CSS::ColorString
+    prop2 border_block, Color, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop2 border_block, BorderWidth, Color, transform_string2: CSS::ColorString
     prop2 border_block, BorderWidth, CSS::Enums::LineStyle
-    prop2 border_block, CSS::Enums::LineStyle, Color
+    prop2 border_block, CSS::Enums::LineStyle, Color, transform_string2: CSS::ColorString
     prop2 border_block, CSS::Enums::LineStyle, BorderWidth
-    prop3 border_block, Color, BorderWidth, CSS::Enums::LineStyle
-    prop3 border_block, Color, CSS::Enums::LineStyle, BorderWidth
-    prop3 border_block, BorderWidth, Color, CSS::Enums::LineStyle
-    prop3 border_block, BorderWidth, CSS::Enums::LineStyle, Color
-    prop3 border_block, CSS::Enums::LineStyle, Color, BorderWidth
-    prop3 border_block, CSS::Enums::LineStyle, BorderWidth, Color
+    prop3 border_block, Color, BorderWidth, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop3 border_block, Color, CSS::Enums::LineStyle, BorderWidth, transform_string1: CSS::ColorString
+    prop3 border_block, BorderWidth, Color, CSS::Enums::LineStyle, transform_string2: CSS::ColorString
+    prop3 border_block, BorderWidth, CSS::Enums::LineStyle, Color, transform_string3: CSS::ColorString
+    prop3 border_block, CSS::Enums::LineStyle, Color, BorderWidth, transform_string2: CSS::ColorString
+    prop3 border_block, CSS::Enums::LineStyle, BorderWidth, Color, transform_string3: CSS::ColorString
 
-    prop border_block_color, Color
-    prop2 border_block_color, Color, Color
+    prop border_block_color, Color, transform_string: CSS::ColorString
+    prop2 border_block_color, Color, Color, transform_string1: CSS::ColorString, transform_string2: CSS::ColorString
 
-    prop border_block_end, Color
+    prop border_block_end, Color, transform_string: CSS::ColorString
     prop border_block_end, BorderWidth
     prop border_block_end, CSS::Enums::LineStyle
-    prop2 border_block_end, Color, BorderWidth
-    prop2 border_block_end, Color, CSS::Enums::LineStyle
-    prop2 border_block_end, BorderWidth, Color
+    prop2 border_block_end, Color, BorderWidth, transform_string1: CSS::ColorString
+    prop2 border_block_end, Color, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop2 border_block_end, BorderWidth, Color, transform_string2: CSS::ColorString
     prop2 border_block_end, BorderWidth, CSS::Enums::LineStyle
-    prop2 border_block_end, CSS::Enums::LineStyle, Color
+    prop2 border_block_end, CSS::Enums::LineStyle, Color, transform_string2: CSS::ColorString
     prop2 border_block_end, CSS::Enums::LineStyle, BorderWidth
-    prop3 border_block_end, Color, BorderWidth, CSS::Enums::LineStyle
-    prop3 border_block_end, Color, CSS::Enums::LineStyle, BorderWidth
-    prop3 border_block_end, BorderWidth, Color, CSS::Enums::LineStyle
-    prop3 border_block_end, BorderWidth, CSS::Enums::LineStyle, Color
-    prop3 border_block_end, CSS::Enums::LineStyle, Color, BorderWidth
-    prop3 border_block_end, CSS::Enums::LineStyle, BorderWidth, Color
+    prop3 border_block_end, Color, BorderWidth, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop3 border_block_end, Color, CSS::Enums::LineStyle, BorderWidth, transform_string1: CSS::ColorString
+    prop3 border_block_end, BorderWidth, Color, CSS::Enums::LineStyle, transform_string2: CSS::ColorString
+    prop3 border_block_end, BorderWidth, CSS::Enums::LineStyle, Color, transform_string3: CSS::ColorString
+    prop3 border_block_end, CSS::Enums::LineStyle, Color, BorderWidth, transform_string2: CSS::ColorString
+    prop3 border_block_end, CSS::Enums::LineStyle, BorderWidth, Color, transform_string3: CSS::ColorString
 
-    prop border_block_end_color, Color
+    prop border_block_end_color, Color, transform_string: CSS::ColorString
     prop border_block_end_style, CSS::Enums::LineStyle
     prop border_block_end_width, BorderWidth
 
-    prop border_block_start, Color
+    prop border_block_start, Color, transform_string: CSS::ColorString
     prop border_block_start, BorderWidth
     prop border_block_start, CSS::Enums::LineStyle
-    prop2 border_block_start, Color, BorderWidth
-    prop2 border_block_start, Color, CSS::Enums::LineStyle
-    prop2 border_block_start, BorderWidth, Color
+    prop2 border_block_start, Color, BorderWidth, transform_string1: CSS::ColorString
+    prop2 border_block_start, Color, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop2 border_block_start, BorderWidth, Color, transform_string2: CSS::ColorString
     prop2 border_block_start, BorderWidth, CSS::Enums::LineStyle
-    prop2 border_block_start, CSS::Enums::LineStyle, Color
+    prop2 border_block_start, CSS::Enums::LineStyle, Color, transform_string2: CSS::ColorString
     prop2 border_block_start, CSS::Enums::LineStyle, BorderWidth
-    prop3 border_block_start, Color, BorderWidth, CSS::Enums::LineStyle
-    prop3 border_block_start, Color, CSS::Enums::LineStyle, BorderWidth
-    prop3 border_block_start, BorderWidth, Color, CSS::Enums::LineStyle
-    prop3 border_block_start, BorderWidth, CSS::Enums::LineStyle, Color
-    prop3 border_block_start, CSS::Enums::LineStyle, Color, BorderWidth
-    prop3 border_block_start, CSS::Enums::LineStyle, BorderWidth, Color
+    prop3 border_block_start, Color, BorderWidth, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop3 border_block_start, Color, CSS::Enums::LineStyle, BorderWidth, transform_string1: CSS::ColorString
+    prop3 border_block_start, BorderWidth, Color, CSS::Enums::LineStyle, transform_string2: CSS::ColorString
+    prop3 border_block_start, BorderWidth, CSS::Enums::LineStyle, Color, transform_string3: CSS::ColorString
+    prop3 border_block_start, CSS::Enums::LineStyle, Color, BorderWidth, transform_string2: CSS::ColorString
+    prop3 border_block_start, CSS::Enums::LineStyle, BorderWidth, Color, transform_string3: CSS::ColorString
 
-    prop border_block_start_color, Color
+    prop border_block_start_color, Color, transform_string: CSS::ColorString
     prop border_block_start_style, CSS::Enums::LineStyle
     prop border_block_start_width, BorderWidth
 
@@ -576,23 +578,23 @@ module CSS
     prop border_block_width, BorderWidth
     prop2 border_block_width, BorderWidth, BorderWidth
 
-    prop border_bottom, Color
+    prop border_bottom, Color, transform_string: CSS::ColorString
     prop border_bottom, BorderWidth
     prop border_bottom, CSS::Enums::LineStyle
-    prop2 border_bottom, Color, BorderWidth
-    prop2 border_bottom, Color, CSS::Enums::LineStyle
-    prop2 border_bottom, BorderWidth, Color
+    prop2 border_bottom, Color, BorderWidth, transform_string1: CSS::ColorString
+    prop2 border_bottom, Color, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop2 border_bottom, BorderWidth, Color, transform_string2: CSS::ColorString
     prop2 border_bottom, BorderWidth, CSS::Enums::LineStyle
-    prop2 border_bottom, CSS::Enums::LineStyle, Color
+    prop2 border_bottom, CSS::Enums::LineStyle, Color, transform_string2: CSS::ColorString
     prop2 border_bottom, CSS::Enums::LineStyle, BorderWidth
-    prop3 border_bottom, Color, BorderWidth, CSS::Enums::LineStyle
-    prop3 border_bottom, Color, CSS::Enums::LineStyle, BorderWidth
-    prop3 border_bottom, BorderWidth, Color, CSS::Enums::LineStyle
-    prop3 border_bottom, BorderWidth, CSS::Enums::LineStyle, Color
-    prop3 border_bottom, CSS::Enums::LineStyle, Color, BorderWidth
-    prop3 border_bottom, CSS::Enums::LineStyle, BorderWidth, Color
+    prop3 border_bottom, Color, BorderWidth, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop3 border_bottom, Color, CSS::Enums::LineStyle, BorderWidth, transform_string1: CSS::ColorString
+    prop3 border_bottom, BorderWidth, Color, CSS::Enums::LineStyle, transform_string2: CSS::ColorString
+    prop3 border_bottom, BorderWidth, CSS::Enums::LineStyle, Color, transform_string3: CSS::ColorString
+    prop3 border_bottom, CSS::Enums::LineStyle, Color, BorderWidth, transform_string2: CSS::ColorString
+    prop3 border_bottom, CSS::Enums::LineStyle, BorderWidth, Color, transform_string3: CSS::ColorString
 
-    prop border_bottom_color, Color
+    prop border_bottom_color, Color, transform_string: CSS::ColorString
 
     prop border_bottom_left_radius, CSS::LengthPercentage
     prop2 border_bottom_left_radius, CSS::LengthPercentage, CSS::LengthPercentage
@@ -604,10 +606,10 @@ module CSS
     prop border_bottom_width, BorderWidth
     prop border_collapse, CSS::Enums::BorderCollapse
 
-    prop border_color, Color
-    prop2 border_color, Color, Color
-    prop3 border_color, Color, Color, Color
-    prop4 border_color, Color, Color, Color, Color
+    prop border_color, Color, transform_string: CSS::ColorString
+    prop2 border_color, Color, Color, transform_string1: CSS::ColorString, transform_string2: CSS::ColorString
+    prop3 border_color, Color, Color, Color, transform_string1: CSS::ColorString, transform_string2: CSS::ColorString, transform_string3: CSS::ColorString
+    prop4 border_color, Color, Color, Color, Color, transform_string1: CSS::ColorString, transform_string2: CSS::ColorString, transform_string3: CSS::ColorString, transform_string4: CSS::ColorString
 
     prop border_end_end_radius, CSS::LengthPercentage
     prop2 border_end_end_radius, CSS::LengthPercentage, CSS::LengthPercentage
@@ -647,62 +649,62 @@ module CSS
     prop3 border_image_width, BorderImageWidth, BorderImageWidth, BorderImageWidth, enforce_unit1: false, enforce_unit2: false, enforce_unit3: false
     prop4 border_image_width, BorderImageWidth, BorderImageWidth, BorderImageWidth, BorderImageWidth, enforce_unit1: false, enforce_unit2: false, enforce_unit3: false, enforce_unit4: false
 
-    prop border_inline, Color
+    prop border_inline, Color, transform_string: CSS::ColorString
     prop border_inline, BorderWidth
     prop border_inline, CSS::Enums::LineStyle
-    prop2 border_inline, Color, BorderWidth
-    prop2 border_inline, Color, CSS::Enums::LineStyle
-    prop2 border_inline, BorderWidth, Color
+    prop2 border_inline, Color, BorderWidth, transform_string1: CSS::ColorString
+    prop2 border_inline, Color, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop2 border_inline, BorderWidth, Color, transform_string2: CSS::ColorString
     prop2 border_inline, BorderWidth, CSS::Enums::LineStyle
-    prop2 border_inline, CSS::Enums::LineStyle, Color
+    prop2 border_inline, CSS::Enums::LineStyle, Color, transform_string2: CSS::ColorString
     prop2 border_inline, CSS::Enums::LineStyle, BorderWidth
-    prop3 border_inline, Color, BorderWidth, CSS::Enums::LineStyle
-    prop3 border_inline, Color, CSS::Enums::LineStyle, BorderWidth
-    prop3 border_inline, BorderWidth, Color, CSS::Enums::LineStyle
-    prop3 border_inline, BorderWidth, CSS::Enums::LineStyle, Color
-    prop3 border_inline, CSS::Enums::LineStyle, Color, BorderWidth
-    prop3 border_inline, CSS::Enums::LineStyle, BorderWidth, Color
+    prop3 border_inline, Color, BorderWidth, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop3 border_inline, Color, CSS::Enums::LineStyle, BorderWidth, transform_string1: CSS::ColorString
+    prop3 border_inline, BorderWidth, Color, CSS::Enums::LineStyle, transform_string2: CSS::ColorString
+    prop3 border_inline, BorderWidth, CSS::Enums::LineStyle, Color, transform_string3: CSS::ColorString
+    prop3 border_inline, CSS::Enums::LineStyle, Color, BorderWidth, transform_string2: CSS::ColorString
+    prop3 border_inline, CSS::Enums::LineStyle, BorderWidth, Color, transform_string3: CSS::ColorString
 
-    prop border_inline_color, Color
-    prop2 border_inline_color, Color, Color
+    prop border_inline_color, Color, transform_string: CSS::ColorString
+    prop2 border_inline_color, Color, Color, transform_string1: CSS::ColorString, transform_string2: CSS::ColorString
 
-    prop border_inline_end, Color
+    prop border_inline_end, Color, transform_string: CSS::ColorString
     prop border_inline_end, BorderWidth
     prop border_inline_end, CSS::Enums::LineStyle
-    prop2 border_inline_end, Color, BorderWidth
-    prop2 border_inline_end, Color, CSS::Enums::LineStyle
-    prop2 border_inline_end, BorderWidth, Color
+    prop2 border_inline_end, Color, BorderWidth, transform_string1: CSS::ColorString
+    prop2 border_inline_end, Color, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop2 border_inline_end, BorderWidth, Color, transform_string2: CSS::ColorString
     prop2 border_inline_end, BorderWidth, CSS::Enums::LineStyle
-    prop2 border_inline_end, CSS::Enums::LineStyle, Color
+    prop2 border_inline_end, CSS::Enums::LineStyle, Color, transform_string2: CSS::ColorString
     prop2 border_inline_end, CSS::Enums::LineStyle, BorderWidth
-    prop3 border_inline_end, Color, BorderWidth, CSS::Enums::LineStyle
-    prop3 border_inline_end, Color, CSS::Enums::LineStyle, BorderWidth
-    prop3 border_inline_end, BorderWidth, Color, CSS::Enums::LineStyle
-    prop3 border_inline_end, BorderWidth, CSS::Enums::LineStyle, Color
-    prop3 border_inline_end, CSS::Enums::LineStyle, Color, BorderWidth
-    prop3 border_inline_end, CSS::Enums::LineStyle, BorderWidth, Color
+    prop3 border_inline_end, Color, BorderWidth, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop3 border_inline_end, Color, CSS::Enums::LineStyle, BorderWidth, transform_string1: CSS::ColorString
+    prop3 border_inline_end, BorderWidth, Color, CSS::Enums::LineStyle, transform_string2: CSS::ColorString
+    prop3 border_inline_end, BorderWidth, CSS::Enums::LineStyle, Color, transform_string3: CSS::ColorString
+    prop3 border_inline_end, CSS::Enums::LineStyle, Color, BorderWidth, transform_string2: CSS::ColorString
+    prop3 border_inline_end, CSS::Enums::LineStyle, BorderWidth, Color, transform_string3: CSS::ColorString
 
-    prop border_inline_end_color, Color
+    prop border_inline_end_color, Color, transform_string: CSS::ColorString
     prop border_inline_end_style, CSS::Enums::LineStyle
     prop border_inline_end_width, BorderWidth
 
-    prop border_inline_start, Color
+    prop border_inline_start, Color, transform_string: CSS::ColorString
     prop border_inline_start, BorderWidth
     prop border_inline_start, CSS::Enums::LineStyle
-    prop2 border_inline_start, Color, BorderWidth
-    prop2 border_inline_start, Color, CSS::Enums::LineStyle
-    prop2 border_inline_start, BorderWidth, Color
+    prop2 border_inline_start, Color, BorderWidth, transform_string1: CSS::ColorString
+    prop2 border_inline_start, Color, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop2 border_inline_start, BorderWidth, Color, transform_string2: CSS::ColorString
     prop2 border_inline_start, BorderWidth, CSS::Enums::LineStyle
-    prop2 border_inline_start, CSS::Enums::LineStyle, Color
+    prop2 border_inline_start, CSS::Enums::LineStyle, Color, transform_string2: CSS::ColorString
     prop2 border_inline_start, CSS::Enums::LineStyle, BorderWidth
-    prop3 border_inline_start, Color, BorderWidth, CSS::Enums::LineStyle
-    prop3 border_inline_start, Color, CSS::Enums::LineStyle, BorderWidth
-    prop3 border_inline_start, BorderWidth, Color, CSS::Enums::LineStyle
-    prop3 border_inline_start, BorderWidth, CSS::Enums::LineStyle, Color
-    prop3 border_inline_start, CSS::Enums::LineStyle, Color, BorderWidth
-    prop3 border_inline_start, CSS::Enums::LineStyle, BorderWidth, Color
+    prop3 border_inline_start, Color, BorderWidth, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop3 border_inline_start, Color, CSS::Enums::LineStyle, BorderWidth, transform_string1: CSS::ColorString
+    prop3 border_inline_start, BorderWidth, Color, CSS::Enums::LineStyle, transform_string2: CSS::ColorString
+    prop3 border_inline_start, BorderWidth, CSS::Enums::LineStyle, Color, transform_string3: CSS::ColorString
+    prop3 border_inline_start, CSS::Enums::LineStyle, Color, BorderWidth, transform_string2: CSS::ColorString
+    prop3 border_inline_start, CSS::Enums::LineStyle, BorderWidth, Color, transform_string3: CSS::ColorString
 
-    prop border_inline_start_color, Color
+    prop border_inline_start_color, Color, transform_string: CSS::ColorString
     prop border_inline_start_style, CSS::Enums::LineStyle
     prop border_inline_start_width, BorderWidth
 
@@ -712,23 +714,23 @@ module CSS
     prop border_inline_width, BorderWidth
     prop2 border_inline_width, BorderWidth, BorderWidth
 
-    prop border_left, Color
+    prop border_left, Color, transform_string: CSS::ColorString
     prop border_left, BorderWidth
     prop border_left, CSS::Enums::LineStyle
-    prop2 border_left, Color, BorderWidth
-    prop2 border_left, Color, CSS::Enums::LineStyle
-    prop2 border_left, BorderWidth, Color
+    prop2 border_left, Color, BorderWidth, transform_string1: CSS::ColorString
+    prop2 border_left, Color, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop2 border_left, BorderWidth, Color, transform_string2: CSS::ColorString
     prop2 border_left, BorderWidth, CSS::Enums::LineStyle
-    prop2 border_left, CSS::Enums::LineStyle, Color
+    prop2 border_left, CSS::Enums::LineStyle, Color, transform_string2: CSS::ColorString
     prop2 border_left, CSS::Enums::LineStyle, BorderWidth
-    prop3 border_left, Color, BorderWidth, CSS::Enums::LineStyle
-    prop3 border_left, Color, CSS::Enums::LineStyle, BorderWidth
-    prop3 border_left, BorderWidth, Color, CSS::Enums::LineStyle
-    prop3 border_left, BorderWidth, CSS::Enums::LineStyle, Color
-    prop3 border_left, CSS::Enums::LineStyle, Color, BorderWidth
-    prop3 border_left, CSS::Enums::LineStyle, BorderWidth, Color
+    prop3 border_left, Color, BorderWidth, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop3 border_left, Color, CSS::Enums::LineStyle, BorderWidth, transform_string1: CSS::ColorString
+    prop3 border_left, BorderWidth, Color, CSS::Enums::LineStyle, transform_string2: CSS::ColorString
+    prop3 border_left, BorderWidth, CSS::Enums::LineStyle, Color, transform_string3: CSS::ColorString
+    prop3 border_left, CSS::Enums::LineStyle, Color, BorderWidth, transform_string2: CSS::ColorString
+    prop3 border_left, CSS::Enums::LineStyle, BorderWidth, Color, transform_string3: CSS::ColorString
 
-    prop border_left_color, Color
+    prop border_left_color, Color, transform_string: CSS::ColorString
     prop border_left_style, CSS::Enums::LineStyle
     prop border_left_width, BorderWidth
 
@@ -737,23 +739,23 @@ module CSS
     prop3 border_radius, CSS::LengthPercentage, CSS::LengthPercentage, CSS::LengthPercentage
     prop4 border_radius, CSS::LengthPercentage, CSS::LengthPercentage, CSS::LengthPercentage, CSS::LengthPercentage
 
-    prop border_right, Color
+    prop border_right, Color, transform_string: CSS::ColorString
     prop border_right, BorderWidth
     prop border_right, CSS::Enums::LineStyle
-    prop2 border_right, Color, BorderWidth
-    prop2 border_right, Color, CSS::Enums::LineStyle
-    prop2 border_right, BorderWidth, Color
+    prop2 border_right, Color, BorderWidth, transform_string1: CSS::ColorString
+    prop2 border_right, Color, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop2 border_right, BorderWidth, Color, transform_string2: CSS::ColorString
     prop2 border_right, BorderWidth, CSS::Enums::LineStyle
-    prop2 border_right, CSS::Enums::LineStyle, Color
+    prop2 border_right, CSS::Enums::LineStyle, Color, transform_string2: CSS::ColorString
     prop2 border_right, CSS::Enums::LineStyle, BorderWidth
-    prop3 border_right, Color, BorderWidth, CSS::Enums::LineStyle
-    prop3 border_right, Color, CSS::Enums::LineStyle, BorderWidth
-    prop3 border_right, BorderWidth, Color, CSS::Enums::LineStyle
-    prop3 border_right, BorderWidth, CSS::Enums::LineStyle, Color
-    prop3 border_right, CSS::Enums::LineStyle, Color, BorderWidth
-    prop3 border_right, CSS::Enums::LineStyle, BorderWidth, Color
+    prop3 border_right, Color, BorderWidth, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop3 border_right, Color, CSS::Enums::LineStyle, BorderWidth, transform_string1: CSS::ColorString
+    prop3 border_right, BorderWidth, Color, CSS::Enums::LineStyle, transform_string2: CSS::ColorString
+    prop3 border_right, BorderWidth, CSS::Enums::LineStyle, Color, transform_string3: CSS::ColorString
+    prop3 border_right, CSS::Enums::LineStyle, Color, BorderWidth, transform_string2: CSS::ColorString
+    prop3 border_right, CSS::Enums::LineStyle, BorderWidth, Color, transform_string3: CSS::ColorString
 
-    prop border_right_color, Color
+    prop border_right_color, Color, transform_string: CSS::ColorString
     prop border_right_style, CSS::Enums::LineStyle
     prop border_right_width, BorderWidth
 
@@ -771,23 +773,23 @@ module CSS
     prop3 border_style, CSS::Enums::LineStyle, CSS::Enums::LineStyle, CSS::Enums::LineStyle
     prop4 border_style, CSS::Enums::LineStyle, CSS::Enums::LineStyle, CSS::Enums::LineStyle, CSS::Enums::LineStyle
 
-    prop border_top, Color
+    prop border_top, Color, transform_string: CSS::ColorString
     prop border_top, BorderWidth
     prop border_top, CSS::Enums::LineStyle
-    prop2 border_top, Color, BorderWidth
-    prop2 border_top, Color, CSS::Enums::LineStyle
-    prop2 border_top, BorderWidth, Color
+    prop2 border_top, Color, BorderWidth, transform_string1: CSS::ColorString
+    prop2 border_top, Color, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop2 border_top, BorderWidth, Color, transform_string2: CSS::ColorString
     prop2 border_top, BorderWidth, CSS::Enums::LineStyle
-    prop2 border_top, CSS::Enums::LineStyle, Color
+    prop2 border_top, CSS::Enums::LineStyle, Color, transform_string2: CSS::ColorString
     prop2 border_top, CSS::Enums::LineStyle, BorderWidth
-    prop3 border_top, Color, BorderWidth, CSS::Enums::LineStyle
-    prop3 border_top, Color, CSS::Enums::LineStyle, BorderWidth
-    prop3 border_top, BorderWidth, Color, CSS::Enums::LineStyle
-    prop3 border_top, BorderWidth, CSS::Enums::LineStyle, Color
-    prop3 border_top, CSS::Enums::LineStyle, Color, BorderWidth
-    prop3 border_top, CSS::Enums::LineStyle, BorderWidth, Color
+    prop3 border_top, Color, BorderWidth, CSS::Enums::LineStyle, transform_string1: CSS::ColorString
+    prop3 border_top, Color, CSS::Enums::LineStyle, BorderWidth, transform_string1: CSS::ColorString
+    prop3 border_top, BorderWidth, Color, CSS::Enums::LineStyle, transform_string2: CSS::ColorString
+    prop3 border_top, BorderWidth, CSS::Enums::LineStyle, Color, transform_string3: CSS::ColorString
+    prop3 border_top, CSS::Enums::LineStyle, Color, BorderWidth, transform_string2: CSS::ColorString
+    prop3 border_top, CSS::Enums::LineStyle, BorderWidth, Color, transform_string3: CSS::ColorString
 
-    prop border_top_color, Color
+    prop border_top_color, Color, transform_string: CSS::ColorString
 
     prop border_top_left_radius, CSS::LengthPercentage
     prop2 border_top_left_radius, CSS::LengthPercentage, CSS::LengthPercentage
@@ -810,28 +812,28 @@ module CSS
     prop box_shadow, CSS::Enums::None
     # 2 Lengths
     prop2 box_shadow, CSS::Length, CSS::Length
-    prop3 box_shadow, Color, CSS::Length, CSS::Length
+    prop3 box_shadow, Color, CSS::Length, CSS::Length, transform_string1: CSS::ColorString
     prop3 box_shadow, CSS::Enums::BoxShadowPosition, CSS::Length, CSS::Length
-    prop3 box_shadow, CSS::Length, CSS::Length, Color
+    prop3 box_shadow, CSS::Length, CSS::Length, Color, transform_string3: CSS::ColorString
     prop3 box_shadow, CSS::Length, CSS::Length, CSS::Enums::BoxShadowPosition
-    prop4 box_shadow, Color, CSS::Length, CSS::Length, CSS::Enums::BoxShadowPosition
-    prop4 box_shadow, CSS::Enums::BoxShadowPosition, CSS::Length, CSS::Length, Color
+    prop4 box_shadow, Color, CSS::Length, CSS::Length, CSS::Enums::BoxShadowPosition, transform_string1: CSS::ColorString
+    prop4 box_shadow, CSS::Enums::BoxShadowPosition, CSS::Length, CSS::Length, Color, transform_string4: CSS::ColorString
     # 3 Lengths
     prop3 box_shadow, CSS::Length, CSS::Length, CSS::Length
-    prop4 box_shadow, Color, CSS::Length, CSS::Length, CSS::Length
+    prop4 box_shadow, Color, CSS::Length, CSS::Length, CSS::Length, transform_string1: CSS::ColorString
     prop4 box_shadow, CSS::Enums::BoxShadowPosition, CSS::Length, CSS::Length, CSS::Length
-    prop4 box_shadow, CSS::Length, CSS::Length, CSS::Length, Color
+    prop4 box_shadow, CSS::Length, CSS::Length, CSS::Length, Color, transform_string4: CSS::ColorString
     prop4 box_shadow, CSS::Length, CSS::Length, CSS::Length, CSS::Enums::BoxShadowPosition
-    prop5 box_shadow, CSS::Enums::BoxShadowPosition, CSS::Length, CSS::Length, CSS::Length, Color
-    prop5 box_shadow, Color, CSS::Length, CSS::Length, CSS::Length, CSS::Enums::BoxShadowPosition
+    prop5 box_shadow, CSS::Enums::BoxShadowPosition, CSS::Length, CSS::Length, CSS::Length, Color, transform_string5: CSS::ColorString
+    prop5 box_shadow, Color, CSS::Length, CSS::Length, CSS::Length, CSS::Enums::BoxShadowPosition, transform_string1: CSS::ColorString
     # 4 Lengths
     prop4 box_shadow, CSS::Length, CSS::Length, CSS::Length, CSS::Length
-    prop5 box_shadow, Color, CSS::Length, CSS::Length, CSS::Length, CSS::Length
+    prop5 box_shadow, Color, CSS::Length, CSS::Length, CSS::Length, CSS::Length, transform_string1: CSS::ColorString
     prop5 box_shadow, CSS::Enums::BoxShadowPosition, CSS::Length, CSS::Length, CSS::Length, CSS::Length
-    prop5 box_shadow, CSS::Length, CSS::Length, CSS::Length, CSS::Length, Color
+    prop5 box_shadow, CSS::Length, CSS::Length, CSS::Length, CSS::Length, Color, transform_string5: CSS::ColorString
     prop5 box_shadow, CSS::Length, CSS::Length, CSS::Length, CSS::Length, CSS::Enums::BoxShadowPosition
-    prop6 box_shadow, CSS::Enums::BoxShadowPosition, CSS::Length, CSS::Length, CSS::Length, CSS::Length, Color
-    prop6 box_shadow, Color, CSS::Length, CSS::Length, CSS::Length, CSS::Length, CSS::Enums::BoxShadowPosition
+    prop6 box_shadow, CSS::Enums::BoxShadowPosition, CSS::Length, CSS::Length, CSS::Length, CSS::Length, Color, transform_string5: CSS::ColorString
+    prop6 box_shadow, Color, CSS::Length, CSS::Length, CSS::Length, CSS::Length, CSS::Enums::BoxShadowPosition, transform_string1: CSS::ColorString
 
     prop box_sizing, CSS::Enums::BoxSizing
     prop break_after, String
@@ -844,7 +846,7 @@ module CSS
     prop clear, String
     prop clip_path, String
     prop clip_rule, String
-    prop color, Color
+    prop color, Color, transform_string: CSS::ColorString
     prop color_interpolation_filters, String
     prop color_scheme, String
     prop column_count, Int
@@ -902,11 +904,11 @@ module CSS
     prop font, String
 
     prop font_family, FontFamily
-    prop2 font_family, FontFamily, FontFamily, css_string1: true, css_string2: true, separator: ", "
-    prop3 font_family, FontFamily, FontFamily, FontFamily, css_string1: true, css_string2: true, css_string3: true, separator: ", "
-    prop4 font_family, FontFamily, FontFamily, FontFamily, FontFamily, css_string1: true, css_string2: true, css_string3: true, css_string4: true, separator: ", "
-    prop5 font_family, FontFamily, FontFamily, FontFamily, FontFamily, FontFamily, css_string1: true, css_string2: true, css_string3: true, css_string4: true, css_string5: true, separator: ", "
-    prop6 font_family, FontFamily, FontFamily, FontFamily, FontFamily, FontFamily, FontFamily, css_string1: true, css_string2: true, css_string3: true, css_string4: true, css_string5: true, css_string6: true, separator: ", "
+    prop2 font_family, FontFamily, FontFamily, separator: ", "
+    prop3 font_family, FontFamily, FontFamily, FontFamily, separator: ", "
+    prop4 font_family, FontFamily, FontFamily, FontFamily, FontFamily, separator: ", "
+    prop5 font_family, FontFamily, FontFamily, FontFamily, FontFamily, FontFamily, separator: ", "
+    prop6 font_family, FontFamily, FontFamily, FontFamily, FontFamily, FontFamily, FontFamily, separator: ", "
 
     prop font_feature_settings, String
     prop font_kerning, CSS::Enums::FontKerning
@@ -938,7 +940,7 @@ module CSS
     prop font_variant_position, String
 
     prop font_variation_settings, CSS::Enums::FontVariationSettings
-    prop2 font_variation_settings, String, Number, enforce_unit2: false, css_string1: true
+    prop2 font_variation_settings, String, Number, enforce_unit2: false
 
     prop font_weight, Int32 | Float64 | CSS::Enums::FontWeight, enforce_unit: false
     prop forced_color_adjust, String
@@ -1184,8 +1186,8 @@ module CSS
     prop tab_size, Int
     prop table_layout, String
 
-    prop text_align, CSS::Enums::TextAlign | String, css_string: true
-    prop2 text_align, String, CSS::Enums::TextAlign, css_string1: true
+    prop text_align, CSS::Enums::TextAlign | String
+    prop2 text_align, String, CSS::Enums::TextAlign
 
     prop text_align_last, CSS::Enums::TextAlignLast
     prop text_anchor, String
@@ -1194,12 +1196,12 @@ module CSS
     prop text_box_trim, String
     prop text_combine_upright, String
 
-    prop text_decoration, CSS::Enums::None | TextDecoration
-    prop2 text_decoration, TextDecoration, TextDecoration
+    prop text_decoration, CSS::Enums::None | TextDecoration, transform_string: CSS::ColorString
+    prop2 text_decoration, TextDecoration, TextDecoration, transform_string1: CSS::ColorString, transform_string2: CSS::ColorString
     prop3 text_decoration, TextDecoration, TextDecoration, TextDecoration
     prop4 text_decoration, TextDecoration, TextDecoration, TextDecoration, TextDecoration
 
-    prop text_decoration_color, Color
+    prop text_decoration_color, Color, transform_string: CSS::ColorString
 
     prop text_decoration_line, CSS::Enums::None | CSS::Enums::TextDecorationLine | CSS::Enums::SpellingError | CSS::Enums::GrammarError
     prop2 text_decoration_line, CSS::Enums::TextDecorationLine, CSS::Enums::TextDecorationLine
@@ -1264,6 +1266,34 @@ module CSS
 
     def self.url(value)
       UrlFunctionCall.new(value)
+    end
+
+    macro font_face(klass_name, *, name, &blk)
+      class {{klass_name}} < CSS::FontFace
+        def self.font_name
+          {{name.id.stringify}}
+        end
+
+        def self.to_s(io : IO)
+          {% if blk.body.is_a?(Expressions) %}
+            {% for exp in blk.body.expressions %}
+              io << {{exp}}
+              io << "\n"
+            {% end %}
+          {% else %}
+            io << {{blk.body}}
+          {% end %}
+        end
+      end
+
+      def self.to_s(io : IO)
+        {% if @type.class.methods.map(&.name.stringify).includes?("to_s") %}
+          previous_def
+          io << "\n\n"
+        {% end %}
+
+        {{klass_name}}.to_s(io)
+      end
     end
   end
 end

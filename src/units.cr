@@ -9,6 +9,10 @@
         io << value
         io << {{unit_name}}
       end
+
+      def to_css_value
+        to_s
+      end
     end
   end
 
@@ -32,6 +36,10 @@ module CSS
     def to_s(io : IO)
       io << value
       io << "%"
+    end
+
+    def to_css_value
+      to_s
     end
   end
 end

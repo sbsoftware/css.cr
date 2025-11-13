@@ -9,5 +9,9 @@ module CSS
       io << arguments
       io << ")"
     end
+
+    def to_css_value
+      to_s
+    end
   end
 end
