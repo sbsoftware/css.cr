@@ -436,6 +436,7 @@ module CSS
     alias BorderImage = BorderImageSource | CSS::NumberPercentage | CSS::Enums::BorderImageRepeat
     alias FontFamily = String | CSS::Enums::GenericFontFamily | CSS::FontFace.class
     alias TextDecoration = CSS::Enums::TextDecorationLine | CSS::Enums::SpellingError | CSS::Enums::GrammarError | CSS::Enums::TextDecorationStyle | CSS::Enums::FromFont | CSS::Enums::Auto | CSS::LengthPercentage | Color
+    alias ListStyle = CSS::Enums::ListStyleType | String | CSS::Enums::ListStylePosition | CSS::UrlFunctionCall
 
     prop accent_color, String
 
@@ -1003,10 +1004,14 @@ module CSS
     prop line_break, String
     prop line_clamp, Int | String
     prop line_height, CSS::Enums::LineHeight | Int32 | Float64 | CSS::LengthPercentage, enforce_unit: false
-    prop list_style, String
-    prop list_style_image, String
-    prop list_style_position, String
-    prop list_style_type, String
+
+    prop list_style, ListStyle
+    prop2 list_style, ListStyle, ListStyle
+    prop3 list_style, ListStyle, ListStyle, ListStyle
+
+    prop list_style_image, CSS::UrlFunctionCall | CSS::Enums::None
+    prop list_style_position, CSS::Enums::ListStylePosition
+    prop list_style_type, CSS::Enums::ListStyleType | String
 
     prop margin, CSS::LengthPercentage
     prop2 margin, CSS::LengthPercentage, CSS::LengthPercentage
