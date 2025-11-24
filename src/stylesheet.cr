@@ -848,7 +848,7 @@ module CSS
     prop caret, String
     prop caret_color, String
     prop caret_shape, String
-    prop clear, String
+    prop clear, CSS::Enums::Clear
     prop clip_path, String
     prop clip_rule, String
     prop color, Color, transform_string: CSS::ColorString
@@ -903,7 +903,7 @@ module CSS
     prop flex_grow, Number, enforce_unit: false
     prop flex_shrink, Number, enforce_unit: false
     prop flex_wrap, CSS::Enums::FlexWrap
-    prop float, String
+    prop float, CSS::Enums::Float
     prop flood_color, String
     prop flood_opacity, String
     prop font, String
