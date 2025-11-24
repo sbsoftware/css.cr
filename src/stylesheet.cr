@@ -54,17 +54,20 @@ module CSS
       {% end %}
     end
 
-    macro make_rule(io, selector, &blk)
+    macro make_rule(io, selector, level = 0, &blk)
       %child_rules = String.build do |%child_rule_io|
+        {% if level > 0 %}
+          {{io}} << "  " * {{level}}
+        {% end %}
         {{io}} << {{selector}}
         {{io}} << " {\n"
         {% if blk.body.is_a?(Expressions) %}
           {% prop_exprs = blk.body.expressions.reject { |exp| exp.is_a?(Call) && exp.name.stringify == "rule" && exp.args.size == 1 && exp.block } %}
           {% for exp, i in blk.body.expressions %}
             {% if exp.is_a?(Call) && exp.name.stringify == "rule" && exp.args.size == 1 && exp.block %}
-              make_rule(%child_rule_io, CSS::DescendantSelector.new({{selector}}, make_selector({{exp.args.first}}))) {{exp.block}}
+              make_rule(%child_rule_io, CSS::DescendantSelector.new({{selector}}, make_selector({{exp.args.first}})), {{level}}) {{exp.block}}
             {% else %}
-              {{io}} << "  "
+              {{io}} << "  " * {{level + 1}}
               {{io}} << {{exp}}
               {% if prop_exprs.size > 1 && i < prop_exprs.size - 1 %}
                 {{io}} << "\n"
@@ -75,11 +78,13 @@ module CSS
           {% if blk.body.is_a?(Call) && blk.body.name.stringify == "rule" && blk.body.args.size == 1 && blk.body.block %}
             make_rule(%child_rule_io, CSS::DescendantSelector.new({{selector}}, make_selector({{blk.body.args.first}}))) {{blk.body.block}}
           {% else %}
-            {{io}} << "  "
+            {{io}} << "  " * {{level + 1}}
             {{io}} << {{blk.body}}
           {% end %}
         {% end %}
-        {{io}} << "\n}"
+        {{io}} << "\n"
+        {{io}} << "  " * {{level}}
+        {{io}} << "}"
       end
 
       if %child_rules.size.positive?
@@ -1286,6 +1291,24 @@ module CSS
         end
       end
 
+      embed({{klass_name}})
+    end
+
+    macro media(queries, &blk)
+      class MediaStyle{{@caller.first.line_number}} < CSS::MediaStylesheet
+        def self.media_queries
+          CSS::MediaQueryEvaluator.evaluate do
+            {{queries}}
+          end
+        end
+
+        {{blk.body}}
+      end
+
+      embed MediaStyle{{@caller.first.line_number}}
+    end
+
+    macro embed(klass_name)
       def self.to_s(io : IO)
         {% if @type.class.methods.map(&.name.stringify).includes?("to_s") %}
           previous_def
@@ -1297,3 +1320,5 @@ module CSS
     end
   end
 end
+
+require "./css/media_stylesheet"
