@@ -46,6 +46,7 @@ module CSS::SelectorSpec
 
     rule div <= :before do
       display :flex
+      content "Aloha!"
     end
 
     rule div <= CSS::NthOfType.new(3) do
@@ -106,6 +107,7 @@ module CSS::SelectorSpec
 
       div:before {
         display: flex;
+        content: "Aloha!";
       }
 
       div:nth-of-type(3) {
