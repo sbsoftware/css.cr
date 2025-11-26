@@ -10,6 +10,7 @@ require "./css/enums/**"
 require "./css/color_string"
 require "./css/rgb_function_call"
 require "./css/url_function_call"
+require "./css/ratio"
 require "./font_face"
 
 module CSS
@@ -438,6 +439,7 @@ module CSS
     alias FontFamily = String | CSS::Enums::GenericFontFamily | CSS::FontFace.class
     alias TextDecoration = CSS::Enums::TextDecorationLine | CSS::Enums::SpellingError | CSS::Enums::GrammarError | CSS::Enums::TextDecorationStyle | CSS::Enums::FromFont | CSS::Enums::Auto | CSS::LengthPercentage | Color
     alias ListStyle = CSS::Enums::ListStyleType | String | CSS::Enums::ListStylePosition | CSS::UrlFunctionCall
+    alias AspectRatio = CSS::Ratio | CSS::RatioNumber | CSS::Enums::Auto
 
     prop accent_color, String
 
@@ -466,7 +468,7 @@ module CSS
     prop animation_play_state, String
     prop animation_timing_function, String
     prop appearance, String
-    prop aspect_ratio, String
+    prop aspect_ratio, AspectRatio, enforce_unit: false
     prop backdrop_filter, String
     prop backface_visibility, String
 
@@ -1286,6 +1288,10 @@ module CSS
     prop y, String
     prop z_index, Int, enforce_unit: false
     prop zoom, String
+
+    def self.ratio(numerator, denominator = nil)
+      Ratio.new(numerator, denominator)
+    end
 
     def self.rgb(r, g, b, *, alpha = nil, from = nil)
       RgbFunctionCall.new(r, g, b, alpha: alpha, from: from)
