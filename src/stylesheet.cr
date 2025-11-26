@@ -1243,7 +1243,8 @@ module CSS
     prop text_indent, String
     prop text_justify, String
     prop text_orientation, String
-    prop text_overflow, String
+    prop text_overflow, CSS::Enums::TextOverflow | String
+    prop2 text_overflow, CSS::Enums::TextOverflow | String, CSS::Enums::TextOverflow | String
     prop text_rendering, String
     prop text_shadow, String
     prop text_transform, String
