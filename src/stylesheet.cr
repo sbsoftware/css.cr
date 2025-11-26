@@ -1273,7 +1273,7 @@ module CSS
     prop view_transition_class, String
     prop view_transition_name, String
     prop visibility, String
-    prop white_space, String
+    prop white_space, CSS::Enums::WhiteSpace
     prop white_space_collapse, String
     prop widows, Int
     prop width, CSS::LengthPercentage | CSS::Enums::Size | CSS::Enums::Auto
