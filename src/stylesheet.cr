@@ -1214,6 +1214,8 @@ module CSS
     prop tab_size, Int
     prop table_layout, String
 
+    prop _webkit_tap_highlight_color, Color, transform_string: CSS::ColorString
+
     prop text_align, CSS::Enums::TextAlign | String
     prop2 text_align, String, CSS::Enums::TextAlign
 
