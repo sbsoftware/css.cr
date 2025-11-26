@@ -58,6 +58,10 @@ module CSS::FlexSpec
         gap 3.px, 10.percent
       end
     end
+
+    rule main do
+      gap :normal
+    end
   end
 
   describe "Style.to_s" do
@@ -118,6 +122,10 @@ module CSS::FlexSpec
         align-self: last baseline;
         order: 0;
         gap: 3px 10%;
+      }
+
+      main {
+        gap: normal;
       }
       CSS
 

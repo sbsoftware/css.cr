@@ -951,8 +951,8 @@ module CSS
 
     prop font_weight, Int32 | Float64 | CSS::Enums::FontWeight, enforce_unit: false
     prop forced_color_adjust, String
-    prop gap, CSS::LengthPercentage
-    prop2 gap, CSS::LengthPercentage, CSS::LengthPercentage
+    prop gap, CSS::Enums::Gap | CSS::LengthPercentage
+    prop2 gap, CSS::Enums::Gap | CSS::LengthPercentage, CSS::Enums::Gap | CSS::LengthPercentage
     prop grid, String
     prop grid_area, String
     prop grid_auto_columns, String
