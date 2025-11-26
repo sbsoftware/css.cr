@@ -10,6 +10,8 @@ require "./css/enums/**"
 require "./css/color_string"
 require "./css/rgb_function_call"
 require "./css/url_function_call"
+require "./css/transform_functions"
+require "./css/transform_function_call"
 require "./css/ratio"
 require "./font_face"
 
@@ -440,6 +442,7 @@ module CSS
     alias TextDecoration = CSS::Enums::TextDecorationLine | CSS::Enums::SpellingError | CSS::Enums::GrammarError | CSS::Enums::TextDecorationStyle | CSS::Enums::FromFont | CSS::Enums::Auto | CSS::LengthPercentage | Color
     alias ListStyle = CSS::Enums::ListStyleType | String | CSS::Enums::ListStylePosition | CSS::UrlFunctionCall
     alias AspectRatio = CSS::Ratio | CSS::RatioNumber | CSS::Enums::Auto
+    alias TransformValue = CSS::TransformFunctionCall | CSS::Enums::None
 
     prop accent_color, String
 
@@ -1259,7 +1262,6 @@ module CSS
     prop text_wrap_style, String
     prop top, CSS::LengthPercentage | CSS::Enums::Auto
     prop touch_action, String
-    prop transform, String
     prop transform_box, String
     prop transform_origin, String
     prop transform_style, String
@@ -1301,6 +1303,22 @@ module CSS
 
     def self.url(value)
       UrlFunctionCall.new(value)
+    end
+
+    macro transform(*values)
+      {% if values.empty? %}
+        {{ raise "transform requires at least one value" }}
+      {% end %}
+
+      _transform(
+        {% for value, i in values %}
+          CSS::TransformFunctions.dispatch({{value}}){% if i < values.size - 1 %}, {% end %}
+        {% end %}
+      )
+    end
+
+    def self._transform(*values : TransformValue)
+      property("transform", values.map(&.to_css_value).join(" "))
     end
 
     macro font_face(klass_name, *, name, &blk)
