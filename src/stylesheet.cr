@@ -1269,7 +1269,7 @@ module CSS
     prop unicode_bidi, String
     prop user_select, String
     prop vector_effect, String
-    prop vertical_align, String
+    prop vertical_align, CSS::LengthPercentage | CSS::Enums::VerticalAlign
     prop view_transition_class, String
     prop view_transition_name, String
     prop visibility, String
