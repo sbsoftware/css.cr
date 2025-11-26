@@ -1282,7 +1282,7 @@ module CSS
     prop will_change, String
     prop word_break, String
     prop word_spacing, String
-    prop word_wrap, String
+    prop word_wrap, CSS::Enums::OverflowWrap
     prop writing_mode, String
     prop x, String
     prop y, String
