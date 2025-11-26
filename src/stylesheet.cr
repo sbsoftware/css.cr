@@ -430,6 +430,7 @@ module CSS
     alias BackgroundTypes = Color | CSS::UrlFunctionCall | CSS::Enums::VisualBox | CSS::Enums::BackgroundAttachment | CSS::Enums::BackgroundRepeat | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter | CSS::Enums::Auto | CSS::LengthPercentage
     alias Color = CSS::Enums::CurrentColor | CSS::Enums::NamedColor | String | CSS::RgbFunctionCall
     alias BorderWidth = CSS::Length | CSS::Enums::BorderWidth
+    alias OutlineWidth = BorderWidth
     alias BorderImageSource = CSS::UrlFunctionCall | CSS::Enums::None
     alias BorderImageWidth = CSS::LengthPercentage | Int32 | Float32 | CSS::Enums::Auto
     alias BorderImageOutset = CSS::Length | Int32 | Float32
@@ -1078,11 +1079,26 @@ module CSS
     prop opacity, Number | CSS::PercentValue, enforce_unit: false
     prop order, Int, enforce_unit: false
     prop orphans, Int
-    prop outline, String
-    prop outline_color, String
-    prop outline_offset, String
-    prop outline_style, String
-    prop outline_width, String
+    prop outline, Color, transform_string: CSS::ColorString
+    prop outline, OutlineWidth
+    prop outline, CSS::Enums::OutlineStyle
+    prop2 outline, Color, OutlineWidth, transform_string1: CSS::ColorString
+    prop2 outline, Color, CSS::Enums::OutlineStyle, transform_string1: CSS::ColorString
+    prop2 outline, OutlineWidth, Color, transform_string2: CSS::ColorString
+    prop2 outline, OutlineWidth, CSS::Enums::OutlineStyle
+    prop2 outline, CSS::Enums::OutlineStyle, Color, transform_string2: CSS::ColorString
+    prop2 outline, CSS::Enums::OutlineStyle, OutlineWidth
+    prop3 outline, Color, OutlineWidth, CSS::Enums::OutlineStyle, transform_string1: CSS::ColorString
+    prop3 outline, Color, CSS::Enums::OutlineStyle, OutlineWidth, transform_string1: CSS::ColorString
+    prop3 outline, OutlineWidth, Color, CSS::Enums::OutlineStyle, transform_string2: CSS::ColorString
+    prop3 outline, OutlineWidth, CSS::Enums::OutlineStyle, Color, transform_string3: CSS::ColorString
+    prop3 outline, CSS::Enums::OutlineStyle, Color, OutlineWidth, transform_string2: CSS::ColorString
+    prop3 outline, CSS::Enums::OutlineStyle, OutlineWidth, Color, transform_string3: CSS::ColorString
+
+    prop outline_color, Color, transform_string: CSS::ColorString
+    prop outline_offset, CSS::Length
+    prop outline_style, CSS::Enums::OutlineStyle
+    prop outline_width, OutlineWidth
 
     prop overflow, CSS::Enums::Overflow
     prop2 overflow, CSS::Enums::Overflow, CSS::Enums::Overflow
