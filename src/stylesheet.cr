@@ -879,7 +879,7 @@ module CSS
     prop counter_increment, Int | String
     prop counter_reset, Int | String
     prop counter_set, String
-    prop cursor, String
+    prop cursor, CSS::Enums::Cursor
     prop cx, String
     prop cy, String
     prop d, String
