@@ -22,6 +22,7 @@
 - Name examples to describe rendered CSS output (see `nested_rule_spec.cr`); include both structure and value assertions.
 - When adding syntax or properties, extend or add focused specs rather than modifying many files at once.
 - Aim to cover both rendering and nesting/combination behaviors for new selectors or declarations.
+- If you don't have permissions to run the tests, don't try any workarounds - just skip the tests
 
 ## Security & Configuration Tips
 - The repo uses only Crystal stdlib; avoid adding new networked dependencies without discussion.
