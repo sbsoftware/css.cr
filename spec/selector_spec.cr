@@ -2,6 +2,7 @@ require "./spec_helper"
 
 module CSS::SelectorSpec
   css_class Test
+  css_id Banner
 
   class Style < CSS::Stylesheet
     rule any do
@@ -18,6 +19,14 @@ module CSS::SelectorSpec
 
     rule div > Test do
       display :block
+    end
+
+    rule Banner do
+      display :grid
+    end
+
+    rule div > Banner do
+      display :inline
     end
 
     rule any > div > p do
@@ -79,6 +88,14 @@ module CSS::SelectorSpec
 
       div > .css--selector-spec--test {
         display: block;
+      }
+
+      #css--selector-spec--banner {
+        display: grid;
+      }
+
+      div > #css--selector-spec--banner {
+        display: inline;
       }
 
       * > div > p {
