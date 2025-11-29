@@ -12,9 +12,9 @@ module CSS
       io << "["
       io << attr_name
       if v = value
-        io << "=\""
+        io << "='"
         io << v
-        io << "\""
+        io << "'"
       end
       io << "]"
     end

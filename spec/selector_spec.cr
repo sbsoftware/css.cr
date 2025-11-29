@@ -132,7 +132,7 @@ module CSS::SelectorSpec
         display: none;
       }
 
-      div[data-test="blah"] {
+      div[data-test='blah'] {
         display: none;
       }
 
