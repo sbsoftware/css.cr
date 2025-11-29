@@ -21,14 +21,14 @@ module CSS
       end
     end
 
-    macro rule(selector_expression, &blk)
+    macro rule(*selector_expressions, &blk)
       def self.to_s(io : IO)
         {% if @type.class.methods.map(&.name.stringify).includes?("to_s") %}
           previous_def
           io << "\n\n"
         {% end %}
 
-        make_rule(io, make_selector({{selector_expression}}), 1) {{blk}}
+        make_rule(io, { {% for selector_expression in selector_expressions %} make_selector({{selector_expression}}), {% end %} }, 1) {{blk}}
       end
     end
   end

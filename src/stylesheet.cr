@@ -17,14 +17,14 @@ require "./font_face"
 
 module CSS
   class Stylesheet
-    macro rule(selector_expression, &blk)
+    macro rule(*selector_expressions, &blk)
       def self.to_s(io : IO)
         {% if @type.class.methods.map(&.name.stringify).includes?("to_s") %}
           previous_def
           io << "\n\n"
         {% end %}
 
-        make_rule(io, make_selector({{selector_expression}})) {{blk}}
+        make_rule(io, { {% for selector_expression in selector_expressions %} make_selector({{selector_expression}}), {% end %} }) {{blk}}
       end
     end
 
@@ -57,18 +57,32 @@ module CSS
       {% end %}
     end
 
-    macro make_rule(io, selector, level = 0, &blk)
+    macro make_rule(io, selectors, level = 0, &blk)
+      %selectors = {{selectors}}
+      %has_child_rules = false
+
       %child_rules = String.build do |%child_rule_io|
         {% if level > 0 %}
           {{io}} << "  " * {{level}}
         {% end %}
-        {{io}} << {{selector}}
+        %selectors.each_with_index do |%selector, %selector_index|
+          {{io}} << ", " if %selector_index > 0
+          {{io}} << %selector
+        end
         {{io}} << " {\n"
         {% if blk.body.is_a?(Expressions) %}
-          {% prop_exprs = blk.body.expressions.reject { |exp| exp.is_a?(Call) && exp.name.stringify == "rule" && exp.args.size == 1 && exp.block } %}
+          {% prop_exprs = blk.body.expressions.reject { |exp| exp.is_a?(Call) && exp.name.stringify == "rule" && exp.block } %}
           {% for exp, i in blk.body.expressions %}
-            {% if exp.is_a?(Call) && exp.name.stringify == "rule" && exp.args.size == 1 && exp.block %}
-              make_rule(%child_rule_io, CSS::DescendantSelector.new({{selector}}, make_selector({{exp.args.first}})), {{level}}) {{exp.block}}
+            {% if exp.is_a?(Call) && exp.name.stringify == "rule" && exp.block %}
+              %descendant_selectors = Array(CSS::Selector).new
+              %selectors.each do |%selector|
+                {% for arg in exp.args %}
+                  %descendant_selectors << CSS::DescendantSelector.new(%selector, make_selector({{arg}}))
+                {% end %}
+              end
+              %child_rule_io << "\n\n" if %has_child_rules
+              make_rule(%child_rule_io, %descendant_selectors, {{level}}) {{exp.block}}
+              %has_child_rules = true
             {% else %}
               {{io}} << "  " * {{level + 1}}
               {{io}} << {{exp}}
@@ -78,8 +92,16 @@ module CSS
             {% end %}
           {% end %}
         {% else %}
-          {% if blk.body.is_a?(Call) && blk.body.name.stringify == "rule" && blk.body.args.size == 1 && blk.body.block %}
-            make_rule(%child_rule_io, CSS::DescendantSelector.new({{selector}}, make_selector({{blk.body.args.first}}))) {{blk.body.block}}
+          {% if blk.body.is_a?(Call) && blk.body.name.stringify == "rule" && blk.body.block %}
+            %descendant_selectors = Array(CSS::Selector).new
+            %selectors.each do |%selector|
+              {% for arg in blk.body.args %}
+                %descendant_selectors << CSS::DescendantSelector.new(%selector, make_selector({{arg}}))
+              {% end %}
+            end
+            %child_rule_io << "\n\n" if %has_child_rules
+            make_rule(%child_rule_io, %descendant_selectors, {{level}}) {{blk.body.block}}
+            %has_child_rules = true
           {% else %}
             {{io}} << "  " * {{level + 1}}
             {{io}} << {{blk.body}}

@@ -71,6 +71,20 @@ module CSS::SelectorSpec
     end
   end
 
+  class MultiSelectorStyle < CSS::Stylesheet
+    rule div, p do
+      display :flex
+
+      rule span do
+        display :block
+      end
+
+      rule strong, em do
+        font_weight :bold
+      end
+    end
+  end
+
   describe "Style.to_s" do
     it "returns the correct CSS" do
       expected = <<-CSS
@@ -141,6 +155,26 @@ module CSS::SelectorSpec
       CSS
 
       Style.to_s.should eq(expected)
+    end
+  end
+
+  describe "MultiSelectorStyle.to_s" do
+    it "renders comma-separated selectors and nested rules" do
+      expected = <<-CSS
+      div, p {
+        display: flex;
+      }
+
+      div span, p span {
+        display: block;
+      }
+
+      div strong, div em, p strong, p em {
+        font-weight: bold;
+      }
+      CSS
+
+      MultiSelectorStyle.to_s.should eq(expected)
     end
   end
 end
