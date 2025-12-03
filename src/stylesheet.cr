@@ -9,6 +9,8 @@ require "./css/css_enum"
 require "./css/enums/**"
 require "./css/color_string"
 require "./css/rgb_function_call"
+require "./css/linear_gradient_direction"
+require "./css/linear_gradient_function_call"
 require "./css/url_function_call"
 require "./css/transform_functions"
 require "./css/transform_function_call"
@@ -452,17 +454,18 @@ module CSS
       "#{name.gsub(/_/, "-")}: #{value};"
     end
 
-    alias BackgroundTypes = Color | CSS::UrlFunctionCall | CSS::Enums::VisualBox | CSS::Enums::BackgroundAttachment | CSS::Enums::BackgroundRepeat | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter | CSS::Enums::Auto | CSS::LengthPercentage
+    alias ImageFunction = CSS::UrlFunctionCall | CSS::LinearGradientFunctionCall
+    alias BackgroundTypes = Color | ImageFunction | CSS::Enums::VisualBox | CSS::Enums::BackgroundAttachment | CSS::Enums::BackgroundRepeat | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter | CSS::Enums::Auto | CSS::LengthPercentage
     alias Color = CSS::Enums::CurrentColor | CSS::Enums::NamedColor | String | CSS::RgbFunctionCall
     alias BorderWidth = CSS::Length | CSS::Enums::BorderWidth
     alias OutlineWidth = BorderWidth
-    alias BorderImageSource = CSS::UrlFunctionCall | CSS::Enums::None
+    alias BorderImageSource = ImageFunction | CSS::Enums::None
     alias BorderImageWidth = CSS::LengthPercentage | Int32 | Float32 | CSS::Enums::Auto
     alias BorderImageOutset = CSS::Length | Int32 | Float32
     alias BorderImage = BorderImageSource | CSS::NumberPercentage | CSS::Enums::BorderImageRepeat
     alias FontFamily = String | CSS::Enums::GenericFontFamily | CSS::FontFace.class
     alias TextDecoration = CSS::Enums::TextDecorationLine | CSS::Enums::SpellingError | CSS::Enums::GrammarError | CSS::Enums::TextDecorationStyle | CSS::Enums::FromFont | CSS::Enums::Auto | CSS::LengthPercentage | Color
-    alias ListStyle = CSS::Enums::ListStyleType | String | CSS::Enums::ListStylePosition | CSS::UrlFunctionCall
+    alias ListStyle = CSS::Enums::ListStyleType | String | CSS::Enums::ListStylePosition | ImageFunction
     alias AspectRatio = CSS::Ratio | CSS::RatioNumber | CSS::Enums::Auto
     alias TransformValue = CSS::TransformFunctionCall | CSS::Enums::None
 
@@ -506,7 +509,7 @@ module CSS
     prop background_blend_mode, CSS::Enums::BlendMode
     prop background_clip, CSS::Enums::VisualBox | CSS::Enums::BackgroundClip
     prop background_color, Color, transform_string: CSS::ColorString
-    prop background_image, CSS::UrlFunctionCall
+    prop background_image, ImageFunction
     prop background_origin, CSS::Enums::VisualBox
 
     prop background_position, CSS::LengthPercentage | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter
@@ -1037,7 +1040,7 @@ module CSS
     prop2 list_style, ListStyle, ListStyle
     prop3 list_style, ListStyle, ListStyle, ListStyle
 
-    prop list_style_image, CSS::UrlFunctionCall | CSS::Enums::None
+    prop list_style_image, ImageFunction | CSS::Enums::None
     prop list_style_position, CSS::Enums::ListStylePosition
     prop list_style_type, CSS::Enums::ListStyleType | String
 
@@ -1321,6 +1324,17 @@ module CSS
 
     def self.rgb(r, g, b, *, alpha = nil, from = nil)
       RgbFunctionCall.new(r, g, b, alpha: alpha, from: from)
+    end
+
+    alias LinearGradientDirection = CSS::LinearGradientSide | CSS::Angle
+    alias LinearGradientStop = Color | CSS::LengthPercentage | Tuple(Color, CSS::LengthPercentage?) | Tuple(Color, CSS::LengthPercentage, CSS::LengthPercentage?)
+
+    def self.linear_gradient(direction : LinearGradientDirection, *stops : LinearGradientStop)
+      LinearGradientFunctionCall.new(direction, *stops)
+    end
+
+    def self.linear_gradient(*stops : LinearGradientStop)
+      LinearGradientFunctionCall.new(*stops)
     end
 
     def self.url(value)

@@ -26,6 +26,7 @@ module CSS::BackgroundSpec
       background_color "#EEEEEE"
 
       background_image url("assets/my_pic.jpg")
+      background_image linear_gradient(:to_right, {"red", 0.percent}, {"blue", 100.percent})
 
       background_origin :border_box
       background_origin :padding_box
@@ -55,6 +56,7 @@ module CSS::BackgroundSpec
       background_size :cover
       background_size :contain
       background_size 100.percent
+      background linear_gradient(45.deg, {"#fff", 0.percent}, {"#000", 75.percent})
 
       opacity 1
       opacity 0.75
@@ -85,6 +87,7 @@ module CSS::BackgroundSpec
         background-color: blue;
         background-color: #EEEEEE;
         background-image: url("assets/my_pic.jpg");
+        background-image: linear-gradient(to right, red 0%, blue 100%);
         background-origin: border-box;
         background-origin: padding-box;
         background-origin: content-box;
@@ -108,6 +111,7 @@ module CSS::BackgroundSpec
         background-size: cover;
         background-size: contain;
         background-size: 100%;
+        background: linear-gradient(45deg, #fff 0%, #000 75%);
         opacity: 1;
         opacity: 0.75;
         opacity: 90%;
