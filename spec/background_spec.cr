@@ -27,6 +27,25 @@ module CSS::BackgroundSpec
 
       background_image url("assets/my_pic.jpg")
       background_image linear_gradient(:to_right, {"red", 0.percent}, {"blue", 100.percent})
+      background_image radial_gradient(
+        :circle,
+        :closest_side,
+        at(:center),
+        {"yellow", 10.percent},
+        {"green", 90.percent}
+      )
+      background_image radial_gradient(
+        50.px,
+        {"orange", 0.percent},
+        {"purple", 100.percent}
+      )
+      background_image radial_gradient(
+        :ellipse,
+        40.percent,
+        60.percent,
+        {"#123456", 0.percent},
+        {"#abcdef", 100.percent}
+      )
 
       background_origin :border_box
       background_origin :padding_box
@@ -57,6 +76,12 @@ module CSS::BackgroundSpec
       background_size :contain
       background_size 100.percent
       background linear_gradient(45.deg, {"#fff", 0.percent}, {"#000", 75.percent})
+      background radial_gradient(
+        :ellipse,
+        at(:center),
+        {"#eee", 5.percent},
+        {"#111", 95.percent}
+      )
 
       opacity 1
       opacity 0.75
@@ -88,6 +113,9 @@ module CSS::BackgroundSpec
         background-color: #EEEEEE;
         background-image: url("assets/my_pic.jpg");
         background-image: linear-gradient(to right, red 0%, blue 100%);
+        background-image: radial-gradient(circle closest-side at center, yellow 10%, green 90%);
+        background-image: radial-gradient(50px, orange 0%, purple 100%);
+        background-image: radial-gradient(ellipse 40% 60%, #123456 0%, #abcdef 100%);
         background-origin: border-box;
         background-origin: padding-box;
         background-origin: content-box;
@@ -112,6 +140,7 @@ module CSS::BackgroundSpec
         background-size: contain;
         background-size: 100%;
         background: linear-gradient(45deg, #fff 0%, #000 75%);
+        background: radial-gradient(ellipse at center, #eee 5%, #111 95%);
         opacity: 1;
         opacity: 0.75;
         opacity: 90%;

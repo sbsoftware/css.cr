@@ -26,6 +26,7 @@ class BorderStyle < CSS::Stylesheet
 
     border_image_source url("/shared/image.jpg")
     border_image_source linear_gradient(:to_bottom, {"#fff", 20.percent}, {"#000", 80.percent})
+    border_image_source radial_gradient(:circle, at(:center), {"#f00", 0.percent}, {"#00f", 100.percent})
 
     border_image_width :auto
     border_image_width 1.rem
@@ -266,6 +267,7 @@ describe "Style.to_s" do
       border-image-slice: 10% 30 45 20% fill;
       border-image-source: url("/shared/image.jpg");
       border-image-source: linear-gradient(to bottom, #fff 20%, #000 80%);
+      border-image-source: radial-gradient(circle at center, #f00 0%, #00f 100%);
       border-image-width: auto;
       border-image-width: 1rem;
       border-image-width: 25%;

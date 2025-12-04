@@ -11,6 +11,8 @@ require "./css/color_string"
 require "./css/rgb_function_call"
 require "./css/linear_gradient_direction"
 require "./css/linear_gradient_function_call"
+require "./css/radial_gradient_at"
+require "./css/radial_gradient_function_call"
 require "./css/url_function_call"
 require "./css/transform_functions"
 require "./css/transform_function_call"
@@ -454,7 +456,7 @@ module CSS
       "#{name.gsub(/_/, "-")}: #{value};"
     end
 
-    alias ImageFunction = CSS::UrlFunctionCall | CSS::LinearGradientFunctionCall
+    alias ImageFunction = CSS::UrlFunctionCall | CSS::LinearGradientFunctionCall | CSS::RadialGradientFunctionCall
     alias BackgroundTypes = Color | ImageFunction | CSS::Enums::VisualBox | CSS::Enums::BackgroundAttachment | CSS::Enums::BackgroundRepeat | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter | CSS::Enums::Auto | CSS::LengthPercentage
     alias Color = CSS::Enums::CurrentColor | CSS::Enums::NamedColor | String | CSS::RgbFunctionCall
     alias BorderWidth = CSS::Length | CSS::Enums::BorderWidth
@@ -1328,6 +1330,7 @@ module CSS
 
     alias LinearGradientDirection = CSS::LinearGradientSide | CSS::Angle
     alias LinearGradientStop = Color | CSS::LengthPercentage | Tuple(Color, CSS::LengthPercentage?) | Tuple(Color, CSS::LengthPercentage, CSS::LengthPercentage?)
+    alias RadialGradientStop = LinearGradientStop
 
     def self.linear_gradient(direction : LinearGradientDirection, *stops : LinearGradientStop)
       LinearGradientFunctionCall.new(direction, *stops)
@@ -1335,6 +1338,94 @@ module CSS
 
     def self.linear_gradient(*stops : LinearGradientStop)
       LinearGradientFunctionCall.new(*stops)
+    end
+
+    # Helper to build an `at` clause for radial gradients.
+    # Position helper for radial gradients. Overloads mirror <position> grammar.
+    def self.at(position : CSS::Enums::RadialGradientPosition | CSS::LengthPercentage)
+      CSS::RadialGradientAt.new(position)
+    end
+
+    def self.at(x : CSS::Enums::RadialGradientPosition | CSS::LengthPercentage,
+                y : CSS::Enums::RadialGradientPosition | CSS::LengthPercentage)
+      CSS::RadialGradientAt.new(x, y)
+    end
+
+    # Edge offsets (e.g., left 10% top 20% or top 20% left 10%)
+    def self.at(x_keyword : CSS::Enums::RadialGradientPosition, x_offset : CSS::LengthPercentage,
+                y_keyword : CSS::Enums::RadialGradientPosition, y_offset : CSS::LengthPercentage)
+      CSS::RadialGradientAt.new(x_keyword, x_offset, y_keyword, y_offset)
+    end
+
+    # Radial gradients: overloads cover shape/size/position combinations; stops
+    # are passed as RadialGradientStop.
+
+    # Stops only
+    def self.radial_gradient(*stops : RadialGradientStop)
+      RadialGradientFunctionCall.new(*stops)
+    end
+
+    # Extent only
+    def self.radial_gradient(extent : CSS::Enums::RadialGradientExtent, *stops : RadialGradientStop)
+      RadialGradientFunctionCall.new({extent}, *stops)
+    end
+
+    def self.radial_gradient(extent : CSS::Enums::RadialGradientExtent, at : CSS::RadialGradientAt, *stops : RadialGradientStop)
+      RadialGradientFunctionCall.new({extent, at}, *stops)
+    end
+
+    # Shape only
+    def self.radial_gradient(shape : CSS::Enums::RadialGradientShape, *stops : RadialGradientStop)
+      RadialGradientFunctionCall.new({shape}, *stops)
+    end
+
+    def self.radial_gradient(shape : CSS::Enums::RadialGradientShape, at : CSS::RadialGradientAt, *stops : RadialGradientStop)
+      RadialGradientFunctionCall.new({shape, at}, *stops)
+    end
+
+    # Shape + extent
+    def self.radial_gradient(shape : CSS::Enums::RadialGradientShape, extent : CSS::Enums::RadialGradientExtent, *stops : RadialGradientStop)
+      RadialGradientFunctionCall.new({shape, extent}, *stops)
+    end
+
+    def self.radial_gradient(shape : CSS::Enums::RadialGradientShape, extent : CSS::Enums::RadialGradientExtent, at : CSS::RadialGradientAt, *stops : RadialGradientStop)
+      RadialGradientFunctionCall.new({shape, extent, at}, *stops)
+    end
+
+    # Shape + radius (single)
+    def self.radial_gradient(shape : CSS::Enums::RadialGradientShape, radius : CSS::LengthPercentage, *stops : RadialGradientStop)
+      RadialGradientFunctionCall.new({shape, radius}, *stops)
+    end
+
+    def self.radial_gradient(shape : CSS::Enums::RadialGradientShape, radius : CSS::LengthPercentage, at : CSS::RadialGradientAt, *stops : RadialGradientStop)
+      RadialGradientFunctionCall.new({shape, radius, at}, *stops)
+    end
+
+    # Shape + radius pair
+    def self.radial_gradient(shape : CSS::Enums::RadialGradientShape, radius_x : CSS::LengthPercentage, radius_y : CSS::LengthPercentage, *stops : RadialGradientStop)
+      RadialGradientFunctionCall.new({shape, radius_x, radius_y}, *stops)
+    end
+
+    def self.radial_gradient(shape : CSS::Enums::RadialGradientShape, radius_x : CSS::LengthPercentage, radius_y : CSS::LengthPercentage, at : CSS::RadialGradientAt, *stops : RadialGradientStop)
+      RadialGradientFunctionCall.new({shape, radius_x, radius_y, at}, *stops)
+    end
+
+    # Radius only (uses default shape)
+    def self.radial_gradient(radius : CSS::LengthPercentage, *stops : RadialGradientStop)
+      RadialGradientFunctionCall.new({radius}, *stops)
+    end
+
+    def self.radial_gradient(radius : CSS::LengthPercentage, at : CSS::RadialGradientAt, *stops : RadialGradientStop)
+      RadialGradientFunctionCall.new({radius, at}, *stops)
+    end
+
+    # Radius pair only
+    def self.radial_gradient(radius_x : CSS::LengthPercentage, radius_y : CSS::LengthPercentage, *stops : RadialGradientStop)
+      RadialGradientFunctionCall.new({radius_x, radius_y}, *stops)
+    end
+
+    def self.radial_gradient(radius_x : CSS::LengthPercentage, radius_y : CSS::LengthPercentage, at : CSS::RadialGradientAt, *stops : RadialGradientStop)
+      RadialGradientFunctionCall.new({radius_x, radius_y, at}, *stops)
     end
 
     def self.url(value)

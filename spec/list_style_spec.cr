@@ -12,6 +12,7 @@ class ListStyleStyle < CSS::Stylesheet
     list_style_image :none
     list_style_image url("star-solid.gif")
     list_style_image linear_gradient(:to_left, {"#eee", 10.percent}, {"#111", 90.percent})
+    list_style_image radial_gradient(:ellipse, at(:center, :bottom), {"#ff0", 0.percent}, {"#f0f", 100.percent})
     list_style_position :inside
     list_style_position :outside
     list_style_type :none
@@ -34,6 +35,7 @@ describe "ListStyleStyle.to_s" do
       list-style-image: none;
       list-style-image: url("star-solid.gif");
       list-style-image: linear-gradient(to left, #eee 10%, #111 90%);
+      list-style-image: radial-gradient(ellipse at center bottom, #ff0 0%, #f0f 100%);
       list-style-position: inside;
       list-style-position: outside;
       list-style-type: none;
