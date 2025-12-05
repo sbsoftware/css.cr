@@ -8,6 +8,7 @@
 ## Build, Test, and Development Commands
 - Install deps: `shards install`.
 - Run the suite: `crystal spec` (use `crystal spec spec/selector_spec.cr` to focus).
+  - If you run into permission issues, create a temporary local cache directory - but make sure to delete it again afterwards.
 - Format code: `crystal tool format` before opening a PR.
 - Optional: `crystal docs` to build API docs locally.
 
@@ -15,6 +16,7 @@
 - Crystal defaults: 2-space indentation, trailing commas avoided, and `require` paths are relative to `src/`.
 - Types, modules, and DSL classes use `CamelCase`; methods, variables, and files use `snake_case` (mirrors existing files like `media_query_evaluator.cr`).
 - Prefer expressive DSL method names that match CSS terms; keep rule blocks small and composable.
+- Be aware that the Crystal compiler automatically converts symbol literals to matching enum values in method arguments.
 - Keep public API additions documented in comments only when behavior is non-obvious; otherwise rely on self-descriptive method names.
 
 ## Testing Guidelines
@@ -22,7 +24,6 @@
 - Name examples to describe rendered CSS output (see `nested_rule_spec.cr`); include both structure and value assertions.
 - When adding syntax or properties, extend or add focused specs rather than modifying many files at once.
 - Aim to cover both rendering and nesting/combination behaviors for new selectors or declarations.
-- If you don't have permissions to run the tests, don't try any workarounds - just skip the tests
 
 ## Security & Configuration Tips
 - The repo uses only Crystal stdlib; avoid adding new networked dependencies without discussion.
