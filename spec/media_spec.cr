@@ -22,6 +22,30 @@ class MediaStyle < CSS::Stylesheet
       display :none
     end
   end
+
+  media(hover :hover) do
+    rule button do
+      display :block
+    end
+  end
+
+  media(hover :none) do
+    rule a do
+      text_decoration :underline
+    end
+  end
+
+  media(any_hover :hover) do
+    rule nav do
+      display :flex
+    end
+  end
+
+  media(any_hover :none) do
+    rule nav do
+      display :block
+    end
+  end
 end
 
 describe "MediaStyle.to_s" do
@@ -46,6 +70,30 @@ describe "MediaStyle.to_s" do
     @media (min-width: 800px) and (max-width: 1000px) and (min-height: 800px) and (max-height: 1600px) {
       div {
         display: none;
+      }
+    }
+
+    @media (hover: hover) {
+      button {
+        display: block;
+      }
+    }
+
+    @media (hover: none) {
+      a {
+        text-decoration: underline;
+      }
+    }
+
+    @media (any-hover: hover) {
+      nav {
+        display: flex;
+      }
+    }
+
+    @media (any-hover: none) {
+      nav {
+        display: block;
       }
     }
     CSS

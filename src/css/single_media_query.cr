@@ -13,7 +13,7 @@ module CSS
       io << "("
       io << name
       io << ": "
-      io << value
+      io << value.to_css_value
       io << ")"
     end
   end
