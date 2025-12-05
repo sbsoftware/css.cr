@@ -29,5 +29,13 @@ module CSS
     def self.any_hover(value : CSS::Enums::HoverCapability)
       CSS::SingleMediaQuery.new("any-hover", value)
     end
+
+    def self.pointer(value : CSS::Enums::PointerCapability)
+      CSS::SingleMediaQuery.new("pointer", value)
+    end
+
+    def self.any_pointer(value : CSS::Enums::PointerCapability)
+      CSS::SingleMediaQuery.new("any-pointer", value)
+    end
   end
 end

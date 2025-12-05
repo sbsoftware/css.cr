@@ -46,6 +46,18 @@ class MediaStyle < CSS::Stylesheet
       display :block
     end
   end
+
+  media(pointer :fine) do
+    rule input do
+      cursor :pointer
+    end
+  end
+
+  media(any_pointer :coarse) do
+    rule textarea do
+      font_size 20.px
+    end
+  end
 end
 
 describe "MediaStyle.to_s" do
@@ -94,6 +106,18 @@ describe "MediaStyle.to_s" do
     @media (any-hover: none) {
       nav {
         display: block;
+      }
+    }
+
+    @media (pointer: fine) {
+      input {
+        cursor: pointer;
+      }
+    }
+
+    @media (any-pointer: coarse) {
+      textarea {
+        font-size: 20px;
       }
     }
     CSS
