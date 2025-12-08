@@ -21,6 +21,10 @@ require "./font_face"
 
 module CSS
   class Stylesheet
+    def self.calc(calculation : CSS::Calculation)
+      CSS::CalcFunctionCall.new(calculation)
+    end
+
     macro rule(*selector_expressions, &blk)
       def self.to_s(io : IO)
         {% if @type.class.methods.map(&.name.stringify).includes?("to_s") %}

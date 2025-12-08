@@ -30,6 +30,22 @@
         self.class.new(value - other)
       end
 
+      def +(other : CSS::CalcOperand)
+        CSS::Calculation.new(self, "+", other)
+      end
+
+      def -(other : CSS::CalcOperand)
+        CSS::Calculation.new(self, "-", other)
+      end
+
+      def *(other : CSS::CalcOperand)
+        CSS::Calculation.new(self, "*", other)
+      end
+
+      def /(other : CSS::CalcOperand)
+        CSS::Calculation.new(self, "/", other)
+      end
+
       def *(other : Number)
         self.class.new(value * other)
       end
@@ -101,6 +117,22 @@ module CSS
     def -
       PercentValue.new(-value)
     end
+
+    def +(other : CSS::CalcOperand)
+      CSS::Calculation.new(self, "+", other)
+    end
+
+    def -(other : CSS::CalcOperand)
+      CSS::Calculation.new(self, "-", other)
+    end
+
+    def *(other : CSS::CalcOperand)
+      CSS::Calculation.new(self, "*", other)
+    end
+
+    def /(other : CSS::CalcOperand)
+      CSS::Calculation.new(self, "/", other)
+    end
   end
 end
 
@@ -113,12 +145,33 @@ end
     def *(value : CSS::PercentValue)
       value * self
     end
+
+    def +(value : CSS::CalcNonNumeric)
+      CSS::Calculation.new(self, "+", value)
+    end
+
+    def -(value : CSS::CalcNonNumeric)
+      CSS::Calculation.new(self, "-", value)
+    end
+
+    def *(value : CSS::CalcNonNumeric)
+      CSS::Calculation.new(self, "*", value)
+    end
+
+    def /(value : CSS::CalcNonNumeric)
+      CSS::Calculation.new(self, "/", value)
+    end
   end
 {% end %}
 
 module CSS
-  alias Length = CmValue | MmValue | InValue | PxValue | PtValue | PcValue | EmValue | RemValue | ExValue | ChValue | LhValue | RlhValue | VhValue | VwValue | VmaxValue | VminValue | SvwValue | LvwValue | LvhValue | DvwValue | DvhValue | FrValue | Int32
-  alias LengthPercentage = Length | PercentValue
-  alias Angle = DegValue | RadValue | GradValue | TurnValue
-  alias NumberPercentage = Int32 | Float32 | PercentValue
+  alias CalcNumeric = Int8 | Int16 | Int32 | Int64 | Int128 | Float32 | Float64
+  alias CalcUnit = CmValue | MmValue | InValue | PxValue | PtValue | PcValue | EmValue | RemValue | ExValue | ChValue | LhValue | RlhValue | VhValue | VwValue | VmaxValue | VminValue | SvwValue | LvwValue | LvhValue | DvwValue | DvhValue | FrValue
+  alias CalcOperand = CalcNumeric | PercentValue | CalcUnit | Calculation | CalcFunctionCall
+  alias CalcNonNumeric = Calculation | PercentValue | CalcUnit | CalcFunctionCall
+
+  alias Length = CmValue | MmValue | InValue | PxValue | PtValue | PcValue | EmValue | RemValue | ExValue | ChValue | LhValue | RlhValue | VhValue | VwValue | VmaxValue | VminValue | SvwValue | LvwValue | LvhValue | DvwValue | DvhValue | FrValue | Int32 | CalcFunctionCall
+  alias LengthPercentage = Length | PercentValue | CalcFunctionCall
+  alias Angle = DegValue | RadValue | GradValue | TurnValue | CalcFunctionCall
+  alias NumberPercentage = Int32 | Float32 | PercentValue | CalcFunctionCall
 end
