@@ -13,6 +13,34 @@
       def to_css_value
         to_s
       end
+
+      def +(other : self)
+        self.class.new(value + other.value)
+      end
+
+      def +(other : Number)
+        self.class.new(value + other)
+      end
+
+      def -(other : self)
+        self.class.new(value - other.value)
+      end
+
+      def -(other : Number)
+        self.class.new(value - other)
+      end
+
+      def *(other : Number)
+        self.class.new(value * other)
+      end
+
+      def /(other : Number)
+        self.class.new(value / other)
+      end
+
+      def -
+        self.class.new(-value)
+      end
     end
   end
 
@@ -20,6 +48,10 @@
     struct {{number_struct}}
       def {{unit_name.downcase.id}}
         CSS::{{unit_name.capitalize.id}}Value.new(self)
+      end
+
+      def *(value : CSS::{{unit_name.capitalize.id}}Value)
+        value * self
       end
     end
   {% end %}
@@ -41,6 +73,34 @@ module CSS
     def to_css_value
       to_s
     end
+
+    def +(other : PercentValue)
+      PercentValue.new(value + other.value)
+    end
+
+    def +(other : Number)
+      PercentValue.new(value + other)
+    end
+
+    def -(other : PercentValue)
+      PercentValue.new(value - other.value)
+    end
+
+    def -(other : Number)
+      PercentValue.new(value - other)
+    end
+
+    def *(other : Number)
+      PercentValue.new(value * other)
+    end
+
+    def /(other : Number)
+      PercentValue.new(value / other)
+    end
+
+    def -
+      PercentValue.new(-value)
+    end
   end
 end
 
@@ -48,6 +108,10 @@ end
   struct {{number_struct}}
     def percent
       CSS::PercentValue.new(self)
+    end
+
+    def *(value : CSS::PercentValue)
+      value * self
     end
   end
 {% end %}
