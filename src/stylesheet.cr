@@ -1187,7 +1187,7 @@ module CSS
     prop place_content, String
     prop place_items, String
     prop place_self, String
-    prop pointer_events, String
+    prop pointer_events, CSS::Enums::PointerEvents
     prop position, CSS::Enums::Position
     prop print_color_adjust, String
     prop quotes, String
