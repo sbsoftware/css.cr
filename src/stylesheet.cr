@@ -1304,7 +1304,7 @@ module CSS
     prop transition_timing_function, String
     prop translate, String
     prop unicode_bidi, String
-    prop user_select, String
+    prop user_select, CSS::Enums::UserSelect
     prop vector_effect, String
     prop vertical_align, CSS::LengthPercentage | CSS::Enums::VerticalAlign
     prop view_transition_class, String
