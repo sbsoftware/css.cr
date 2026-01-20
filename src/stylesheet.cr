@@ -1033,7 +1033,10 @@ module CSS
     prop isolation, String
     prop justify_content, CSS::Enums::JustifyContent | CSS::Enums::JustifyContentPositional
     prop2 justify_content, CSS::Enums::Safety, CSS::Enums::JustifyContentPositional
-    prop justify_items, String
+    prop justify_items, CSS::Enums::JustifyItems | CSS::Enums::JustifyItemsPositional | CSS::Enums::AlignmentBaseline | CSS::Enums::JustifyItemsLegacy
+    prop2 justify_items, CSS::Enums::Safety, CSS::Enums::JustifyItemsPositional
+    prop2 justify_items, CSS::Enums::FirstLast, CSS::Enums::AlignmentBaseline
+    prop2 justify_items, CSS::Enums::JustifyItemsLegacy, CSS::Enums::JustifyItemsLegacyPositional
     prop justify_self, String
     prop left, CSS::LengthPercentage | CSS::Enums::Auto
     prop letter_spacing, String
