@@ -13,10 +13,12 @@ require "./css/linear_gradient_direction"
 require "./css/linear_gradient_function_call"
 require "./css/radial_gradient_at"
 require "./css/radial_gradient_function_call"
+require "./css/min_function_call"
 require "./css/url_function_call"
 require "./css/transform_functions"
 require "./css/transform_function_call"
 require "./css/ratio"
+require "./css/grid_template_columns"
 require "./font_face"
 
 module CSS
@@ -1002,8 +1004,38 @@ module CSS
     prop grid_row_start, Int
     prop grid_template, String
     prop grid_template_areas, String
-    prop grid_template_columns, String
     prop grid_template_rows, String
+
+    macro grid_template_columns(*values)
+      {% if values.empty? %}
+        {{ raise "grid_template_columns requires at least one value" }}
+      {% end %}
+
+      {% for value in values %}
+        {% if value.is_a?(NumberLiteral) && value != 0 %}
+          {{ value.raise "Non-zero number values have to be specified with a unit, for example: #{value}.px" }}
+        {% end %}
+      {% end %}
+
+      _grid_template_columns({{values.splat}})
+    end
+
+    def self._grid_template_columns(value : CSS::Enums::None | CSS::Enums::Masonry | CSS::Enums::Global)
+      property("grid-template-columns", value.to_css_value)
+    end
+
+    def self._grid_template_columns(value : CSS::Enums::Subgrid, *names : CSS::GridLineNameListItem)
+      if names.empty?
+        property("grid-template-columns", value.to_css_value)
+      else
+        property("grid-template-columns", "#{value.to_css_value} #{names.map(&.to_css_value).join(" ")}")
+      end
+    end
+
+    def self._grid_template_columns(*values : CSS::GridTrackListValue)
+      property("grid-template-columns", values.map(&.to_css_value).join(" "))
+    end
+
     prop hanging_punctuation, String
     prop height, CSS::LengthPercentage | CSS::Enums::Size | CSS::Enums::Auto
     prop hyphenate_character, String
@@ -1329,6 +1361,93 @@ module CSS
 
     def self.ratio(numerator, denominator = nil)
       Ratio.new(numerator, denominator)
+    end
+
+    macro min(*values)
+      {% if values.size < 2 %}
+        {{ raise "min requires at least two values" }}
+      {% end %}
+
+      {% for value in values %}
+        {% if value.is_a?(NumberLiteral) && value != 0 %}
+          {{ value.raise "Non-zero number values have to be specified with a unit, for example: #{value}.px" }}
+        {% end %}
+      {% end %}
+
+      _min({{values.splat}})
+    end
+
+    def self._min(*values : CSS::GridLengthPercentage)
+      CSS::MinFunctionCall.new(*values)
+    end
+
+    def self.line_names(*names : CSS::GridLineName)
+      CSS::GridLineNames.new(*names)
+    end
+
+    macro fit_content(value)
+      {% if value.is_a?(NumberLiteral) && value != 0 %}
+        {{ value.raise "Non-zero number values have to be specified with a unit, for example: #{value}.px" }}
+      {% end %}
+
+      _fit_content({{value}})
+    end
+
+    def self._fit_content(value : CSS::GridLengthPercentage)
+      CSS::GridFitContentFunctionCall.new(value)
+    end
+
+    macro minmax(min, max)
+      {% if min.is_a?(NumberLiteral) && min != 0 %}
+        {{ min.raise "Non-zero number values have to be specified with a unit, for example: #{min}.px" }}
+      {% end %}
+      {% if max.is_a?(NumberLiteral) && max != 0 %}
+        {{ max.raise "Non-zero number values have to be specified with a unit, for example: #{max}.px" }}
+      {% end %}
+
+      _minmax({{min}}, {{max}})
+    end
+
+    def self._minmax(min : CSS::GridFixedBreadth, max : CSS::GridTrackBreadth)
+      CSS::GridMinmaxFixedFunctionCall.new(min, max)
+    end
+
+    def self._minmax(min : CSS::GridInflexibleBreadth, max : CSS::GridFixedBreadth)
+      CSS::GridMinmaxFixedFunctionCall.new(min, max)
+    end
+
+    def self._minmax(min : CSS::GridInflexibleBreadth, max : CSS::GridTrackBreadth)
+      CSS::GridMinmaxFunctionCall.new(min, max)
+    end
+
+    macro repeat(count, *tracks)
+      {% if tracks.empty? %}
+        {{ raise "repeat requires at least one track value" }}
+      {% end %}
+
+      {% for track in tracks %}
+        {% if track.is_a?(NumberLiteral) && track != 0 %}
+          {{ track.raise "Non-zero number values have to be specified with a unit, for example: #{track}.px" }}
+        {% end %}
+      {% end %}
+
+      _repeat({{count}}, {{tracks.splat}})
+    end
+
+    def self._repeat(count : Int32, *names : CSS::GridLineNames)
+      CSS::GridNameRepeatFunctionCall.new(count, *names)
+    end
+
+    def self._repeat(count : CSS::Enums::GridAutoRepeat, *names : CSS::GridLineNames)
+      CSS::GridNameRepeatFunctionCall.new(count, *names)
+    end
+
+    def self._repeat(count : CSS::Enums::GridAutoRepeat, *tracks : CSS::GridRepeatFixedItem)
+      CSS::GridAutoRepeatFunctionCall.new(count, *tracks)
+    end
+
+    def self._repeat(count : Int32, *tracks : CSS::GridRepeatTrackItem)
+      CSS::GridTrackRepeatFunctionCall.new(count, *tracks)
     end
 
     def self.rgb(r, g, b, *, alpha = nil, from = nil)
