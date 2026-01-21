@@ -1,7 +1,8 @@
 require "./function_call"
 
 module CSS
-  struct UrlFunctionCall < FunctionCall
+  struct UrlFunctionCall
+    include FunctionCall
     getter url : String
 
     def initialize(@url)

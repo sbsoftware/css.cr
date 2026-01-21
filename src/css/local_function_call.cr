@@ -1,7 +1,8 @@
 require "./function_call"
 
 module CSS
-  struct LocalFunctionCall < FunctionCall
+  struct LocalFunctionCall
+    include FunctionCall
     getter name : String
 
     def initialize(@name)

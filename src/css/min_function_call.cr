@@ -1,20 +1,18 @@
+require "./function_call"
+
 module CSS
   # Represents a `min()` function call.
   struct MinFunctionCall
+    include FunctionCall
+
     getter arguments : String
 
     def initialize(*values)
       @arguments = build_arguments(values)
     end
 
-    def to_s(io : IO)
-      io << "min("
-      io << arguments
-      io << ")"
-    end
-
-    def to_css_value
-      to_s
+    def function_name : String
+      "min"
     end
 
     private def build_arguments(values : Tuple) : String

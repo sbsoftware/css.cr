@@ -2,7 +2,8 @@ require "./function_call"
 require "./calculation"
 
 module CSS
-  struct CalcFunctionCall < FunctionCall
+  struct CalcFunctionCall
+    include FunctionCall
     getter calculation : Calculation
 
     def initialize(@calculation)

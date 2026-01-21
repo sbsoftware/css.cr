@@ -30,7 +30,8 @@ module CSS
   alias GridInflexibleBreadth = GridLengthPercentage | CSS::Enums::GridTrackKeyword
   alias GridFixedBreadth = GridLengthPercentage
 
-  struct GridMinmaxFunctionCall < FunctionCall
+  struct GridMinmaxFunctionCall
+    include FunctionCall
     getter min : GridInflexibleBreadth
     getter max : GridTrackBreadth
 
@@ -46,7 +47,8 @@ module CSS
     end
   end
 
-  struct GridMinmaxFixedFunctionCall < FunctionCall
+  struct GridMinmaxFixedFunctionCall
+    include FunctionCall
     getter min : GridFixedBreadth | GridInflexibleBreadth
     getter max : GridTrackBreadth | GridFixedBreadth
 
@@ -65,7 +67,8 @@ module CSS
     end
   end
 
-  struct GridFitContentFunctionCall < FunctionCall
+  struct GridFitContentFunctionCall
+    include FunctionCall
     getter size : GridLengthPercentage
 
     def initialize(@size : GridLengthPercentage)
@@ -86,7 +89,8 @@ module CSS
   alias GridRepeatTrackItem = GridLineNames | GridTrackSize
   alias GridRepeatFixedItem = GridLineNames | GridFixedSize
 
-  struct GridTrackRepeatFunctionCall < FunctionCall
+  struct GridTrackRepeatFunctionCall
+    include FunctionCall
     getter count : Int32
     getter tracks : Array(GridRepeatTrackItem)
 
@@ -113,7 +117,8 @@ module CSS
     end
   end
 
-  struct GridAutoRepeatFunctionCall < FunctionCall
+  struct GridAutoRepeatFunctionCall
+    include FunctionCall
     getter count : CSS::Enums::GridAutoRepeat
     getter tracks : Array(GridRepeatFixedItem)
 
@@ -140,7 +145,8 @@ module CSS
     end
   end
 
-  struct GridNameRepeatFunctionCall < FunctionCall
+  struct GridNameRepeatFunctionCall
+    include FunctionCall
     getter count : Int32 | CSS::Enums::GridAutoRepeat
     getter names : Array(GridLineNames)
 

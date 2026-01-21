@@ -1,5 +1,5 @@
 module CSS
-  abstract struct FunctionCall
+  module FunctionCall
     abstract def function_name : String
     abstract def arguments : String
 

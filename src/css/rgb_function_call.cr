@@ -1,7 +1,8 @@
 require "./function_call"
 
 module CSS
-  struct RgbFunctionCall < FunctionCall
+  struct RgbFunctionCall
+    include FunctionCall
     getter red : Int32
     getter green : Int32
     getter blue : Int32

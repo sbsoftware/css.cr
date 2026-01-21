@@ -7,7 +7,8 @@ module CSS
   # comma-separated segment. To group multiple tokens inside a single
   # segment (e.g. a color stop like `red 10%`), pass a `Tuple`; its items
   # are joined with spaces.
-  struct RadialGradientFunctionCall < FunctionCall
+  struct RadialGradientFunctionCall
+    include FunctionCall
     getter arguments : String
 
     def initialize(*values)

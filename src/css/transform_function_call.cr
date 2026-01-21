@@ -2,7 +2,8 @@ require "./function_call"
 
 module CSS
   # Represents a CSS transform function call such as rotateX() or translate().
-  struct TransformFunctionCall < FunctionCall
+  struct TransformFunctionCall
+    include FunctionCall
     getter function_name : String
     getter arguments : String
 
