@@ -1004,7 +1004,36 @@ module CSS
     prop grid_row_start, Int
     prop grid_template, String
     prop grid_template_areas, String
-    prop grid_template_rows, String
+
+    macro grid_template_rows(*values)
+      {% if values.empty? %}
+        {{ raise "grid_template_rows requires at least one value" }}
+      {% end %}
+
+      {% for value in values %}
+        {% if value.is_a?(NumberLiteral) && value != 0 %}
+          {{ value.raise "Non-zero number values have to be specified with a unit, for example: #{value}.px" }}
+        {% end %}
+      {% end %}
+
+      _grid_template_rows({{values.splat}})
+    end
+
+    def self._grid_template_rows(value : CSS::Enums::None | CSS::Enums::Masonry | CSS::Enums::Global)
+      property("grid-template-rows", value.to_css_value)
+    end
+
+    def self._grid_template_rows(value : CSS::Enums::Subgrid, *names : CSS::GridLineNameListItem)
+      if names.empty?
+        property("grid-template-rows", value.to_css_value)
+      else
+        property("grid-template-rows", "#{value.to_css_value} #{names.map(&.to_css_value).join(" ")}")
+      end
+    end
+
+    def self._grid_template_rows(*values : CSS::GridTrackListValue)
+      property("grid-template-rows", values.map(&.to_css_value).join(" "))
+    end
 
     macro grid_template_columns(*values)
       {% if values.empty? %}
