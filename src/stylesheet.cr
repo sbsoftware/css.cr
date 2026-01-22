@@ -1100,7 +1100,7 @@ module CSS
     prop2 justify_items, CSS::Enums::JustifyItemsLegacy, CSS::Enums::JustifyItemsLegacyPositional
     prop justify_self, String
     prop left, CSS::LengthPercentage | CSS::Enums::Auto
-    prop letter_spacing, String
+    prop letter_spacing, CSS::Length | CSS::Enums::LetterSpacing
     prop lighting_color, String
     prop line_break, String
     prop line_clamp, Int | String

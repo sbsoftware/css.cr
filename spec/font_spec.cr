@@ -72,6 +72,9 @@ class FontStyle < CSS::Stylesheet
     line_height 2
     line_height 1.5
     line_height 10.px
+    letter_spacing :normal
+    letter_spacing 0.12.em
+    letter_spacing -0.05.em
 
     text_align :start
     text_align ".", :center
@@ -170,6 +173,9 @@ describe "FontStyle.to_s" do
       line-height: 2;
       line-height: 1.5;
       line-height: 10px;
+      letter-spacing: normal;
+      letter-spacing: 0.12em;
+      letter-spacing: -0.05em;
       text-align: start;
       text-align: "." center;
       text-align-last: auto;
