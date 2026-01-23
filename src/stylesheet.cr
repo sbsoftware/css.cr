@@ -1168,7 +1168,7 @@ module CSS
     prop min_inline_size, CSS::LengthPercentage | CSS::Enums::Size | CSS::Enums::Auto
     prop min_width, CSS::LengthPercentage | CSS::Enums::Size | CSS::Enums::Auto
     prop mix_blend_mode, String
-    prop object_fit, String
+    prop object_fit, CSS::Enums::ObjectFit
     prop object_position, String
     prop offset, String
     prop offset_anchor, String
