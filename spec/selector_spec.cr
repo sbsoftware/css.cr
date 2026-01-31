@@ -41,6 +41,14 @@ module CSS::SelectorSpec
       display :none
     end
 
+    rule Test && input do
+      display :inline
+    end
+
+    rule "[data-test]" && input do
+      display :inline_block
+    end
+
     rule input && "[data-test]" do
       display :none
     end
@@ -51,6 +59,10 @@ module CSS::SelectorSpec
 
     rule div && CSS::AttrSelector.new("data-test", "blah") do
       display :none
+    end
+
+    rule CSS::AttrSelector.new("data-test") && Test do
+      display :grid
     end
 
     rule div <= :before do
@@ -124,6 +136,14 @@ module CSS::SelectorSpec
         display: none;
       }
 
+      input.css--selector-spec--test {
+        display: inline;
+      }
+
+      input[data-test] {
+        display: inline-block;
+      }
+
       input[data-test] {
         display: none;
       }
@@ -134,6 +154,10 @@ module CSS::SelectorSpec
 
       div[data-test='blah'] {
         display: none;
+      }
+
+      .css--selector-spec--test[data-test] {
+        display: grid;
       }
 
       div:before {

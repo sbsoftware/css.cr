@@ -4,7 +4,7 @@ require "./nth_of_type"
 
 module CSS
   class PseudoclassSelector < Selector
-    @element_selector : Selector
+    getter element_selector : Selector
     @pseudoclass : CSS::Pseudoclass | CSS::NthOfType
 
     def initialize(@element_selector, @pseudoclass)
