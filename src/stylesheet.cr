@@ -129,17 +129,17 @@ module CSS
     end
 
     macro prop(name, type, *, enforce_unit = true, transform_string = nil)
-      macro {{name.id}}(value)
+      macro {{name.id}}(value, *, important = false)
         {% if enforce_unit %}
           \{% if value.is_a?(NumberLiteral) && value != 0 %}
             \{{raise "Non-zero number values have to be specified with a unit, for example: #{value}.px"}}
           \{% end %}
         {% end %}
 
-        _{{name.id}}(\{{value}})
+        _{{name.id}}(\{{value}}, important: \{{important}})
       end
 
-      def self._{{name.id}}(value : {{type}} | CSS::Enums::Global)
+      def self._{{name.id}}(value : {{type}} | CSS::Enums::Global, *, important = false)
         %value = nil
 
         {% if transform_string %}
@@ -149,12 +149,12 @@ module CSS
         {% end %}
         %value ||= value
 
-        property({{name.stringify}}, %value.to_css_value)
+        property({{name.stringify}}, %value.to_css_value, important: important)
       end
     end
 
     macro prop2(name, type1, type2, *, enforce_unit1 = true, enforce_unit2 = true, transform_string1 = nil, transform_string2 = nil, separator = " ")
-      macro {{name.id}}(value1, value2)
+      macro {{name.id}}(value1, value2, *, important = false)
         {% if enforce_unit1 %}
           \{% if value1.is_a?(NumberLiteral) && value1 != 0 %}
             \{{raise "Non-zero number values have to be specified with a unit, for example: #{value1}.px"}}
@@ -166,10 +166,10 @@ module CSS
           \{% end %}
         {% end %}
 
-        _{{name.id}}(\{{value1}}, \{{value2}})
+        _{{name.id}}(\{{value1}}, \{{value2}}, important: \{{important}})
       end
 
-      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}})
+      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, *, important = false)
         %value1 = %value2 = nil
 
         {% if transform_string1 %}
@@ -186,12 +186,12 @@ module CSS
         {% end %}
         %value2 ||= value2
 
-        property({{name.stringify}}, "#{%value1.to_css_value}#{{{separator}}}#{%value2.to_css_value}")
+        property({{name.stringify}}, "#{%value1.to_css_value}#{{{separator}}}#{%value2.to_css_value}", important: important)
       end
     end
 
     macro prop3(name, type1, type2, type3, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, transform_string1 = nil, transform_string2 = nil, transform_string3 = nil, separator = " ")
-      macro {{name.id}}(value1, value2, value3)
+      macro {{name.id}}(value1, value2, value3, *, important = false)
         {% if enforce_unit1 %}
           \{% if value1.is_a?(NumberLiteral) && value1 != 0 %}
             \{{raise "Non-zero number values have to be specified with a unit, for example: #{value1}.px"}}
@@ -208,10 +208,10 @@ module CSS
           \{% end %}
         {% end %}
 
-        _{{name.id}}(\{{value1}}, \{{value2}}, \{{value3}})
+        _{{name.id}}(\{{value1}}, \{{value2}}, \{{value3}}, important: \{{important}})
       end
 
-      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}})
+      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, *, important = false)
         %value1 = %value2 = %value3 = nil
 
         {% if transform_string1 %}
@@ -235,12 +235,12 @@ module CSS
         {% end %}
         %value3 ||= value3
 
-        property({{name.stringify}}, "#{%value1.to_css_value}#{{{separator}}}#{%value2.to_css_value}#{{{separator}}}#{%value3.to_css_value}")
+        property({{name.stringify}}, "#{%value1.to_css_value}#{{{separator}}}#{%value2.to_css_value}#{{{separator}}}#{%value3.to_css_value}", important: important)
       end
     end
 
     macro prop4(name, type1, type2, type3, type4, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, enforce_unit4 = true, transform_string1 = nil, transform_string2 = nil, transform_string3 = nil, transform_string4 = nil, separator = " ")
-      macro {{name.id}}(value1, value2, value3, value4)
+      macro {{name.id}}(value1, value2, value3, value4, *, important = false)
         {% if enforce_unit1 %}
           \{% if value1.is_a?(NumberLiteral) && value1 != 0 %}
             \{{raise "Non-zero number values have to be specified with a unit, for example: #{value1}.px"}}
@@ -262,10 +262,10 @@ module CSS
           \{% end %}
         {% end %}
 
-        _{{name.id}}(\{{value1}}, \{{value2}}, \{{value3}}, \{{value4}})
+        _{{name.id}}(\{{value1}}, \{{value2}}, \{{value3}}, \{{value4}}, important: \{{important}})
       end
 
-      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}})
+      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}}, *, important = false)
         %value1 = %value2 = %value3 = %value4 = nil
 
         {% if transform_string1 %}
@@ -296,12 +296,12 @@ module CSS
         {% end %}
         %value4 ||= value4
 
-        property({{name.stringify}}, "#{%value1.to_css_value}#{{{separator}}}#{%value2.to_css_value}#{{{separator}}}#{%value3.to_css_value}#{{{separator}}}#{%value4.to_css_value}")
+        property({{name.stringify}}, "#{%value1.to_css_value}#{{{separator}}}#{%value2.to_css_value}#{{{separator}}}#{%value3.to_css_value}#{{{separator}}}#{%value4.to_css_value}", important: important)
       end
     end
 
     macro prop5(name, type1, type2, type3, type4, type5, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, enforce_unit4 = true, enforce_unit5 = true, transform_string1 = nil, transform_string2 = nil, transform_string3 = nil, transform_string4 = nil, transform_string5 = nil, separator = " ")
-      macro {{name.id}}(value1, value2, value3, value4, value5)
+      macro {{name.id}}(value1, value2, value3, value4, value5, *, important = false)
         {% if enforce_unit1 %}
           \{% if value1.is_a?(NumberLiteral) && value1 != 0 %}
             \{{raise "Non-zero number values have to be specified with a unit, for example: #{value1}.px"}}
@@ -328,10 +328,10 @@ module CSS
           \{% end %}
         {% end %}
 
-        _{{name.id}}(\{{value1}}, \{{value2}}, \{{value3}}, \{{value4}}, \{{value5}})
+        _{{name.id}}(\{{value1}}, \{{value2}}, \{{value3}}, \{{value4}}, \{{value5}}, important: \{{important}})
       end
 
-      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}}, value5 : {{type5}})
+      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}}, value5 : {{type5}}, *, important = false)
         %value1 = %value2 = %value3 = %value4 = %value5 = nil
 
         {% if transform_string1 %}
@@ -369,12 +369,12 @@ module CSS
         {% end %}
         %value5 ||= value5
 
-        property({{name.stringify}}, "#{%value1.to_css_value}#{{{separator}}}#{%value2.to_css_value}#{{{separator}}}#{%value3.to_css_value}#{{{separator}}}#{%value4.to_css_value}#{{{separator}}}#{%value5.to_css_value}")
+        property({{name.stringify}}, "#{%value1.to_css_value}#{{{separator}}}#{%value2.to_css_value}#{{{separator}}}#{%value3.to_css_value}#{{{separator}}}#{%value4.to_css_value}#{{{separator}}}#{%value5.to_css_value}", important: important)
       end
     end
 
     macro prop6(name, type1, type2, type3, type4, type5, type6, *, enforce_unit1 = true, enforce_unit2 = true, enforce_unit3 = true, enforce_unit4 = true, enforce_unit5 = true, enforce_unit6 = true, transform_string1 = nil, transform_string2 = nil, transform_string3 = nil, transform_string4 = nil, transform_string5 = nil, transform_string6 = nil, separator = " ")
-      macro {{name.id}}(value1, value2, value3, value4, value5, value6)
+      macro {{name.id}}(value1, value2, value3, value4, value5, value6, *, important = false)
         {% if enforce_unit1 %}
           \{% if value1.is_a?(NumberLiteral) && value1 != 0 %}
             \{{raise "Non-zero number values have to be specified with a unit, for example: #{value1}.px"}}
@@ -406,10 +406,10 @@ module CSS
           \{% end %}
         {% end %}
 
-        _{{name.id}}(\{{value1}}, \{{value2}}, \{{value3}}, \{{value4}}, \{{value5}}, \{{value6}})
+        _{{name.id}}(\{{value1}}, \{{value2}}, \{{value3}}, \{{value4}}, \{{value5}}, \{{value6}}, important: \{{important}})
       end
 
-      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}}, value5 : {{type5}}, value6 : {{type6}})
+      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}}, value5 : {{type5}}, value6 : {{type6}}, *, important = false)
         %value1 = %value2 = %value3 = %value4 = %value5 = %value6 = nil
 
         {% if transform_string1 %}
@@ -454,12 +454,13 @@ module CSS
         {% end %}
         %value6 ||= value6
 
-        property({{name.stringify}}, "#{%value1.to_css_value}#{{{separator}}}#{%value2.to_css_value}#{{{separator}}}#{%value3.to_css_value}#{{{separator}}}#{%value4.to_css_value}#{{{separator}}}#{%value5.to_css_value}#{{{separator}}}#{%value6.to_css_value}")
+        property({{name.stringify}}, "#{%value1.to_css_value}#{{{separator}}}#{%value2.to_css_value}#{{{separator}}}#{%value3.to_css_value}#{{{separator}}}#{%value4.to_css_value}#{{{separator}}}#{%value5.to_css_value}#{{{separator}}}#{%value6.to_css_value}", important: important)
       end
     end
 
-    def self.property(name, value)
-      "#{name.gsub(/_/, "-")}: #{value};"
+    def self.property(name, value, *, important = false)
+      suffix = important ? " !important" : ""
+      "#{name.gsub(/_/, "-")}: #{value}#{suffix};"
     end
 
     alias ImageFunction = CSS::UrlFunctionCall | CSS::LinearGradientFunctionCall | CSS::RadialGradientFunctionCall
@@ -1005,7 +1006,7 @@ module CSS
     prop grid_template, String
     prop grid_template_areas, String
 
-    macro grid_template_rows(*values)
+    macro grid_template_rows(*values, important = false)
       {% if values.empty? %}
         {{ raise "grid_template_rows requires at least one value" }}
       {% end %}
@@ -1016,26 +1017,26 @@ module CSS
         {% end %}
       {% end %}
 
-      _grid_template_rows({{values.splat}})
+      _grid_template_rows({{values.splat}}, important: {{important}})
     end
 
-    def self._grid_template_rows(value : CSS::Enums::None | CSS::Enums::Masonry | CSS::Enums::Global)
-      property("grid-template-rows", value.to_css_value)
+    def self._grid_template_rows(value : CSS::Enums::None | CSS::Enums::Masonry | CSS::Enums::Global, *, important = false)
+      property("grid-template-rows", value.to_css_value, important: important)
     end
 
-    def self._grid_template_rows(value : CSS::Enums::Subgrid, *names : CSS::GridLineNameListItem)
+    def self._grid_template_rows(value : CSS::Enums::Subgrid, *names : CSS::GridLineNameListItem, important = false)
       if names.empty?
-        property("grid-template-rows", value.to_css_value)
+        property("grid-template-rows", value.to_css_value, important: important)
       else
-        property("grid-template-rows", "#{value.to_css_value} #{names.map(&.to_css_value).join(" ")}")
+        property("grid-template-rows", "#{value.to_css_value} #{names.map(&.to_css_value).join(" ")}", important: important)
       end
     end
 
-    def self._grid_template_rows(*values : CSS::GridTrackListValue)
-      property("grid-template-rows", values.map(&.to_css_value).join(" "))
+    def self._grid_template_rows(*values : CSS::GridTrackListValue, important = false)
+      property("grid-template-rows", values.map(&.to_css_value).join(" "), important: important)
     end
 
-    macro grid_template_columns(*values)
+    macro grid_template_columns(*values, important = false)
       {% if values.empty? %}
         {{ raise "grid_template_columns requires at least one value" }}
       {% end %}
@@ -1046,23 +1047,23 @@ module CSS
         {% end %}
       {% end %}
 
-      _grid_template_columns({{values.splat}})
+      _grid_template_columns({{values.splat}}, important: {{important}})
     end
 
-    def self._grid_template_columns(value : CSS::Enums::None | CSS::Enums::Masonry | CSS::Enums::Global)
-      property("grid-template-columns", value.to_css_value)
+    def self._grid_template_columns(value : CSS::Enums::None | CSS::Enums::Masonry | CSS::Enums::Global, *, important = false)
+      property("grid-template-columns", value.to_css_value, important: important)
     end
 
-    def self._grid_template_columns(value : CSS::Enums::Subgrid, *names : CSS::GridLineNameListItem)
+    def self._grid_template_columns(value : CSS::Enums::Subgrid, *names : CSS::GridLineNameListItem, important = false)
       if names.empty?
-        property("grid-template-columns", value.to_css_value)
+        property("grid-template-columns", value.to_css_value, important: important)
       else
-        property("grid-template-columns", "#{value.to_css_value} #{names.map(&.to_css_value).join(" ")}")
+        property("grid-template-columns", "#{value.to_css_value} #{names.map(&.to_css_value).join(" ")}", important: important)
       end
     end
 
-    def self._grid_template_columns(*values : CSS::GridTrackListValue)
-      property("grid-template-columns", values.map(&.to_css_value).join(" "))
+    def self._grid_template_columns(*values : CSS::GridTrackListValue, important = false)
+      property("grid-template-columns", values.map(&.to_css_value).join(" "), important: important)
     end
 
     prop hanging_punctuation, String
@@ -1587,20 +1588,20 @@ module CSS
       UrlFunctionCall.new(value)
     end
 
-    macro transform(*values)
+    macro transform(*values, important = false)
       {% if values.empty? %}
         {{ raise "transform requires at least one value" }}
       {% end %}
 
       _transform(
         {% for value, i in values %}
-          CSS::TransformFunctions.dispatch({{value}}){% if i < values.size - 1 %}, {% end %}
+          CSS::TransformFunctions.dispatch({{value}}){% if i < values.size - 1 %}, {% else %}, important: {{important}}{% end %}
         {% end %}
       )
     end
 
-    def self._transform(*values : TransformValue)
-      property("transform", values.map(&.to_css_value).join(" "))
+    def self._transform(*values : TransformValue, important = false)
+      property("transform", values.map(&.to_css_value).join(" "), important: important)
     end
 
     macro font_face(klass_name, *, name, &blk)
