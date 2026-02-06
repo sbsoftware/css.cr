@@ -173,6 +173,20 @@ class Typography < CSS::Stylesheet
 end
 ```
 
+## Coverage Index
+
+Generate the MDN-vs-shard coverage index with a single command:
+
+```bash
+crystal scripts/generate_coverage.cr
+```
+
+The generated report is committed at [`COVERAGE.md`](COVERAGE.md) and includes:
+- supported/unsupported/missing MDN property coverage,
+- typed enum coverage for enum-applicable properties,
+- a dedicated list of unsupported string-only properties,
+- a short guide and checklist for adding missing CSS.
+
 ## Contributing
 
 1. Fork it (<https://github.com/sbsoftware/css.cr/fork>)
