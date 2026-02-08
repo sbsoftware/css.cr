@@ -14,6 +14,7 @@ require "./css/linear_gradient_function_call"
 require "./css/radial_gradient_at"
 require "./css/radial_gradient_function_call"
 require "./css/min_function_call"
+require "./css/clamp_function_call"
 require "./css/url_function_call"
 require "./css/transform_functions"
 require "./css/transform_function_call"
@@ -25,6 +26,23 @@ module CSS
   class Stylesheet
     def self.calc(calculation : CSS::Calculation)
       CSS::CalcFunctionCall.new(calculation)
+    end
+
+    # Type-safe helper for length/percentage `clamp()` values.
+    #
+    # Note: this helper enforces units for non-zero number literals (same as property setters).
+    macro clamp(min, preferred, max)
+      {% for value in [min, preferred, max] %}
+        {% if value.is_a?(NumberLiteral) && value != 0 %}
+          {{ value.raise "Non-zero number values have to be specified with a unit, for example: #{value}.px" }}
+        {% end %}
+      {% end %}
+
+      _clamp({{min}}, {{preferred}}, {{max}})
+    end
+
+    def self._clamp(min : CSS::LengthPercentage, preferred : CSS::LengthPercentage, max : CSS::LengthPercentage)
+      CSS::ClampFunctionCall.new(min, preferred, max)
     end
 
     macro rule(*selector_expressions, &blk)
@@ -1625,6 +1643,66 @@ module CSS
       embed({{klass_name}})
     end
 
+    macro supports(condition, &blk)
+      class SupportsStyle{{@caller.first.line_number}} < CSS::SupportsStylesheet
+        def self.supports_condition : CSS::SupportsCondition
+          CSS::SupportsConditionEvaluator.evaluate do
+            {{condition}}
+          end
+        end
+
+        {{blk.body}}
+      end
+
+      embed SupportsStyle{{@caller.first.line_number}}
+    end
+
+    macro layer(name, &blk)
+      class LayerStyle{{@caller.first.line_number}} < CSS::LayerStylesheet
+        def self.layer_name : String?
+          CSS::LayerStylesheet.format_layer_name({{name}})
+        end
+
+        {{blk.body}}
+      end
+
+      embed LayerStyle{{@caller.first.line_number}}
+    end
+
+    macro layer(&blk)
+      class LayerStyle{{@caller.first.line_number}} < CSS::LayerStylesheet
+        def self.layer_name : String?
+          nil
+        end
+
+        {{blk.body}}
+      end
+
+      embed LayerStyle{{@caller.first.line_number}}
+    end
+
+    macro layer_order(*names)
+      {% if names.empty? %}
+        {{ raise "layer_order requires at least one layer name" }}
+      {% end %}
+
+      def self.to_s(io : IO)
+        {% if @type.class.methods.map(&.name.stringify).includes?("to_s") %}
+          previous_def
+          io << "\n\n"
+        {% end %}
+
+        io << "@layer "
+        {% for name, i in names %}
+          io << CSS::LayerStylesheet.format_layer_name({{name}})
+          {% if i < names.size - 1 %}
+            io << ", "
+          {% end %}
+        {% end %}
+        io << ";"
+      end
+    end
+
     macro media(queries, &blk)
       class MediaStyle{{@caller.first.line_number}} < CSS::MediaStylesheet
         def self.media_queries
@@ -1649,7 +1727,24 @@ module CSS
         {{klass_name}}.to_s(io)
       end
     end
+
+    # Writes `content` to `io` and prefixes each non-empty line with `level` indentation steps.
+    protected def self.write_indented(io : IO, content : String, level : Int32)
+      prefix = "  " * level
+      at_line_start = true
+
+      content.each_char do |ch|
+        if at_line_start && ch != '\n'
+          io << prefix
+        end
+
+        io << ch
+        at_line_start = (ch == '\n')
+      end
+    end
   end
 end
 
 require "./css/media_stylesheet"
+require "./css/supports_stylesheet"
+require "./css/layer_stylesheet"

@@ -1,19 +1,29 @@
 require "../stylesheet"
-require "./media_query_evaluator"
 
 module CSS
-  abstract class MediaStylesheet < CSS::Stylesheet
+  abstract class LayerStylesheet < CSS::Stylesheet
     module ClassMethods
-      abstract def media_queries
+      abstract def layer_name : String?
     end
 
     extend ClassMethods
 
+    def self.format_layer_name(name : String) : String
+      name
+    end
+
+    def self.format_layer_name(name : Symbol) : String
+      name.to_s.gsub('_', '-')
+    end
+
     macro inherited
       macro finished
         def self.to_s(io : IO)
-          io << "@media "
-          io << media_queries
+          io << "@layer"
+          if (name = layer_name)
+            io << " "
+            io << name
+          end
           io << " {\n"
           previous_def
           io << "\n}"

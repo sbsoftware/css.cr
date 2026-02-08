@@ -112,6 +112,33 @@ class Spacing < CSS::Stylesheet
 end
 ```
 
+### Modern Patterns (`clamp`, `@supports`, `@layer`)
+
+Use helpers for common modern CSS patterns while keeping the existing DSL style.
+
+```crystal
+class Modern < CSS::Stylesheet
+  rule h1 do
+    font_size clamp(1.rem, calc(2.vw + 1.rem), 3.rem)
+  end
+
+  supports(decl(:display, :grid) & decl(:gap, 1.rem)) do
+    rule ".grid" do
+      display :grid
+      gap 1.rem
+    end
+  end
+
+  layer_order :reset, :base
+
+  layer :base do
+    rule body do
+      margin 0
+    end
+  end
+end
+```
+
 ### Backgrounds and Gradients
 
 Compose layered backgrounds, linear/radial gradients, and opacity values with readable builders.
