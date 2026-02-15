@@ -139,6 +139,32 @@ class Modern < CSS::Stylesheet
 end
 ```
 
+### Ergonomic Aliases for CSS-like Entry Points
+
+When Crystal naming differs from CSS mental models, use alias entry points that keep behavior identical:
+
+```crystal
+class ErgonomicAliases < CSS::Stylesheet
+  at_layer_order :reset, :base
+
+  at_layer :base do
+    rule body do
+      margin 0
+    end
+  end
+
+  at_supports(declaration(:display, :grid) & declaration(:gap, 1.rem)) do
+    at_media(max_width 600.px) do
+      rule ".grid" do
+        display :grid
+      end
+    end
+  end
+end
+```
+
+See [`ERGONOMICS_MAP.md`](ERGONOMICS_MAP.md) for the friction audit and full alias map.
+
 ### Backgrounds and Gradients
 
 Compose layered backgrounds, linear/radial gradients, and opacity values with readable builders.

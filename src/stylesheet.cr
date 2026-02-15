@@ -949,11 +949,11 @@ module CSS
     prop fill_opacity, String
     prop fill_rule, String
     prop filter, String
-    prop flex, CSS::Enums::Flex # keyword or global value
-    prop flex, Number, enforce_unit: false # flex-grow only
-    prop flex, CSS::LengthPercentage | CSS::Enums::FlexBasis | CSS::Enums::Auto # flex-basis only
-    prop2 flex, Number, CSS::LengthPercentage | CSS::Enums::FlexBasis | CSS::Enums::Auto, enforce_unit1: false # flex-grow and flex-basis
-    prop2 flex, Number, Number, enforce_unit1: false, enforce_unit2: false # flex-grow and flex-shrink
+    prop flex, CSS::Enums::Flex                                                                                                              # keyword or global value
+    prop flex, Number, enforce_unit: false                                                                                                   # flex-grow only
+    prop flex, CSS::LengthPercentage | CSS::Enums::FlexBasis | CSS::Enums::Auto                                                              # flex-basis only
+    prop2 flex, Number, CSS::LengthPercentage | CSS::Enums::FlexBasis | CSS::Enums::Auto, enforce_unit1: false                               # flex-grow and flex-basis
+    prop2 flex, Number, Number, enforce_unit1: false, enforce_unit2: false                                                                   # flex-grow and flex-shrink
     prop3 flex, Number, Number, CSS::LengthPercentage | CSS::Enums::FlexBasis | CSS::Enums::Auto, enforce_unit1: false, enforce_unit2: false # flex-grow, flex-shrink and flex-basis
     prop flex_basis, CSS::LengthPercentage | CSS::Enums::FlexBasis | CSS::Enums::Auto
     prop flex_direction, CSS::Enums::FlexDirection
@@ -1657,6 +1657,21 @@ module CSS
       embed SupportsStyle{{@caller.first.line_number}}
     end
 
+    # CSS-like alias for `supports`.
+    macro at_supports(condition, &blk)
+      class AtSupportsStyle{{@caller.first.line_number}} < CSS::SupportsStylesheet
+        def self.supports_condition : CSS::SupportsCondition
+          CSS::SupportsConditionEvaluator.evaluate do
+            {{condition}}
+          end
+        end
+
+        {{blk.body}}
+      end
+
+      embed AtSupportsStyle{{@caller.first.line_number}}
+    end
+
     macro layer(name, &blk)
       class LayerStyle{{@caller.first.line_number}} < CSS::LayerStylesheet
         def self.layer_name : String?
@@ -1667,6 +1682,19 @@ module CSS
       end
 
       embed LayerStyle{{@caller.first.line_number}}
+    end
+
+    # CSS-like alias for `layer`.
+    macro at_layer(name, &blk)
+      class AtLayerStyle{{@caller.first.line_number}} < CSS::LayerStylesheet
+        def self.layer_name : String?
+          CSS::LayerStylesheet.format_layer_name({{name}})
+        end
+
+        {{blk.body}}
+      end
+
+      embed AtLayerStyle{{@caller.first.line_number}}
     end
 
     macro layer(&blk)
@@ -1681,9 +1709,45 @@ module CSS
       embed LayerStyle{{@caller.first.line_number}}
     end
 
+    # CSS-like alias for anonymous `@layer`.
+    macro at_layer(&blk)
+      class AtLayerStyle{{@caller.first.line_number}} < CSS::LayerStylesheet
+        def self.layer_name : String?
+          nil
+        end
+
+        {{blk.body}}
+      end
+
+      embed AtLayerStyle{{@caller.first.line_number}}
+    end
+
     macro layer_order(*names)
       {% if names.empty? %}
         {{ raise "layer_order requires at least one layer name" }}
+      {% end %}
+
+      def self.to_s(io : IO)
+        {% if @type.class.methods.map(&.name.stringify).includes?("to_s") %}
+          previous_def
+          io << "\n\n"
+        {% end %}
+
+        io << "@layer "
+        {% for name, i in names %}
+          io << CSS::LayerStylesheet.format_layer_name({{name}})
+          {% if i < names.size - 1 %}
+            io << ", "
+          {% end %}
+        {% end %}
+        io << ";"
+      end
+    end
+
+    # CSS-like alias for `layer_order`.
+    macro at_layer_order(*names)
+      {% if names.empty? %}
+        {{ raise "at_layer_order requires at least one layer name" }}
       {% end %}
 
       def self.to_s(io : IO)
@@ -1715,6 +1779,21 @@ module CSS
       end
 
       embed MediaStyle{{@caller.first.line_number}}
+    end
+
+    # CSS-like alias for `media`.
+    macro at_media(queries, &blk)
+      class AtMediaStyle{{@caller.first.line_number}} < CSS::MediaStylesheet
+        def self.media_queries
+          CSS::MediaQueryEvaluator.evaluate do
+            {{queries}}
+          end
+        end
+
+        {{blk.body}}
+      end
+
+      embed AtMediaStyle{{@caller.first.line_number}}
     end
 
     macro embed(klass_name)
