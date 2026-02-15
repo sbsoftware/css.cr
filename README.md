@@ -1,6 +1,6 @@
 # css.cr
 
-Create CSS stylesheets in pure Crystal
+Create CSS stylesheets in pure Crystal.
 
 ## Installation
 
@@ -12,9 +12,9 @@ Create CSS stylesheets in pure Crystal
        github: sbsoftware/css.cr
    ```
 
-2. Run `shards install`
+2. Run `shards install`.
 
-## Usage
+## Quick Start
 
 ```crystal
 require "css"
@@ -22,172 +22,56 @@ require "css"
 class Style < CSS::Stylesheet
   rule div do
     display :block
+    padding 12.px
   end
 end
 
-# div {
-#   display: block;
-# }
 puts Style
 ```
 
-### Nested Rules
+Output:
 
-Similar to modern [CSS nesting](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_nesting), the `rule` directive can be nested. The resulting CSS will print a dedicated rule with both the parent and the child selector appended, to support older browsers.
-
-```crystal
-class Style < CSS::Stylesheet
-  rule div do
-    display :block
-
-    rule p do
-      display :block
-    end
-  end
-end
-
-# div {
-#   display: block;
-# }
-#
-# div p {
-#   display: block;
-# }
-puts Style
+```css
+div {
+  display: block;
+  padding: 12px;
+}
 ```
 
-### Media Queries
+## Documentation
 
-Define media blocks inline with your stylesheet so breakpoints live next to the rules they affect.
+Task-focused guides live in [`docs/`](docs/README.md):
 
-```crystal
-class Responsive < CSS::Stylesheet
-  rule div do
-    font_size 16.px
-  end
-
-  media(max_width 600.px) do
-    rule div do
-      font_size 12.px
-    end
-  end
-end
-```
-
-### Custom Selectors, Attributes, and Pseudo Elements
-
-Use `css_class`/`css_id` helpers to generate consistent names, combine selectors, and target pseudo elements or attribute selectors.
-
-```crystal
-css_class Card
-css_id Hero
-
-class Selectors < CSS::Stylesheet
-  rule Card do
-    display :block
-  end
-
-  rule div > Card && "[data-state='active']" do
-    opacity 1
-  end
-
-  rule Hero <= :before do
-    content "\"★\""
-    color :gold
-  end
-end
-```
-
-### Calculations and Unit Arithmetic
-
-Do math directly on units or wrap complex expressions with `calc`.
-
-```crystal
-class Spacing < CSS::Stylesheet
-  rule section do
-    margin_left 8.px * -1      # => -8px
-    padding_top 2.cm / 2       # => 1.0cm
-    width calc(100.percent - 20.px)
-  end
-end
-```
-
-### Backgrounds and Gradients
-
-Compose layered backgrounds, linear/radial gradients, and opacity values with readable builders.
-
-```crystal
-class HeroBackground < CSS::Stylesheet
-  rule header do
-    background linear_gradient(:to_right, {"#fff", 0.percent}, {"#000", 75.percent})
-    background_image radial_gradient(:circle, :closest_side, at(:center), {"red", 10.percent}, {"blue", 90.percent})
-    background_repeat :no_repeat
-    opacity 0.9
-  end
-end
-```
-
-### Colors with `rgb()`
-
-Build RGB and RGBA values without string concatenation.
-
-```crystal
-class Palette < CSS::Stylesheet
-  rule button do
-    color rgb(255, 128, 128)
-    background_color rgb(10, 20, 30, alpha: 50.percent)
-    border_color rgb(0, 0, 0, alpha: 25.percent)
-  end
-end
-```
-
-### Aspect Ratios with `ratio`
-
-Use `ratio(numerator, denominator)` for the CSS `aspect-ratio` property (also works with plain numbers or math).
-
-```crystal
-class MediaBlocks < CSS::Stylesheet
-  rule iframe do
-    aspect_ratio ratio(16, 9)
-  end
-
-  rule img do
-    aspect_ratio 4.0 / 3
-  end
-end
-```
-
-### Fonts and Assets
-
-Declare `@font-face` blocks and reuse the family in later rules.
-
-```crystal
-class Typography < CSS::Stylesheet
-  font_face MyFont, name: "MyFont" do
-    src local("MyFont"), url("/assets/my_font.ttf")
-  end
-
-  rule body do
-    font_family MyFont, "Verdana", :sans_serif
-  end
-end
-```
+- [Getting Started](docs/getting-started.md)
+- [Selectors](docs/selectors.md)
+- [Nesting](docs/nesting.md)
+- [Media Queries](docs/media-queries.md)
+- [Units and calc()](docs/units-and-calc.md)
+- [Gradients and Colors](docs/gradients.md)
+- [Fonts and @font-face](docs/fonts.md)
+- [Using !important](docs/important.md)
+- [Cookbook (idiomatic patterns + CSS <-> Crystal hints)](docs/cookbook.md)
+- [API Reference Summary](docs/api-reference.md)
+- [Contributor Guide: Adding Properties and Enums](docs/contributing-properties-and-enums.md)
 
 ## Coverage Index
 
-Generate the MDN-vs-shard coverage index with a single command:
+Generate the MDN-vs-shard coverage index:
 
 ```bash
 crystal scripts/generate_coverage.cr
 ```
 
 The generated report is committed at [`COVERAGE.md`](COVERAGE.md) and includes:
+
 - supported/unsupported/missing MDN property coverage,
 - typed enum coverage for enum-applicable properties,
-- a dedicated list of unsupported string-only properties,
-- a short guide and checklist for adding missing CSS.
+- unsupported string-only properties,
+- a checklist for adding missing CSS.
 
 ## Contributing
+
+Use the contributor docs in [`docs/contributing-properties-and-enums.md`](docs/contributing-properties-and-enums.md) for implementation details.
 
 1. Fork it (<https://github.com/sbsoftware/css.cr/fork>)
 2. Create your feature branch (`git checkout -b my-new-feature`)
