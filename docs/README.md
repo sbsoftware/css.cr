@@ -15,6 +15,7 @@ Use this guide index to jump directly to the task you are working on.
 
 ## Practical Patterns
 
+- [Examples Gallery](../examples/README.md)
 - [Cookbook](cookbook.md)
 
 ## Reference
