@@ -50,6 +50,7 @@ Task-focused guides live in [`docs/`](docs/README.md):
 - [Gradients and Colors](docs/gradients.md)
 - [Fonts and @font-face](docs/fonts.md)
 - [Using !important](docs/important.md)
+- [Examples Gallery (copy/paste-ready DSL + rendered CSS)](examples/README.md)
 - [Cookbook (idiomatic patterns + CSS <-> Crystal hints)](docs/cookbook.md)
 - [API Reference Summary](docs/api-reference.md)
 - [Contributor Guide: Adding Properties and Enums](docs/contributing-properties-and-enums.md)
