@@ -7,19 +7,22 @@ Two-column application shell with constrained content width and full viewport he
 ```crystal
 require "css"
 
+css_class AppShell
+css_class Content
+
 class DashboardLayoutExample < CSS::Stylesheet
-  rule ".app-shell" do
+  rule AppShell do
     display :grid
     grid_template_columns 240.px, 1.fr
     gap 24.px
     min_height 100.vh
     background_color "#f8fafc"
-  end
 
-  rule ".app-shell .content" do
-    padding 24.px
-    max_width 1200.px
-    margin 0, :auto
+    rule Content do
+      padding 24.px
+      max_width 1200.px
+      margin 0, :auto
+    end
   end
 end
 

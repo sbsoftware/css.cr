@@ -7,21 +7,23 @@ Grid layout that progressively reduces columns and spacing at narrower breakpoin
 ```crystal
 require "css"
 
+css_class ProductGrid
+
 class ProductGridResponsiveExample < CSS::Stylesheet
-  rule ".product-grid" do
+  rule ProductGrid do
     display :grid
     grid_template_columns repeat(4, minmax(0, 1.fr))
     gap 20.px
   end
 
   media(max_width 1024.px) do
-    rule ".product-grid" do
+    rule ProductGrid do
       grid_template_columns repeat(2, minmax(0, 1.fr))
     end
   end
 
   media(max_width 640.px) do
-    rule ".product-grid" do
+    rule ProductGrid do
       grid_template_columns 1.fr
       gap 12.px
     end

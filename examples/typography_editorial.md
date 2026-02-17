@@ -8,23 +8,23 @@ Readable article defaults with serif stack, vertical rhythm, and constrained lin
 require "css"
 
 class EditorialTypographyExample < CSS::Stylesheet
-  rule "article" do
+  rule article do
     max_width 68.ch
     margin 0, :auto
     padding 32.px, 20.px
     font_family "Merriweather", "Georgia", :serif
     line_height 1.7
     color "#1f2937"
-  end
 
-  rule "article h1" do
-    font_size 2.5.rem
-    line_height 1.2
-    margin_bottom 16.px
-  end
+    rule h1 do
+      font_size 2.5.rem
+      line_height 1.2
+      margin_bottom 16.px
+    end
 
-  rule "article p" do
-    margin_bottom 1.2.em
+    rule p do
+      margin_bottom 1.2.em
+    end
   end
 end
 

@@ -7,8 +7,10 @@ Form card styling with input controls, button treatment, and subtle elevation.
 ```crystal
 require "css"
 
+css_class SignInForm
+
 class SignInFormExample < CSS::Stylesheet
-  rule ".sign-in-form" do
+  rule SignInForm do
     display :grid
     gap 12.px
     max_width 420.px
@@ -16,22 +18,22 @@ class SignInFormExample < CSS::Stylesheet
     border_radius 12.px
     background_color :white
     box_shadow 0.px, 10.px, 30.px, rgb(15, 23, 42, alpha: 10.percent)
-  end
 
-  rule ".sign-in-form input" do
-    padding 10.px, 12.px
-    border 1.px, :solid, "#cbd5e1"
-    border_radius 8.px
-    font_size 1.rem
-  end
+    rule input do
+      padding 10.px, 12.px
+      border 1.px, :solid, "#cbd5e1"
+      border_radius 8.px
+      font_size 1.rem
+    end
 
-  rule ".sign-in-form button" do
-    padding 10.px, 14.px
-    border_radius 8.px
-    border :none
-    background_color "#2563eb"
-    color :white
-    font_weight :bold
+    rule button do
+      padding 10.px, 14.px
+      border_radius 8.px
+      border :none
+      background_color "#2563eb"
+      color :white
+      font_weight :bold
+    end
   end
 end
 

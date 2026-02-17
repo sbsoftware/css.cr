@@ -7,8 +7,11 @@ Hero section background with a linear gradient plus radial glow overlay.
 ```crystal
 require "css"
 
+css_class MarketingHero
+css_class Glow
+
 class GradientHeroExample < CSS::Stylesheet
-  rule ".marketing-hero" do
+  rule MarketingHero do
     background linear_gradient(
       :to_right,
       {"#0ea5e9", 0.percent},
@@ -17,16 +20,16 @@ class GradientHeroExample < CSS::Stylesheet
     )
     color :white
     padding 80.px, 24.px
-  end
 
-  rule ".marketing-hero .glow" do
-    background_image radial_gradient(
-      :circle,
-      :farthest_corner,
-      at(:top, :right),
-      {rgb(255, 255, 255, alpha: 40.percent), 0.percent},
-      {rgb(255, 255, 255, alpha: 0.percent), 70.percent}
-    )
+    rule Glow do
+      background_image radial_gradient(
+        :circle,
+        :farthest_corner,
+        at(:top, :right),
+        {rgb(255, 255, 255, alpha: 40.percent), 0.percent},
+        {rgb(255, 255, 255, alpha: 0.percent), 70.percent}
+      )
+    end
   end
 end
 
