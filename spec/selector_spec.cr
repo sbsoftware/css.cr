@@ -74,7 +74,7 @@ module CSS::SelectorSpec
       display :none
     end
 
-    rule div <= CSS::NthOfType.new(:odd) do
+    rule div <= nth_of_type(:odd) do
       display :none
     end
 
@@ -179,6 +179,14 @@ module CSS::SelectorSpec
       CSS
 
       Style.to_s.should eq(expected)
+    end
+  end
+
+  describe "Style.nth_of_type" do
+    it "returns nth-of-type selector helper objects" do
+      Style.nth_of_type(3).should be_a(CSS::NthOfType)
+      Style.nth_of_type("2n+1").should be_a(CSS::NthOfType)
+      Style.nth_of_type(:odd).should be_a(CSS::NthOfType)
     end
   end
 
