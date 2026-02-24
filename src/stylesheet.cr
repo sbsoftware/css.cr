@@ -28,6 +28,10 @@ module CSS
       CSS::CalcFunctionCall.new(calculation)
     end
 
+    def self.nth_of_type(exp : Int32 | String | CSS::NthOfType::Static)
+      CSS::NthOfType.new(exp)
+    end
+
     # Type-safe helper for length/percentage `clamp()` values.
     #
     # Note: this helper enforces units for non-zero number literals (same as property setters).
