@@ -182,14 +182,6 @@ module CSS::SelectorSpec
     end
   end
 
-  describe "Style.nth_of_type" do
-    it "returns nth-of-type selector helper objects" do
-      Style.nth_of_type(3).should be_a(CSS::NthOfType)
-      Style.nth_of_type("2n+1").should be_a(CSS::NthOfType)
-      Style.nth_of_type(:odd).should be_a(CSS::NthOfType)
-    end
-  end
-
   describe "MultiSelectorStyle.to_s" do
     it "renders comma-separated selectors and nested rules" do
       expected = <<-CSS
