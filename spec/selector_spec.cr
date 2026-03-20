@@ -74,7 +74,7 @@ module CSS::SelectorSpec
       display :none
     end
 
-    rule div <= CSS::NthOfType.new(:odd) do
+    rule div <= nth_of_type(:odd) do
       display :none
     end
 

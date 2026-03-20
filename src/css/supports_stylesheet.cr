@@ -1,10 +1,10 @@
 require "../stylesheet"
-require "./media_query_evaluator"
+require "./supports_condition_evaluator"
 
 module CSS
-  abstract class MediaStylesheet < CSS::Stylesheet
+  abstract class SupportsStylesheet < CSS::Stylesheet
     module ClassMethods
-      abstract def media_queries
+      abstract def supports_condition : CSS::SupportsCondition
     end
 
     extend ClassMethods
@@ -12,8 +12,8 @@ module CSS
     macro inherited
       macro finished
         def self.to_s(io : IO)
-          io << "@media "
-          io << media_queries
+          io << "@supports "
+          io << supports_condition
           io << " {\n"
           previous_def
           io << "\n}"
