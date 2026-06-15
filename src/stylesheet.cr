@@ -1383,7 +1383,11 @@ module CSS
     prop top, CSS::LengthPercentage | CSS::Enums::Auto
     prop touch_action, String
     prop transform_box, String
-    prop transform_origin, String
+    prop transform_origin, CSS::LengthPercentage | CSS::Enums::TransformOriginX | CSS::Enums::TransformOriginY | CSS::Enums::TransformOriginCenter
+    prop2 transform_origin, CSS::LengthPercentage | CSS::Enums::TransformOriginX | CSS::Enums::TransformOriginCenter, CSS::LengthPercentage | CSS::Enums::TransformOriginY | CSS::Enums::TransformOriginCenter
+    prop2 transform_origin, CSS::Enums::TransformOriginY | CSS::Enums::TransformOriginCenter, CSS::Enums::TransformOriginX | CSS::Enums::TransformOriginCenter
+    prop3 transform_origin, CSS::LengthPercentage | CSS::Enums::TransformOriginX | CSS::Enums::TransformOriginCenter, CSS::LengthPercentage | CSS::Enums::TransformOriginY | CSS::Enums::TransformOriginCenter, CSS::Length
+    prop3 transform_origin, CSS::Enums::TransformOriginY | CSS::Enums::TransformOriginCenter, CSS::Enums::TransformOriginX | CSS::Enums::TransformOriginCenter, CSS::Length
     prop transform_style, String
     prop transition, String
     prop transition_behavior, String
