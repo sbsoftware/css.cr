@@ -1199,7 +1199,7 @@ module CSS
     prop offset_path, String
     prop offset_position, String
     prop offset_rotate, String
-    prop opacity, Number | CSS::PercentValue, enforce_unit: false
+    prop opacity, CSS::NumberPercentage, enforce_unit: false
     prop order, Int, enforce_unit: false
     prop orphans, Int
     prop outline, Color, transform_string: CSS::ColorString
@@ -1435,7 +1435,7 @@ module CSS
       _min({{values.splat}})
     end
 
-    def self._min(*values : CSS::GridLengthPercentage)
+    def self._min(*values : CSS::LengthPercentage | CSS::Angle | CSS::NumberPercentage)
       CSS::MinFunctionCall.new(*values)
     end
 
