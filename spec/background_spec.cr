@@ -46,6 +46,10 @@ module CSS::BackgroundSpec
         {"#123456", 0.percent},
         {"#abcdef", 100.percent}
       )
+      background_image conic_gradient({"red", 0.deg}, {"blue", 180.deg}, {"red", 360.deg})
+      background_image conic_gradient(from(45.deg), {"#fff", 0.percent}, {"#000", 100.percent})
+      background_image conic_gradient(at(:left, 25.percent, :top, 40.percent), {"gold", 0.deg}, {"navy", 270.deg})
+      background_image conic_gradient(from(0.25.turn), at(:center), {"#f00", 0.deg, 90.deg}, {"#0f0", 90.deg, 180.deg}, {"#00f", 180.deg, 360.deg})
 
       background_origin :border_box
       background_origin :padding_box
@@ -82,6 +86,7 @@ module CSS::BackgroundSpec
         {"#eee", 5.percent},
         {"#111", 95.percent}
       )
+      background conic_gradient(from(90.deg), at(25.percent, 75.percent), {"#111", 0.percent}, {"#eee", 100.percent})
 
       opacity 1
       opacity 0.75
@@ -116,6 +121,10 @@ module CSS::BackgroundSpec
         background-image: radial-gradient(circle closest-side at center, yellow 10%, green 90%);
         background-image: radial-gradient(50px, orange 0%, purple 100%);
         background-image: radial-gradient(ellipse 40% 60%, #123456 0%, #abcdef 100%);
+        background-image: conic-gradient(red 0deg, blue 180deg, red 360deg);
+        background-image: conic-gradient(from 45deg, #fff 0%, #000 100%);
+        background-image: conic-gradient(at left 25% top 40%, gold 0deg, navy 270deg);
+        background-image: conic-gradient(from 0.25turn at center, #f00 0deg 90deg, #0f0 90deg 180deg, #00f 180deg 360deg);
         background-origin: border-box;
         background-origin: padding-box;
         background-origin: content-box;
@@ -141,6 +150,7 @@ module CSS::BackgroundSpec
         background-size: 100%;
         background: linear-gradient(45deg, #fff 0%, #000 75%);
         background: radial-gradient(ellipse at center, #eee 5%, #111 95%);
+        background: conic-gradient(from 90deg at 25% 75%, #111 0%, #eee 100%);
         opacity: 1;
         opacity: 0.75;
         opacity: 90%;

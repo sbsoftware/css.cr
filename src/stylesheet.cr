@@ -13,6 +13,8 @@ require "./css/linear_gradient_direction"
 require "./css/linear_gradient_function_call"
 require "./css/radial_gradient_at"
 require "./css/radial_gradient_function_call"
+require "./css/conic_gradient_from"
+require "./css/conic_gradient_function_call"
 require "./css/min_function_call"
 require "./css/clamp_function_call"
 require "./css/url_function_call"
@@ -487,7 +489,7 @@ module CSS
       "#{name.gsub(/_/, "-")}: #{value}#{suffix};"
     end
 
-    alias ImageFunction = CSS::UrlFunctionCall | CSS::LinearGradientFunctionCall | CSS::RadialGradientFunctionCall
+    alias ImageFunction = CSS::UrlFunctionCall | CSS::LinearGradientFunctionCall | CSS::RadialGradientFunctionCall | CSS::ConicGradientFunctionCall
     alias BackgroundTypes = Color | ImageFunction | CSS::Enums::VisualBox | CSS::Enums::BackgroundAttachment | CSS::Enums::BackgroundRepeat | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter | CSS::Enums::Auto | CSS::LengthPercentage
     alias Color = CSS::Enums::CurrentColor | CSS::Enums::NamedColor | String | CSS::RgbFunctionCall
     alias BorderWidth = CSS::Length | CSS::Enums::BorderWidth
@@ -1523,6 +1525,9 @@ module CSS
     alias LinearGradientDirection = CSS::LinearGradientSide | CSS::Angle
     alias LinearGradientStop = Color | CSS::LengthPercentage | Tuple(Color, CSS::LengthPercentage?) | Tuple(Color, CSS::LengthPercentage, CSS::LengthPercentage?)
     alias RadialGradientStop = LinearGradientStop
+    alias ConicGradientAngle = CSS::Angle
+    alias ConicGradientStopPosition = CSS::Angle | CSS::PercentValue | CSS::MathFunctionCall
+    alias ConicGradientStop = Color | ConicGradientStopPosition | Tuple(Color, ConicGradientStopPosition?) | Tuple(Color, ConicGradientStopPosition, ConicGradientStopPosition?)
 
     def self.linear_gradient(direction : LinearGradientDirection, *stops : LinearGradientStop)
       LinearGradientFunctionCall.new(direction, *stops)
@@ -1532,8 +1537,27 @@ module CSS
       LinearGradientFunctionCall.new(*stops)
     end
 
-    # Helper to build an `at` clause for radial gradients.
-    # Position helper for radial gradients. Overloads mirror <position> grammar.
+    def self.from(angle : ConicGradientAngle)
+      CSS::ConicGradientFrom.new(angle)
+    end
+
+    def self.conic_gradient(*stops : ConicGradientStop)
+      ConicGradientFunctionCall.new(*stops)
+    end
+
+    def self.conic_gradient(from : CSS::ConicGradientFrom, *stops : ConicGradientStop)
+      ConicGradientFunctionCall.new({from}, *stops)
+    end
+
+    def self.conic_gradient(at : CSS::RadialGradientAt, *stops : ConicGradientStop)
+      ConicGradientFunctionCall.new({at}, *stops)
+    end
+
+    def self.conic_gradient(from : CSS::ConicGradientFrom, at : CSS::RadialGradientAt, *stops : ConicGradientStop)
+      ConicGradientFunctionCall.new({from, at}, *stops)
+    end
+
+    # Position helper for radial and conic gradients. Overloads mirror <position> grammar.
     def self.at(position : CSS::Enums::RadialGradientPosition | CSS::LengthPercentage)
       CSS::RadialGradientAt.new(position)
     end
