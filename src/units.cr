@@ -174,5 +174,6 @@ module CSS
   alias Length = CmValue | MmValue | InValue | PxValue | PtValue | PcValue | EmValue | RemValue | ExValue | ChValue | LhValue | RlhValue | VhValue | VwValue | VmaxValue | VminValue | SvwValue | LvwValue | LvhValue | DvwValue | DvhValue | FrValue | Int32 | MathFunctionCall
   alias LengthPercentage = Length | PercentValue | MathFunctionCall
   alias Angle = DegValue | RadValue | GradValue | TurnValue | MathFunctionCall
+  alias Time = ::Time::Span | Int32
   alias NumberPercentage = CalcNumeric | PercentValue | MathFunctionCall
 end
