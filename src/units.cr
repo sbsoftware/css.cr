@@ -1,4 +1,4 @@
-{% for unit_name in ["cm", "mm", "in", "px", "pt", "pc", "em", "rem", "ex", "ch", "lh", "rlh", "vh", "vw", "vmax", "vmin", "svw", "svh", "lvw", "lvh", "dvw", "dvh", "deg", "rad", "grad", "turn", "s", "ms", "Hz", "kHz", "dpi", "dpcm", "dppx", "fr"] %}
+{% for unit_name in ["cm", "mm", "in", "px", "pt", "pc", "em", "rem", "ex", "ch", "lh", "rlh", "vh", "vw", "vmax", "vmin", "svw", "svh", "lvw", "lvh", "dvw", "dvh", "deg", "rad", "grad", "turn", "Hz", "kHz", "dpi", "dpcm", "dppx", "fr"] %}
   module CSS
     struct {{unit_name.capitalize.id}}Value
       getter value : (Int8 | Int16 | Int32 | Int128 | Float32 | Float64)
@@ -174,6 +174,6 @@ module CSS
   alias Length = CmValue | MmValue | InValue | PxValue | PtValue | PcValue | EmValue | RemValue | ExValue | ChValue | LhValue | RlhValue | VhValue | VwValue | VmaxValue | VminValue | SvwValue | LvwValue | LvhValue | DvwValue | DvhValue | FrValue | Int32 | MathFunctionCall
   alias LengthPercentage = Length | PercentValue | MathFunctionCall
   alias Angle = DegValue | RadValue | GradValue | TurnValue | MathFunctionCall
-  alias Time = SValue | MsValue | Int32
+  alias Time = ::Time::Span | Int32
   alias NumberPercentage = CalcNumeric | PercentValue | MathFunctionCall
 end

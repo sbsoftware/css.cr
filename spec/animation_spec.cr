@@ -30,14 +30,14 @@ module CSS::AnimationSpec
 
     rule ".card" do
       animation_name FadeIn
-      animation_duration 250.ms
+      animation_duration 250.milliseconds
       animation_timing_function cubic_bezier(0.4, 0, 0.2, 1)
-      animation_delay 1.s
+      animation_delay 1.second
       animation_iteration_count :infinite
       animation_direction :alternate_reverse
       animation_fill_mode :both
       animation_play_state :running
-      animation FadeIn, 250.ms, :ease_in_out, 1.s, :infinite, :alternate_reverse, :both, :running
+      animation FadeIn, 250.milliseconds, :ease_in_out, 1.second, :infinite, :alternate_reverse, :both, :running
     end
 
     rule ".toast" do
@@ -45,7 +45,7 @@ module CSS::AnimationSpec
       animation_duration 0
       animation_timing_function steps(4, :jump_end)
       animation_iteration_count 2
-      animation "slide-out", 120.ms, :linear, 2, :reverse, :forwards, :paused
+      animation "slide-out", 120.milliseconds, :linear, 2, :reverse, :forwards, :paused
     end
   end
 
