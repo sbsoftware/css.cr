@@ -9,6 +9,7 @@ require "./css/css_enum"
 require "./css/enums/**"
 require "./css/color_string"
 require "./css/rgb_function_call"
+require "./css/hsl_function_call"
 require "./css/linear_gradient_direction"
 require "./css/linear_gradient_function_call"
 require "./css/radial_gradient_at"
@@ -491,7 +492,7 @@ module CSS
 
     alias ImageFunction = CSS::UrlFunctionCall | CSS::LinearGradientFunctionCall | CSS::RadialGradientFunctionCall | CSS::ConicGradientFunctionCall
     alias BackgroundTypes = Color | ImageFunction | CSS::Enums::VisualBox | CSS::Enums::BackgroundAttachment | CSS::Enums::BackgroundRepeat | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter | CSS::Enums::Auto | CSS::LengthPercentage
-    alias Color = CSS::Enums::CurrentColor | CSS::Enums::NamedColor | String | CSS::RgbFunctionCall
+    alias Color = CSS::Enums::CurrentColor | CSS::Enums::NamedColor | String | CSS::RgbFunctionCall | CSS::HslFunctionCall | CSS::HslaFunctionCall
     alias BorderWidth = CSS::Length | CSS::Enums::BorderWidth
     alias OutlineWidth = BorderWidth
     alias BorderImageSource = ImageFunction | CSS::Enums::None
@@ -1520,6 +1521,48 @@ module CSS
 
     def self.rgb(r, g, b, *, alpha = nil, from = nil)
       RgbFunctionCall.new(r, g, b, alpha: alpha, from: from)
+    end
+
+    macro hsl(hue, saturation, lightness)
+      {% if hue.is_a?(NumberLiteral) && (hue < 0 || hue > 360) %}
+        {{ hue.raise "hue must be between 0 and 360" }}
+      {% end %}
+      {% if saturation.is_a?(Call) && saturation.name == "percent".id && saturation.receiver.is_a?(NumberLiteral) && (saturation.receiver < 0 || saturation.receiver > 100) %}
+        {{ saturation.raise "saturation must be between 0% and 100%" }}
+      {% end %}
+      {% if lightness.is_a?(Call) && lightness.name == "percent".id && lightness.receiver.is_a?(NumberLiteral) && (lightness.receiver < 0 || lightness.receiver > 100) %}
+        {{ lightness.raise "lightness must be between 0% and 100%" }}
+      {% end %}
+
+      _hsl({{hue}}, {{saturation}}, {{lightness}})
+    end
+
+    def self._hsl(hue, saturation, lightness)
+      HslFunctionCall.new(hue, saturation, lightness)
+    end
+
+    macro hsla(hue, saturation, lightness, alpha)
+      {% if hue.is_a?(NumberLiteral) && (hue < 0 || hue > 360) %}
+        {{ hue.raise "hue must be between 0 and 360" }}
+      {% end %}
+      {% if saturation.is_a?(Call) && saturation.name == "percent".id && saturation.receiver.is_a?(NumberLiteral) && (saturation.receiver < 0 || saturation.receiver > 100) %}
+        {{ saturation.raise "saturation must be between 0% and 100%" }}
+      {% end %}
+      {% if lightness.is_a?(Call) && lightness.name == "percent".id && lightness.receiver.is_a?(NumberLiteral) && (lightness.receiver < 0 || lightness.receiver > 100) %}
+        {{ lightness.raise "lightness must be between 0% and 100%" }}
+      {% end %}
+      {% if alpha.is_a?(NumberLiteral) && (alpha < 0 || alpha > 1) %}
+        {{ alpha.raise "alpha must be between 0 and 1" }}
+      {% end %}
+      {% if alpha.is_a?(Call) && alpha.name == "percent".id && alpha.receiver.is_a?(NumberLiteral) && (alpha.receiver < 0 || alpha.receiver > 100) %}
+        {{ alpha.raise "alpha must be between 0% and 100%" }}
+      {% end %}
+
+      _hsla({{hue}}, {{saturation}}, {{lightness}}, {{alpha}})
+    end
+
+    def self._hsla(hue, saturation, lightness, alpha)
+      HslaFunctionCall.new(hue, saturation, lightness, alpha)
     end
 
     alias LinearGradientDirection = CSS::LinearGradientSide | CSS::Angle
