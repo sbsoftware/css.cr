@@ -9,6 +9,7 @@ require "./css/css_enum"
 require "./css/enums/**"
 require "./css/color_string"
 require "./css/rgb_function_call"
+require "./css/hsl_function_call"
 require "./css/linear_gradient_direction"
 require "./css/linear_gradient_function_call"
 require "./css/radial_gradient_at"
@@ -491,7 +492,7 @@ module CSS
 
     alias ImageFunction = CSS::UrlFunctionCall | CSS::LinearGradientFunctionCall | CSS::RadialGradientFunctionCall | CSS::ConicGradientFunctionCall
     alias BackgroundTypes = Color | ImageFunction | CSS::Enums::VisualBox | CSS::Enums::BackgroundAttachment | CSS::Enums::BackgroundRepeat | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter | CSS::Enums::Auto | CSS::LengthPercentage
-    alias Color = CSS::Enums::CurrentColor | CSS::Enums::NamedColor | String | CSS::RgbFunctionCall
+    alias Color = CSS::Enums::CurrentColor | CSS::Enums::NamedColor | String | CSS::RgbFunctionCall | CSS::HslFunctionCall | CSS::HslaFunctionCall
     alias BorderWidth = CSS::Length | CSS::Enums::BorderWidth
     alias OutlineWidth = BorderWidth
     alias BorderImageSource = ImageFunction | CSS::Enums::None
@@ -1520,6 +1521,14 @@ module CSS
 
     def self.rgb(r, g, b, *, alpha = nil, from = nil)
       RgbFunctionCall.new(r, g, b, alpha: alpha, from: from)
+    end
+
+    def self.hsl(hue, saturation, lightness)
+      HslFunctionCall.new(hue, saturation, lightness)
+    end
+
+    def self.hsla(hue, saturation, lightness, alpha)
+      HslaFunctionCall.new(hue, saturation, lightness, alpha)
     end
 
     alias LinearGradientDirection = CSS::LinearGradientSide | CSS::Angle
