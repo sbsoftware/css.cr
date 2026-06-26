@@ -31,14 +31,23 @@ module CSS
 
   struct HslaFunctionCall
     include FunctionCall
-    getter hue : HslHue
-    getter saturation : CSS::PercentValue
-    getter lightness : CSS::PercentValue
     getter alpha : HslAlpha
 
-    def initialize(@hue, @saturation, @lightness, @alpha)
-      validate_hsl_values
+    def initialize(hue, saturation, lightness, @alpha)
+      @hsl = HslFunctionCall.new(hue, saturation, lightness)
       validate_alpha
+    end
+
+    def hue : HslHue
+      hsl.hue
+    end
+
+    def saturation : CSS::PercentValue
+      hsl.saturation
+    end
+
+    def lightness : CSS::PercentValue
+      hsl.lightness
     end
 
     def function_name : String
@@ -46,14 +55,10 @@ module CSS
     end
 
     def arguments : String
-      "#{hue}, #{saturation}, #{lightness}, #{alpha}"
+      "#{hsl.arguments}, #{alpha}"
     end
 
-    private def validate_hsl_values
-      raise ArgumentError.new("hue must be between 0 and 360") unless 0 <= hue <= 360
-      raise ArgumentError.new("saturation must be between 0% and 100%") unless 0 <= saturation.value <= 100
-      raise ArgumentError.new("lightness must be between 0% and 100%") unless 0 <= lightness.value <= 100
-    end
+    private getter hsl : HslFunctionCall
 
     private def validate_alpha
       alpha_value = alpha
