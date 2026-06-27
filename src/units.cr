@@ -167,11 +167,13 @@ end
 module CSS
   alias CalcNumeric = Int8 | Int16 | Int32 | Int64 | Int128 | Float32 | Float64
   alias CalcUnit = CmValue | MmValue | InValue | PxValue | PtValue | PcValue | EmValue | RemValue | ExValue | ChValue | LhValue | RlhValue | VhValue | VwValue | VmaxValue | VminValue | SvwValue | LvwValue | LvhValue | DvwValue | DvhValue | FrValue
-  alias CalcOperand = CalcNumeric | PercentValue | CalcUnit | Calculation | CalcFunctionCall
-  alias CalcNonNumeric = Calculation | PercentValue | CalcUnit | CalcFunctionCall
+  alias MathFunctionCall = CalcFunctionCall | ClampFunctionCall | MinFunctionCall
+  alias CalcOperand = CalcNumeric | PercentValue | CalcUnit | Calculation | MathFunctionCall
+  alias CalcNonNumeric = Calculation | PercentValue | CalcUnit | MathFunctionCall
 
-  alias Length = CmValue | MmValue | InValue | PxValue | PtValue | PcValue | EmValue | RemValue | ExValue | ChValue | LhValue | RlhValue | VhValue | VwValue | VmaxValue | VminValue | SvwValue | LvwValue | LvhValue | DvwValue | DvhValue | FrValue | Int32 | CalcFunctionCall | ClampFunctionCall
-  alias LengthPercentage = Length | PercentValue | CalcFunctionCall
-  alias Angle = DegValue | RadValue | GradValue | TurnValue | CalcFunctionCall | ClampFunctionCall
-  alias NumberPercentage = Int32 | Float32 | PercentValue | CalcFunctionCall | ClampFunctionCall
+  alias Length = CmValue | MmValue | InValue | PxValue | PtValue | PcValue | EmValue | RemValue | ExValue | ChValue | LhValue | RlhValue | VhValue | VwValue | VmaxValue | VminValue | SvwValue | LvwValue | LvhValue | DvwValue | DvhValue | FrValue | Int32 | MathFunctionCall
+  alias LengthPercentage = Length | PercentValue | MathFunctionCall
+  alias Angle = DegValue | RadValue | GradValue | TurnValue | MathFunctionCall
+  alias Time = ::Time::Span | Int32
+  alias NumberPercentage = CalcNumeric | PercentValue | MathFunctionCall
 end

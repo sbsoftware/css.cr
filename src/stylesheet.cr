@@ -9,13 +9,18 @@ require "./css/css_enum"
 require "./css/enums/**"
 require "./css/color_string"
 require "./css/rgb_function_call"
+require "./css/hsl_function_call"
 require "./css/linear_gradient_direction"
 require "./css/linear_gradient_function_call"
 require "./css/radial_gradient_at"
 require "./css/radial_gradient_function_call"
+require "./css/conic_gradient_from"
+require "./css/conic_gradient_function_call"
 require "./css/min_function_call"
 require "./css/clamp_function_call"
 require "./css/url_function_call"
+require "./css/animation_name"
+require "./css/animation_timing_function"
 require "./css/transform_functions"
 require "./css/transform_function_call"
 require "./css/ratio"
@@ -485,9 +490,9 @@ module CSS
       "#{name.gsub(/_/, "-")}: #{value}#{suffix};"
     end
 
-    alias ImageFunction = CSS::UrlFunctionCall | CSS::LinearGradientFunctionCall | CSS::RadialGradientFunctionCall
+    alias ImageFunction = CSS::UrlFunctionCall | CSS::LinearGradientFunctionCall | CSS::RadialGradientFunctionCall | CSS::ConicGradientFunctionCall
     alias BackgroundTypes = Color | ImageFunction | CSS::Enums::VisualBox | CSS::Enums::BackgroundAttachment | CSS::Enums::BackgroundRepeat | CSS::Enums::BackgroundPositionX | CSS::Enums::BackgroundPositionY | CSS::Enums::BackgroundPositionCenter | CSS::Enums::Auto | CSS::LengthPercentage
-    alias Color = CSS::Enums::CurrentColor | CSS::Enums::NamedColor | String | CSS::RgbFunctionCall
+    alias Color = CSS::Enums::CurrentColor | CSS::Enums::NamedColor | String | CSS::RgbFunctionCall | CSS::HslFunctionCall | CSS::HslaFunctionCall
     alias BorderWidth = CSS::Length | CSS::Enums::BorderWidth
     alias OutlineWidth = BorderWidth
     alias BorderImageSource = ImageFunction | CSS::Enums::None
@@ -499,6 +504,13 @@ module CSS
     alias ListStyle = CSS::Enums::ListStyleType | String | CSS::Enums::ListStylePosition | ImageFunction
     alias AspectRatio = CSS::Ratio | CSS::RatioNumber | CSS::Enums::Auto
     alias TransformValue = CSS::TransformFunctionCall | CSS::Enums::None
+    alias AnimationNameValue = CSS::AnimationName | String | CSS::Enums::None
+    alias AnimationTimingFunctionValue = CSS::Enums::AnimationTimingFunction | CSS::CubicBezierFunctionCall | CSS::StepsFunctionCall
+    alias AnimationIterationCountValue = Int32 | Float32 | Float64 | CSS::Enums::AnimationIterationCount
+    alias AnimationDirectionValue = CSS::Enums::AnimationDirection
+    alias AnimationFillModeValue = CSS::Enums::AnimationFillMode | CSS::Enums::None
+    alias AnimationPlayStateValue = CSS::Enums::AnimationPlayState
+    alias AnimationValue = CSS::Time | AnimationNameValue | CSS::Keyframes.class | AnimationTimingFunctionValue | AnimationIterationCountValue | AnimationDirectionValue | AnimationFillModeValue | AnimationPlayStateValue
 
     prop accent_color, String
 
@@ -516,16 +528,15 @@ module CSS
 
     prop alignment_baseline, String
     prop all, String
-    prop animation, String
     prop animation_composition, String
-    prop animation_delay, String
-    prop animation_direction, String
-    prop animation_duration, String
-    prop animation_fill_mode, String
-    prop animation_iteration_count, Int | String
-    prop animation_name, String
-    prop animation_play_state, String
-    prop animation_timing_function, String
+    prop animation_delay, CSS::Time
+    prop animation_direction, AnimationDirectionValue
+    prop animation_duration, CSS::Time
+    prop animation_fill_mode, AnimationFillModeValue
+    prop animation_iteration_count, AnimationIterationCountValue, enforce_unit: false
+    prop animation_name, AnimationNameValue, transform_string: CSS::AnimationName
+    prop animation_play_state, AnimationPlayStateValue
+    prop animation_timing_function, AnimationTimingFunctionValue
     prop appearance, String
     prop aspect_ratio, AspectRatio, enforce_unit: false
     prop backdrop_filter, String
@@ -1199,7 +1210,7 @@ module CSS
     prop offset_path, String
     prop offset_position, String
     prop offset_rotate, String
-    prop opacity, Number | CSS::PercentValue, enforce_unit: false
+    prop opacity, CSS::NumberPercentage, enforce_unit: false
     prop order, Int, enforce_unit: false
     prop orphans, Int
     prop outline, Color, transform_string: CSS::ColorString
@@ -1383,7 +1394,11 @@ module CSS
     prop top, CSS::LengthPercentage | CSS::Enums::Auto
     prop touch_action, String
     prop transform_box, String
-    prop transform_origin, String
+    prop transform_origin, CSS::LengthPercentage | CSS::Enums::TransformOriginX | CSS::Enums::TransformOriginY | CSS::Enums::TransformOriginCenter
+    prop2 transform_origin, CSS::LengthPercentage | CSS::Enums::TransformOriginX | CSS::Enums::TransformOriginCenter, CSS::LengthPercentage | CSS::Enums::TransformOriginY | CSS::Enums::TransformOriginCenter
+    prop2 transform_origin, CSS::Enums::TransformOriginY | CSS::Enums::TransformOriginCenter, CSS::Enums::TransformOriginX | CSS::Enums::TransformOriginCenter
+    prop3 transform_origin, CSS::LengthPercentage | CSS::Enums::TransformOriginX | CSS::Enums::TransformOriginCenter, CSS::LengthPercentage | CSS::Enums::TransformOriginY | CSS::Enums::TransformOriginCenter, CSS::Length
+    prop3 transform_origin, CSS::Enums::TransformOriginY | CSS::Enums::TransformOriginCenter, CSS::Enums::TransformOriginX | CSS::Enums::TransformOriginCenter, CSS::Length
     prop transform_style, String
     prop transition, String
     prop transition_behavior, String
@@ -1431,7 +1446,7 @@ module CSS
       _min({{values.splat}})
     end
 
-    def self._min(*values : CSS::GridLengthPercentage)
+    def self._min(*values : CSS::LengthPercentage | CSS::Angle | CSS::NumberPercentage)
       CSS::MinFunctionCall.new(*values)
     end
 
@@ -1508,9 +1523,54 @@ module CSS
       RgbFunctionCall.new(r, g, b, alpha: alpha, from: from)
     end
 
+    macro hsl(hue, saturation, lightness)
+      {% if hue.is_a?(NumberLiteral) && (hue < 0 || hue > 360) %}
+        {{ hue.raise "hue must be between 0 and 360" }}
+      {% end %}
+      {% if saturation.is_a?(Call) && saturation.name == "percent".id && saturation.receiver.is_a?(NumberLiteral) && (saturation.receiver < 0 || saturation.receiver > 100) %}
+        {{ saturation.raise "saturation must be between 0% and 100%" }}
+      {% end %}
+      {% if lightness.is_a?(Call) && lightness.name == "percent".id && lightness.receiver.is_a?(NumberLiteral) && (lightness.receiver < 0 || lightness.receiver > 100) %}
+        {{ lightness.raise "lightness must be between 0% and 100%" }}
+      {% end %}
+
+      _hsl({{hue}}, {{saturation}}, {{lightness}})
+    end
+
+    def self._hsl(hue, saturation, lightness)
+      HslFunctionCall.new(hue, saturation, lightness)
+    end
+
+    macro hsla(hue, saturation, lightness, alpha)
+      {% if hue.is_a?(NumberLiteral) && (hue < 0 || hue > 360) %}
+        {{ hue.raise "hue must be between 0 and 360" }}
+      {% end %}
+      {% if saturation.is_a?(Call) && saturation.name == "percent".id && saturation.receiver.is_a?(NumberLiteral) && (saturation.receiver < 0 || saturation.receiver > 100) %}
+        {{ saturation.raise "saturation must be between 0% and 100%" }}
+      {% end %}
+      {% if lightness.is_a?(Call) && lightness.name == "percent".id && lightness.receiver.is_a?(NumberLiteral) && (lightness.receiver < 0 || lightness.receiver > 100) %}
+        {{ lightness.raise "lightness must be between 0% and 100%" }}
+      {% end %}
+      {% if alpha.is_a?(NumberLiteral) && (alpha < 0 || alpha > 1) %}
+        {{ alpha.raise "alpha must be between 0 and 1" }}
+      {% end %}
+      {% if alpha.is_a?(Call) && alpha.name == "percent".id && alpha.receiver.is_a?(NumberLiteral) && (alpha.receiver < 0 || alpha.receiver > 100) %}
+        {{ alpha.raise "alpha must be between 0% and 100%" }}
+      {% end %}
+
+      _hsla({{hue}}, {{saturation}}, {{lightness}}, {{alpha}})
+    end
+
+    def self._hsla(hue, saturation, lightness, alpha)
+      HslaFunctionCall.new(hue, saturation, lightness, alpha)
+    end
+
     alias LinearGradientDirection = CSS::LinearGradientSide | CSS::Angle
     alias LinearGradientStop = Color | CSS::LengthPercentage | Tuple(Color, CSS::LengthPercentage?) | Tuple(Color, CSS::LengthPercentage, CSS::LengthPercentage?)
     alias RadialGradientStop = LinearGradientStop
+    alias ConicGradientAngle = CSS::Angle
+    alias ConicGradientStopPosition = CSS::Angle | CSS::PercentValue | CSS::MathFunctionCall
+    alias ConicGradientStop = Color | ConicGradientStopPosition | Tuple(Color, ConicGradientStopPosition?) | Tuple(Color, ConicGradientStopPosition, ConicGradientStopPosition?)
 
     def self.linear_gradient(direction : LinearGradientDirection, *stops : LinearGradientStop)
       LinearGradientFunctionCall.new(direction, *stops)
@@ -1520,8 +1580,27 @@ module CSS
       LinearGradientFunctionCall.new(*stops)
     end
 
-    # Helper to build an `at` clause for radial gradients.
-    # Position helper for radial gradients. Overloads mirror <position> grammar.
+    def self.from(angle : ConicGradientAngle)
+      CSS::ConicGradientFrom.new(angle)
+    end
+
+    def self.conic_gradient(*stops : ConicGradientStop)
+      ConicGradientFunctionCall.new(*stops)
+    end
+
+    def self.conic_gradient(from : CSS::ConicGradientFrom, *stops : ConicGradientStop)
+      ConicGradientFunctionCall.new({from}, *stops)
+    end
+
+    def self.conic_gradient(at : CSS::RadialGradientAt, *stops : ConicGradientStop)
+      ConicGradientFunctionCall.new({at}, *stops)
+    end
+
+    def self.conic_gradient(from : CSS::ConicGradientFrom, at : CSS::RadialGradientAt, *stops : ConicGradientStop)
+      ConicGradientFunctionCall.new({from, at}, *stops)
+    end
+
+    # Position helper for radial and conic gradients. Overloads mirror <position> grammar.
     def self.at(position : CSS::Enums::RadialGradientPosition | CSS::LengthPercentage)
       CSS::RadialGradientAt.new(position)
     end
@@ -1608,8 +1687,44 @@ module CSS
       RadialGradientFunctionCall.new({radius_x, radius_y, at}, *stops)
     end
 
+    def self.cubic_bezier(x1 : Number, y1 : Number, x2 : Number, y2 : Number)
+      CubicBezierFunctionCall.new(x1.to_f64, y1.to_f64, x2.to_f64, y2.to_f64)
+    end
+
+    def self.steps(count : Int32, position : CSS::Enums::StepPosition? = nil)
+      StepsFunctionCall.new(count, position)
+    end
+
     def self.url(value)
       UrlFunctionCall.new(value)
+    end
+
+    macro animation(*values, important = false)
+      {% if values.empty? %}
+        {{ raise "animation requires at least one value" }}
+      {% end %}
+
+      _animation({{values.splat}}, important: {{important}})
+    end
+
+    def self._animation(*values : AnimationValue | String | CSS::Enums::Global, important = false)
+      property("animation", values.map { |value| animation_value_to_css(value) }.join(" "), important: important)
+    end
+
+    def self._animation_name(value : CSS::Keyframes.class, *, important = false)
+      property("animation-name", value.to_css_value, important: important)
+    end
+
+    def self.animation_value_to_css(value : String)
+      CSS::AnimationName.new(value).to_css_value
+    end
+
+    def self.animation_value_to_css(value : CSS::Keyframes.class)
+      value.to_css_value
+    end
+
+    def self.animation_value_to_css(value)
+      value.to_css_value
     end
 
     macro transform(*values, important = false)
@@ -1626,6 +1741,22 @@ module CSS
 
     def self._transform(*values : TransformValue, important = false)
       property("transform", values.map(&.to_css_value).join(" "), important: important)
+    end
+
+    macro keyframes(klass_name, name = nil, &blk)
+      class {{klass_name}} < CSS::Keyframes
+        def self.keyframes_name : CSS::AnimationName
+          {% if name %}
+            CSS::AnimationName.new({{name}})
+          {% else %}
+            CSS::AnimationName.new({{klass_name.stringify.underscore.gsub(/_/, "-")}})
+          {% end %}
+        end
+
+        {{blk.body}}
+      end
+
+      embed({{klass_name}})
     end
 
     macro font_face(klass_name, *, name, &blk)
@@ -1747,6 +1878,84 @@ module CSS
         io << ch
         at_line_start = (ch == '\n')
       end
+    end
+  end
+
+  abstract class Keyframes < CSS::Stylesheet
+    module ClassMethods
+      abstract def keyframes_name : CSS::AnimationName
+    end
+
+    extend ClassMethods
+
+    macro inherited
+      macro finished
+        def self.to_s(io : IO)
+          io << "@keyframes "
+          io << keyframes_name
+          io << " {\n"
+          previous_def
+          io << "\n}"
+        end
+      end
+    end
+
+    def self.to_css_value
+      keyframes_name.to_css_value
+    end
+
+    def self.format_keyframe_selector(value : CSS::PercentValue)
+      value.to_css_value
+    end
+
+    def self.format_keyframe_selector(value : Symbol)
+      value.to_s.gsub('_', '-')
+    end
+
+    def self.format_keyframe_selector(value : String)
+      value
+    end
+
+    macro step(selector, &blk)
+      def self.to_s(io : IO)
+        {% if @type.class.methods.map(&.name.stringify).includes?("to_s") %}
+          previous_def
+          io << "\n\n"
+        {% end %}
+
+        make_keyframe_rule(io, CSS::Keyframes.format_keyframe_selector({{selector}}), 1) {{blk}}
+      end
+    end
+
+    macro from(&blk)
+      step(:from) {{blk}}
+    end
+
+    macro to(&blk)
+      step(:to) {{blk}}
+    end
+
+    macro make_keyframe_rule(io, selector, level = 0, &blk)
+      {% if level > 0 %}
+        {{io}} << "  " * {{level}}
+      {% end %}
+      {{io}} << {{selector}}
+      {{io}} << " {\n"
+      {% if blk.body.is_a?(Expressions) %}
+        {% for exp, i in blk.body.expressions %}
+          {{io}} << "  " * {{level + 1}}
+          {{io}} << {{exp}}
+          {% if i < blk.body.expressions.size - 1 %}
+            {{io}} << "\n"
+          {% end %}
+        {% end %}
+      {% else %}
+        {{io}} << "  " * {{level + 1}}
+        {{io}} << {{blk.body}}
+      {% end %}
+      {{io}} << "\n"
+      {{io}} << "  " * {{level}}
+      {{io}} << "}"
     end
   end
 end
