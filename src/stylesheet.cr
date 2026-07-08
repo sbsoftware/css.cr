@@ -21,6 +21,8 @@ require "./css/clamp_function_call"
 require "./css/url_function_call"
 require "./css/animation_name"
 require "./css/animation_timing_function"
+require "./css/filter_functions"
+require "./css/filter_function_call"
 require "./css/transform_functions"
 require "./css/transform_function_call"
 require "./css/ratio"
@@ -503,6 +505,7 @@ module CSS
     alias TextDecoration = CSS::Enums::TextDecorationLine | CSS::Enums::SpellingError | CSS::Enums::GrammarError | CSS::Enums::TextDecorationStyle | CSS::Enums::FromFont | CSS::Enums::Auto | CSS::LengthPercentage | Color
     alias ListStyle = CSS::Enums::ListStyleType | String | CSS::Enums::ListStylePosition | ImageFunction
     alias AspectRatio = CSS::Ratio | CSS::RatioNumber | CSS::Enums::Auto
+    alias FilterValue = CSS::FilterFunctionCall | CSS::Enums::None
     alias TransformValue = CSS::TransformFunctionCall | CSS::Enums::None
     alias AnimationNameValue = CSS::AnimationName | String | CSS::Enums::None
     alias AnimationTimingFunctionValue = CSS::Enums::AnimationTimingFunction | CSS::CubicBezierFunctionCall | CSS::StepsFunctionCall
@@ -539,7 +542,23 @@ module CSS
     prop animation_timing_function, AnimationTimingFunctionValue
     prop appearance, String
     prop aspect_ratio, AspectRatio, enforce_unit: false
-    prop backdrop_filter, String
+
+    macro backdrop_filter(*values, important = false)
+      {% if values.empty? %}
+        {{ raise "backdrop_filter requires at least one value" }}
+      {% end %}
+
+      _backdrop_filter(
+        {% for value, i in values %}
+          CSS::FilterFunctions.dispatch({{value}}){% if i < values.size - 1 %}, {% else %}, important: {{important}}{% end %}
+        {% end %}
+      )
+    end
+
+    def self._backdrop_filter(*values : FilterValue, important = false)
+      property("backdrop-filter", values.map(&.to_css_value).join(" "), important: important)
+    end
+
     prop backface_visibility, String
 
     prop background, BackgroundTypes, transform_string: CSS::ColorString
@@ -964,11 +983,11 @@ module CSS
     prop fill_opacity, String
     prop fill_rule, String
     prop filter, String
-    prop flex, CSS::Enums::Flex # keyword or global value
-    prop flex, Number, enforce_unit: false # flex-grow only
-    prop flex, CSS::LengthPercentage | CSS::Enums::FlexBasis | CSS::Enums::Auto # flex-basis only
-    prop2 flex, Number, CSS::LengthPercentage | CSS::Enums::FlexBasis | CSS::Enums::Auto, enforce_unit1: false # flex-grow and flex-basis
-    prop2 flex, Number, Number, enforce_unit1: false, enforce_unit2: false # flex-grow and flex-shrink
+    prop flex, CSS::Enums::Flex                                                                                                              # keyword or global value
+    prop flex, Number, enforce_unit: false                                                                                                   # flex-grow only
+    prop flex, CSS::LengthPercentage | CSS::Enums::FlexBasis | CSS::Enums::Auto                                                              # flex-basis only
+    prop2 flex, Number, CSS::LengthPercentage | CSS::Enums::FlexBasis | CSS::Enums::Auto, enforce_unit1: false                               # flex-grow and flex-basis
+    prop2 flex, Number, Number, enforce_unit1: false, enforce_unit2: false                                                                   # flex-grow and flex-shrink
     prop3 flex, Number, Number, CSS::LengthPercentage | CSS::Enums::FlexBasis | CSS::Enums::Auto, enforce_unit1: false, enforce_unit2: false # flex-grow, flex-shrink and flex-basis
     prop flex_basis, CSS::LengthPercentage | CSS::Enums::FlexBasis | CSS::Enums::Auto
     prop flex_direction, CSS::Enums::FlexDirection
