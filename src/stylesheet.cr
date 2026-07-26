@@ -1401,7 +1401,9 @@ module CSS
     prop text_overflow, CSS::Enums::TextOverflow | String
     prop2 text_overflow, CSS::Enums::TextOverflow | String, CSS::Enums::TextOverflow | String
     prop text_rendering, String
-    prop text_shadow, String
+    prop text_shadow, CSS::Enums::None
+    prop3 text_shadow, Color, CSS::Length, CSS::Length, transform_string1: CSS::ColorString
+    prop4 text_shadow, Color, CSS::Length, CSS::Length, CSS::Length, transform_string1: CSS::ColorString
     prop text_transform, CSS::Enums::None | CSS::Enums::TextTransform | CSS::Enums::TextTransformMathAuto
     prop2 text_transform, CSS::Enums::TextTransform, CSS::Enums::TextTransform
     prop3 text_transform, CSS::Enums::TextTransform, CSS::Enums::TextTransform, CSS::Enums::TextTransform
