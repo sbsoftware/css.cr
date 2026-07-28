@@ -1407,7 +1407,7 @@ module CSS
     prop text_transform, CSS::Enums::None | CSS::Enums::TextTransform | CSS::Enums::TextTransformMathAuto
     prop2 text_transform, CSS::Enums::TextTransform, CSS::Enums::TextTransform
     prop3 text_transform, CSS::Enums::TextTransform, CSS::Enums::TextTransform, CSS::Enums::TextTransform
-    prop text_underline_offset, CSS::LengthPercentage | String
+    prop text_underline_offset, CSS::LengthPercentage | CSS::Enums::Auto
     prop text_underline_position, String
     prop text_wrap, String
     prop text_wrap_mode, String
