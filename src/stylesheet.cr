@@ -16,6 +16,7 @@ require "./css/radial_gradient_at"
 require "./css/radial_gradient_function_call"
 require "./css/conic_gradient_from"
 require "./css/conic_gradient_function_call"
+require "./css/env_function_call"
 require "./css/min_function_call"
 require "./css/clamp_function_call"
 require "./css/url_function_call"
@@ -54,6 +55,14 @@ module CSS
 
     def self._clamp(min : CSS::LengthPercentage, preferred : CSS::LengthPercentage, max : CSS::LengthPercentage)
       CSS::ClampFunctionCall.new(min, preferred, max)
+    end
+
+    def self.env(variable : CSS::Enums::EnvVariable, fallback = nil)
+      CSS::EnvFunctionCall.new(variable, fallback: fallback)
+    end
+
+    def self.env(variable : CSS::Enums::EnvVariable, index1 : Int32, index2 : Int32, fallback = nil)
+      CSS::EnvFunctionCall.new(variable, index1, index2, fallback: fallback)
     end
 
     macro rule(*selector_expressions, &blk)
@@ -168,7 +177,7 @@ module CSS
         _{{name.id}}(\{{value}}, important: \{{important}})
       end
 
-      def self._{{name.id}}(value : {{type}} | CSS::Enums::Global, *, important = false)
+      def self._{{name.id}}(value : {{type}} | CSS::EnvFunctionCall | CSS::Enums::Global, *, important = false)
         %value = nil
 
         {% if transform_string %}
@@ -198,7 +207,7 @@ module CSS
         _{{name.id}}(\{{value1}}, \{{value2}}, important: \{{important}})
       end
 
-      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, *, important = false)
+      def self._{{name.id}}(value1 : {{type1}} | CSS::EnvFunctionCall, value2 : {{type2}} | CSS::EnvFunctionCall, *, important = false)
         %value1 = %value2 = nil
 
         {% if transform_string1 %}
@@ -240,7 +249,7 @@ module CSS
         _{{name.id}}(\{{value1}}, \{{value2}}, \{{value3}}, important: \{{important}})
       end
 
-      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, *, important = false)
+      def self._{{name.id}}(value1 : {{type1}} | CSS::EnvFunctionCall, value2 : {{type2}} | CSS::EnvFunctionCall, value3 : {{type3}} | CSS::EnvFunctionCall, *, important = false)
         %value1 = %value2 = %value3 = nil
 
         {% if transform_string1 %}
@@ -294,7 +303,7 @@ module CSS
         _{{name.id}}(\{{value1}}, \{{value2}}, \{{value3}}, \{{value4}}, important: \{{important}})
       end
 
-      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}}, *, important = false)
+      def self._{{name.id}}(value1 : {{type1}} | CSS::EnvFunctionCall, value2 : {{type2}} | CSS::EnvFunctionCall, value3 : {{type3}} | CSS::EnvFunctionCall, value4 : {{type4}} | CSS::EnvFunctionCall, *, important = false)
         %value1 = %value2 = %value3 = %value4 = nil
 
         {% if transform_string1 %}
@@ -360,7 +369,7 @@ module CSS
         _{{name.id}}(\{{value1}}, \{{value2}}, \{{value3}}, \{{value4}}, \{{value5}}, important: \{{important}})
       end
 
-      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}}, value5 : {{type5}}, *, important = false)
+      def self._{{name.id}}(value1 : {{type1}} | CSS::EnvFunctionCall, value2 : {{type2}} | CSS::EnvFunctionCall, value3 : {{type3}} | CSS::EnvFunctionCall, value4 : {{type4}} | CSS::EnvFunctionCall, value5 : {{type5}} | CSS::EnvFunctionCall, *, important = false)
         %value1 = %value2 = %value3 = %value4 = %value5 = nil
 
         {% if transform_string1 %}
@@ -438,7 +447,7 @@ module CSS
         _{{name.id}}(\{{value1}}, \{{value2}}, \{{value3}}, \{{value4}}, \{{value5}}, \{{value6}}, important: \{{important}})
       end
 
-      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}}, value5 : {{type5}}, value6 : {{type6}}, *, important = false)
+      def self._{{name.id}}(value1 : {{type1}} | CSS::EnvFunctionCall, value2 : {{type2}} | CSS::EnvFunctionCall, value3 : {{type3}} | CSS::EnvFunctionCall, value4 : {{type4}} | CSS::EnvFunctionCall, value5 : {{type5}} | CSS::EnvFunctionCall, value6 : {{type6}} | CSS::EnvFunctionCall, *, important = false)
         %value1 = %value2 = %value3 = %value4 = %value5 = %value6 = nil
 
         {% if transform_string1 %}

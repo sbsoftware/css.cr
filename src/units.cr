@@ -167,7 +167,7 @@ end
 module CSS
   alias CalcNumeric = Int8 | Int16 | Int32 | Int64 | Int128 | Float32 | Float64
   alias CalcUnit = CmValue | MmValue | InValue | PxValue | PtValue | PcValue | EmValue | RemValue | ExValue | ChValue | LhValue | RlhValue | VhValue | VwValue | VmaxValue | VminValue | SvwValue | LvwValue | LvhValue | DvwValue | DvhValue | FrValue
-  alias MathFunctionCall = CalcFunctionCall | ClampFunctionCall | MinFunctionCall
+  alias MathFunctionCall = CalcFunctionCall | ClampFunctionCall | MinFunctionCall | EnvFunctionCall
   alias CalcOperand = CalcNumeric | PercentValue | CalcUnit | Calculation | MathFunctionCall
   alias CalcNonNumeric = Calculation | PercentValue | CalcUnit | MathFunctionCall
 
