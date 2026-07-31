@@ -41,10 +41,24 @@ class GridTrackExample < CSS::Stylesheet
 end
 ```
 
+## Environment variables
+
+Use `env` with a typed `CSS::Enums::EnvVariable` value. Viewport segment variables require two non-negative indices.
+
+```crystal
+class SafeAreaExample < CSS::Stylesheet
+  rule main do
+    padding_top env(:safe_area_inset_top, fallback: 0.px)
+    width env(:viewport_segment_width, 0, 0, fallback: 100.percent)
+  end
+end
+```
+
 ## CSS <-> Crystal translation hints
 
 | CSS | Crystal DSL |
 | --- | --- |
 | `padding: 16px;` | `padding 16.px` |
+| `padding-top: env(safe-area-inset-top, 0px);` | `padding_top env(:safe_area_inset_top, fallback: 0.px)` |
 | `width: calc(100% - 20px);` | `width calc(100.percent - 20.px)` |
 | `grid-template-columns: repeat(12, minmax(0, 1fr));` | `grid_template_columns repeat(12, minmax(0, 1.fr))` |

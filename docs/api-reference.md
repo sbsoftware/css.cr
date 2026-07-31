@@ -12,7 +12,7 @@ This is a concise map of the public DSL surface. Use this file as the first stop
 - Rule composition: `rule`, `embed`
 - Media queries: `media`
 - Properties: generated via `prop`, `prop2`, `prop3`, `prop4`, `prop5`, `prop6`
-- CSS function/value helpers: `calc`, `min`, `minmax`, `repeat`, `fit_content`, `line_names`, `rgb`, `url`, `linear_gradient`, `radial_gradient`, `at`, `ratio`
+- CSS function/value helpers: `calc`, `env`, `min`, `minmax`, `repeat`, `fit_content`, `line_names`, `rgb`, `url`, `linear_gradient`, `radial_gradient`, `at`, `ratio`
 - Font embedding: `font_face`
 - Transform helper: `transform`
 - Low-level escape hatch used by helpers: `property(name, value, important: false)`
