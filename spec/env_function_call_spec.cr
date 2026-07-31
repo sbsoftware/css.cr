@@ -7,6 +7,7 @@ module CSS::EnvFunctionCallSpec
       padding_right env(:safe_area_inset_right, fallback: 1.em)
       margin_bottom env(:safe_area_max_inset_bottom, fallback: 0)
       width env(:viewport_segment_width, 0, 1, fallback: 40.percent)
+      max_width calc(100.percent - env(:safe_area_inset_left))
       grid_template_columns env(:safe_area_inset_left), 1.fr
       line_height env(:preferred_text_scale, fallback: 1)
       background_color env(:titlebar_area_width, fallback: "transparent")
@@ -22,6 +23,7 @@ module CSS::EnvFunctionCallSpec
         padding-right: env(safe-area-inset-right, 1em);
         margin-bottom: env(safe-area-max-inset-bottom, 0);
         width: env(viewport-segment-width 0 1, 40%);
+        max-width: calc(100% - env(safe-area-inset-left));
         grid-template-columns: env(safe-area-inset-left) 1fr;
         line-height: env(preferred-text-scale, 1);
         background-color: env(titlebar-area-width, transparent);
