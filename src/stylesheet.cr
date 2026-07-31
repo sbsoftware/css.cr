@@ -57,11 +57,30 @@ module CSS
       CSS::ClampFunctionCall.new(min, preferred, max)
     end
 
-    def self.env(variable : CSS::Enums::EnvVariable, fallback = nil)
+    macro env(variable, *indices, fallback = nil)
+      {% viewport_segment_variables = [:viewport_segment_width, :viewport_segment_height, :viewport_segment_top, :viewport_segment_right, :viewport_segment_bottom, :viewport_segment_left] %}
+      {% if variable.is_a?(SymbolLiteral) && viewport_segment_variables.includes?(variable) %}
+        {% if indices.size != 2 %}
+          {{ variable.raise "#{variable} requires exactly two non-negative indices" }}
+        {% end %}
+      {% elsif variable.is_a?(SymbolLiteral) && indices.size > 0 %}
+        {{ variable.raise "#{variable} does not accept indices" }}
+      {% end %}
+
+      {% for index in indices %}
+        {% if index.is_a?(NumberLiteral) && index < 0 %}
+          {{ index.raise "env indices must be non-negative" }}
+        {% end %}
+      {% end %}
+
+      _env({{variable}}{% for index in indices %}, {{index}}{% end %}, fallback: {{fallback}})
+    end
+
+    def self._env(variable : CSS::Enums::EnvVariable, fallback = nil)
       CSS::EnvFunctionCall.new(variable, fallback: fallback)
     end
 
-    def self.env(variable : CSS::Enums::EnvVariable, index1 : Int32, index2 : Int32, fallback = nil)
+    def self._env(variable : CSS::Enums::EnvVariable, index1 : Int32, index2 : Int32, fallback = nil)
       CSS::EnvFunctionCall.new(variable, index1, index2, fallback: fallback)
     end
 
