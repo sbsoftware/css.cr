@@ -37,11 +37,22 @@ end
 
 ```crystal
 css_class Button
+css_class Card
 
 class AdvancedSelectors < CSS::Stylesheet
   # Child combinator
   rule nav > Button do
     margin_left 8.px
+  end
+
+  # Descendant combinator, useful when the right side is :has()
+  rule nav >> Button do
+    margin_left 8.px
+  end
+
+  # :has() selector, with an explicit child or descendant combinator
+  rule Card > has(Button) do
+    border_color "#2563eb"
   end
 
   # Combine selectors
@@ -68,5 +79,7 @@ end
 | `.card { ... }` | `css_class Card` + `rule Card do ... end` |
 | `#header { ... }` | `css_id Header` + `rule Header do ... end` |
 | `nav > .button { ... }` | `rule nav > Button do ... end` |
+| `.card > :has(.button) { ... }` | `rule Card > has(Button) do ... end` |
+| `.card :has(.button) { ... }` | `rule Card >> has(Button) do ... end` |
 | `.button[aria-pressed='true'] { ... }` | `rule Button && "[aria-pressed='true']" do ... end` |
 | `.button:hover { ... }` | `rule Button <= :hover do ... end` |

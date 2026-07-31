@@ -2,6 +2,7 @@ require "./css/any_selector"
 require "./css/string_selector"
 require "./css/descendant_selector"
 require "./css/child_selector"
+require "./css/has_selector"
 require "./css/combined_selector"
 require "./css/attr_selector"
 require "./css/pseudoclass_selector"
@@ -95,11 +96,13 @@ module CSS
       end
     end
 
-    macro make_selector(expr, nested = false)
+    macro make_selector(expr)
       {% if expr.is_a?(Call) && expr.name == "any".id %}
         CSS::AnySelector.new
       {% elsif expr.is_a?(Call) && CSS::HTML_TAG_NAMES.includes?(expr.name.stringify) %}
         CSS::StringSelector.new({{expr.name.stringify}})
+      {% elsif expr.is_a?(Call) && expr.name == "has".id %}
+        {{expr.raise "has(selector) must be preceded by an explicit combinator, for example: Parent > has(Child) or Parent >> has(Child)"}}
       {% elsif expr.is_a?(Call) && expr.name == "<=".id %}
         CSS::PseudoclassSelector.new(make_selector({{expr.receiver}}), {{expr.args.first.expressions.last}})
       {% elsif expr.is_a?(Call) && expr.name == "&&".id %}
@@ -107,21 +110,47 @@ module CSS
       {% elsif expr.is_a?(And) %}
         # This will occurr when multiple `>` calls are concatenated.
         # The Crystal compiler transforms `x > y > z` into `x > (__temp_136 = y) && __temp_136 > z`
-        make_selector({{expr.left}}).combine(make_selector({{expr.right}}, true))
+        make_selector({{expr.left}}).combine(make_nested_child_selector({{expr.right}}))
       {% elsif expr.is_a?(Assign) %}
         # This can occur via Crystal's internal transformations of `x > y > z`, for example
         make_selector({{expr.value}})
       {% elsif expr.is_a?(Call) && expr.name == ">".id %}
-        {% if nested %}
-          CSS::NestedChildSelector.new(make_selector({{expr.args.first}}))
-        {% else %}
-          CSS::ChildSelector.new(make_selector({{expr.receiver}}), make_selector({{expr.args.first}}))
-        {% end %}
+        CSS::ChildSelector.new(make_selector({{expr.receiver}}), make_selector_after_combinator({{expr.args.first}}))
+      {% elsif expr.is_a?(Call) && expr.name == ">>".id %}
+        CSS::DescendantSelector.new(make_selector({{expr.receiver}}), make_selector_after_combinator({{expr.args.first}}))
       {% elsif expr.is_a?(Expressions) %}
         make_selector({{expr.expressions.last}})
       {% else %}
         {{expr}}.to_css_selector
       {% end %}
+    end
+
+    macro make_nested_child_selector(expr)
+      {% if expr.is_a?(Call) && expr.name == ">".id %}
+        CSS::NestedChildSelector.new(make_selector_after_combinator({{expr.args.first}}))
+      {% else %}
+        make_selector({{expr}})
+      {% end %}
+    end
+
+    macro make_selector_after_combinator(expr)
+      {% if expr.is_a?(Call) && expr.name == "has".id %}
+        make_has_selector({{expr}})
+      {% elsif expr.is_a?(Assign) %}
+        make_selector_after_combinator({{expr.value}})
+      {% elsif expr.is_a?(Expressions) %}
+        make_selector_after_combinator({{expr.expressions.last}})
+      {% else %}
+        make_selector({{expr}})
+      {% end %}
+    end
+
+    macro make_has_selector(expr)
+      {% if expr.args.size != 1 %}
+        {{expr.raise "has(selector) requires exactly one selector argument"}}
+      {% end %}
+
+      CSS::HasSelector.new({{expr.args.first}}.to_css_selector)
     end
 
     macro make_rule(io, selectors, level = 0, &blk)
