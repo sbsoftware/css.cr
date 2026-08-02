@@ -24,8 +24,8 @@ Status legend:
 | Properties: unsupported | 213 |
 | Properties: missing | 46 |
 | Enum-applicable properties | 141 |
-| Enum coverage: supported | 136 |
-| Enum coverage: partial | 5 |
+| Enum coverage: supported | 137 |
+| Enum coverage: partial | 4 |
 | Enum coverage: n/a | 345 |
 
 ## Missing Properties
@@ -875,7 +875,7 @@ These properties are currently not practically usable and need implementation wi
 | timeline-trigger-name | missing | property not implemented | n/a | not evaluated because property is missing | none \| &lt;dashed-ident&gt;# |
 | timeline-trigger-source | missing | property not implemented | n/a | not evaluated because property is missing | &lt;single-animation-timeline&gt;# |
 | top | supported | typed overloads | supported | typed enums | auto \| &lt;length-percentage&gt; \| &lt;anchor()&gt; \| &lt;anchor-size()&gt; |
-| touch-action | supported | typed overloads exist; raw String fallback may quote values | partial | typed enums exist; raw String fallback remains | auto \| none \| [ [ pan-x \| pan-left \| pan-right ] \|\| [ pan-y \| pan-up \| pan-down ] \|\| pinch-zoom ] \| manipulation |
+| touch-action | supported | typed overloads | supported | typed enums | auto \| none \| [ [ pan-x \| pan-left \| pan-right ] \|\| [ pan-y \| pan-up \| pan-down ] \|\| pinch-zoom ] \| manipulation |
 | transform | supported | typed overloads | n/a | not tracked as a required enum gap | none \| &lt;transform-list&gt; |
 | transform-box | unsupported | raw String-only overloads emit quoted values | n/a | not tracked as a required enum gap | content-box \| border-box \| fill-box \| stroke-box \| view-box |
 | transform-origin | supported | typed overloads | supported | typed enums | [ &lt;length-percentage&gt; \| left \| center \| right \| top \| bottom ] \| [ [ &lt;length-percentage&gt; \| left \| center \| right ] &amp;&amp; [ &lt;length-percentage&gt; \| top \| center \| bottom ] ] &lt;length&gt;? |

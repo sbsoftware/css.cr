@@ -8,9 +8,8 @@ module CSS::TouchActionSpec
       touch_action :manipulation
       touch_action :pan_x, :pan_y
       touch_action :pan_left, :pan_down, :pinch_zoom
-      touch_action CSS::TouchAction::PanRight, CSS::TouchAction::PanUp, CSS::TouchAction::DoubleTapZoom, important: true
+      touch_action :pan_right, :pan_up, :double_tap_zoom, important: true
       touch_action :revert_layer
-      touch_action "pan-x pan-y"
     end
   end
 
@@ -25,7 +24,6 @@ module CSS::TouchActionSpec
         touch-action: pan-left pan-down pinch-zoom;
         touch-action: pan-right pan-up double-tap-zoom !important;
         touch-action: revert-layer;
-        touch-action: "pan-x pan-y";
       }
       CSS
 
@@ -33,17 +31,81 @@ module CSS::TouchActionSpec
     end
   end
 
-  describe ".touch_action" do
-    it "rejects exclusive values in combinations" do
-      expect_raises(ArgumentError, "auto cannot be combined with other touch-action values") { CSS::Stylesheet._touch_action(:auto, :pan_x) }
-      expect_raises(ArgumentError, "none cannot be combined with other touch-action values") { CSS::Stylesheet._touch_action(:none, :pinch_zoom) }
-      expect_raises(ArgumentError, "manipulation cannot be combined with other touch-action values") { CSS::Stylesheet._touch_action(:manipulation, :double_tap_zoom) }
+  describe "touch_action macro validation" do
+    it "rejects raw string values" do
+      sample = <<-CRYSTAL
+      require "./src/css"
+
+      class InvalidTouchActionStyle < CSS::Stylesheet
+        rule div do
+          touch_action "pan-x pan-y"
+        end
+      end
+
+      InvalidTouchActionStyle.to_s
+      CRYSTAL
+
+      output = IO::Memory.new
+      status = Process.run("crystal", ["eval", sample], output: output, error: output)
+      status.success?.should be_false
+      output.to_s.should contain("touch_action does not accept raw String values")
     end
 
-    it "rejects duplicate and ambiguous pan values" do
-      expect_raises(ArgumentError, "touch-action values must not be duplicated") { CSS::Stylesheet._touch_action(:pan_x, :pan_x) }
-      expect_raises(ArgumentError, "touch-action accepts at most one horizontal pan value") { CSS::Stylesheet._touch_action(:pan_x, :pan_left) }
-      expect_raises(ArgumentError, "touch-action accepts at most one vertical pan value") { CSS::Stylesheet._touch_action(:pan_y, :pan_down) }
+    it "rejects invalid value combinations" do
+      sample = <<-CRYSTAL
+      require "./src/css"
+
+      class InvalidTouchActionStyle < CSS::Stylesheet
+        rule div do
+          touch_action :auto, :pan_x
+        end
+      end
+
+      InvalidTouchActionStyle.to_s
+      CRYSTAL
+
+      output = IO::Memory.new
+      status = Process.run("crystal", ["eval", sample], output: output, error: output)
+      status.success?.should be_false
+      output.to_s.should contain("\"auto\" cannot be combined with other touch-action values")
+    end
+
+    it "rejects duplicate values" do
+      sample = <<-CRYSTAL
+      require "./src/css"
+
+      class InvalidTouchActionStyle < CSS::Stylesheet
+        rule div do
+          touch_action :pan_x, :pan_x
+        end
+      end
+
+      InvalidTouchActionStyle.to_s
+      CRYSTAL
+
+      output = IO::Memory.new
+      status = Process.run("crystal", ["eval", sample], output: output, error: output)
+      status.success?.should be_false
+      output.to_s.should contain("touch-action values must not be duplicated")
+    end
+
+    it "rejects ambiguous pan values" do
+      sample = <<-CRYSTAL
+      require "./src/css"
+
+      class InvalidTouchActionStyle < CSS::Stylesheet
+        rule div do
+          touch_action :pan_x, :pan_left
+        end
+      end
+
+      InvalidTouchActionStyle.to_s
+      CRYSTAL
+
+      output = IO::Memory.new
+      status = Process.run("crystal", ["eval", sample], output: output, error: output)
+      status.success?.should be_false
+      output.to_s.should contain("touch-action accepts at most one horizontal pan value")
     end
   end
 end

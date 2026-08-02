@@ -11,7 +11,3 @@ css_enum TouchAction do
   DoubleTapZoom
   Manipulation
 end
-
-module CSS
-  alias TouchAction = Enums::TouchAction
-end

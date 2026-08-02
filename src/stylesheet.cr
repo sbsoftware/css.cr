@@ -1476,11 +1476,35 @@ module CSS
         {{ raise "touch_action requires at least one value" }}
       {% end %}
 
-      _touch_action({{values.splat}}, important: {{important}})
-    end
+      {% horizontal = 0 %}
+      {% vertical = 0 %}
+      {% symbols = [] of SymbolLiteral %}
 
-    def self._touch_action(value : String | CSS::EnvFunctionCall, *, important = false)
-      property("touch-action", value.to_css_value, important: important)
+      {% for value in values %}
+        {% if value.is_a?(StringLiteral) %}
+          {{ value.raise "touch_action does not accept raw String values; use typed enum symbols" }}
+        {% elsif value.is_a?(SymbolLiteral) %}
+          {% symbols << value %}
+          {% if [:auto, :none, :manipulation, :initial, :inherit, :unset, :revert, :revert_layer].includes?(value) && values.size > 1 %}
+            {{ value.raise "#{value.id.stringify.gsub(/_/, "-")} cannot be combined with other touch-action values" }}
+          {% end %}
+          {% if [:pan_x, :pan_left, :pan_right].includes?(value) %}
+            {% horizontal += 1 %}
+          {% elsif [:pan_y, :pan_up, :pan_down].includes?(value) %}
+            {% vertical += 1 %}
+          {% end %}
+        {% end %}
+      {% end %}
+
+      {% if symbols.uniq.size != symbols.size %}
+        {{ values.first.raise "touch-action values must not be duplicated" }}
+      {% elsif horizontal > 1 %}
+        {{ values.first.raise "touch-action accepts at most one horizontal pan value" }}
+      {% elsif vertical > 1 %}
+        {{ values.first.raise "touch-action accepts at most one vertical pan value" }}
+      {% end %}
+
+      _touch_action({{values.splat}}, important: {{important}})
     end
 
     def self._touch_action(value : CSS::Enums::Global, *, important = false)
@@ -1488,20 +1512,7 @@ module CSS
     end
 
     def self._touch_action(*values : CSS::Enums::TouchAction, important = false)
-      validate_touch_action_values(values)
       property("touch-action", values.map(&.to_css_value).join(" "), important: important)
-    end
-
-    def self.validate_touch_action_values(values : Tuple(*T)) forall T
-      values.each do |value|
-        if value.auto? || value.none? || value.manipulation?
-          raise ArgumentError.new("#{value.to_css_value} cannot be combined with other touch-action values") if values.size > 1
-        end
-      end
-
-      raise ArgumentError.new("touch-action values must not be duplicated") if values.to_a.uniq.size != values.size
-      raise ArgumentError.new("touch-action accepts at most one horizontal pan value") if values.count { |value| value.pan_x? || value.pan_left? || value.pan_right? } > 1
-      raise ArgumentError.new("touch-action accepts at most one vertical pan value") if values.count { |value| value.pan_y? || value.pan_up? || value.pan_down? } > 1
     end
 
     prop transform_box, String
