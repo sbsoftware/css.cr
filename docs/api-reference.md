@@ -43,6 +43,7 @@ This is a concise map of the public DSL surface. Use this file as the first stop
 
 - Property methods are defined in `src/stylesheet.cr`
 - Method names mirror CSS property names in snake_case (`font_size`, `background_color`, `grid_template_columns`)
+- Typed enum properties accept symbol literals matching enum values, including multi-value declarations such as `touch_action :pan_x, :pan_y`
 - Most methods support `important: true`
 
 ## Coverage and support status

@@ -1470,7 +1470,40 @@ module CSS
     prop text_wrap_mode, String
     prop text_wrap_style, String
     prop top, CSS::LengthPercentage | CSS::Enums::Auto
-    prop touch_action, String
+
+    macro touch_action(*values, important = false)
+      {% if values.empty? %}
+        {{ raise "touch_action requires at least one value" }}
+      {% end %}
+
+      _touch_action({{values.splat}}, important: {{important}})
+    end
+
+    def self._touch_action(value : String | CSS::EnvFunctionCall, *, important = false)
+      property("touch-action", value.to_css_value, important: important)
+    end
+
+    def self._touch_action(value : CSS::Enums::Global, *, important = false)
+      property("touch-action", value.to_css_value, important: important)
+    end
+
+    def self._touch_action(*values : CSS::Enums::TouchAction, important = false)
+      validate_touch_action_values(values)
+      property("touch-action", values.map(&.to_css_value).join(" "), important: important)
+    end
+
+    def self.validate_touch_action_values(values : Tuple(*T)) forall T
+      values.each do |value|
+        if value.auto? || value.none? || value.manipulation?
+          raise ArgumentError.new("#{value.to_css_value} cannot be combined with other touch-action values") if values.size > 1
+        end
+      end
+
+      raise ArgumentError.new("touch-action values must not be duplicated") if values.to_a.uniq.size != values.size
+      raise ArgumentError.new("touch-action accepts at most one horizontal pan value") if values.count { |value| value.pan_x? || value.pan_left? || value.pan_right? } > 1
+      raise ArgumentError.new("touch-action accepts at most one vertical pan value") if values.count { |value| value.pan_y? || value.pan_up? || value.pan_down? } > 1
+    end
+
     prop transform_box, String
     prop transform_origin, CSS::LengthPercentage | CSS::Enums::TransformOriginX | CSS::Enums::TransformOriginY | CSS::Enums::TransformOriginCenter
     prop2 transform_origin, CSS::LengthPercentage | CSS::Enums::TransformOriginX | CSS::Enums::TransformOriginCenter, CSS::LengthPercentage | CSS::Enums::TransformOriginY | CSS::Enums::TransformOriginCenter

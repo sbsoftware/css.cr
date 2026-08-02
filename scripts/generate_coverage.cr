@@ -125,6 +125,11 @@ def parse_local_property_coverage(stylesheet_path : String) : Hash(String, Local
       coverage["transform"].observe_runtime_signature(line)
       next
     end
+
+    if line.includes?("def self._touch_action(")
+      coverage["touch-action"].observe_runtime_signature(line)
+      next
+    end
   end
 
   coverage
@@ -177,12 +182,12 @@ end
 
 def markdown_table_row(values : Array(String)) : String
   "| #{values.map { |value|
-       value
-         .gsub("&", "&amp;")
-         .gsub("<", "&lt;")
-         .gsub(">", "&gt;")
-         .gsub("|", "\\|")
-     }.join(" | ")} |"
+         value
+           .gsub("&", "&amp;")
+           .gsub("<", "&lt;")
+           .gsub(">", "&gt;")
+           .gsub("|", "\\|")
+       }.join(" | ")} |"
 end
 
 def generate_report(
