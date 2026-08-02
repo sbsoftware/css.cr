@@ -1470,7 +1470,51 @@ module CSS
     prop text_wrap_mode, String
     prop text_wrap_style, String
     prop top, CSS::LengthPercentage | CSS::Enums::Auto
-    prop touch_action, String
+
+    macro touch_action(*values, important = false)
+      {% if values.empty? %}
+        {{ raise "touch_action requires at least one value" }}
+      {% end %}
+
+      {% horizontal = 0 %}
+      {% vertical = 0 %}
+      {% symbols = [] of SymbolLiteral %}
+
+      {% for value in values %}
+        {% if value.is_a?(StringLiteral) %}
+          {{ value.raise "touch_action does not accept raw String values; use typed enum symbols" }}
+        {% elsif value.is_a?(SymbolLiteral) %}
+          {% symbols << value %}
+          {% if [:auto, :none, :manipulation, :initial, :inherit, :unset, :revert, :revert_layer].includes?(value) && values.size > 1 %}
+            {{ value.raise "#{value.id.stringify.gsub(/_/, "-")} cannot be combined with other touch-action values" }}
+          {% end %}
+          {% if [:pan_x, :pan_left, :pan_right].includes?(value) %}
+            {% horizontal += 1 %}
+          {% elsif [:pan_y, :pan_up, :pan_down].includes?(value) %}
+            {% vertical += 1 %}
+          {% end %}
+        {% end %}
+      {% end %}
+
+      {% if symbols.uniq.size != symbols.size %}
+        {{ values.first.raise "touch-action values must not be duplicated" }}
+      {% elsif horizontal > 1 %}
+        {{ values.first.raise "touch-action accepts at most one horizontal pan value" }}
+      {% elsif vertical > 1 %}
+        {{ values.first.raise "touch-action accepts at most one vertical pan value" }}
+      {% end %}
+
+      _touch_action({{values.splat}}, important: {{important}})
+    end
+
+    def self._touch_action(value : CSS::Enums::Global, *, important = false)
+      property("touch-action", value.to_css_value, important: important)
+    end
+
+    def self._touch_action(*values : CSS::Enums::TouchAction, important = false)
+      property("touch-action", values.map(&.to_css_value).join(" "), important: important)
+    end
+
     prop transform_box, String
     prop transform_origin, CSS::LengthPercentage | CSS::Enums::TransformOriginX | CSS::Enums::TransformOriginY | CSS::Enums::TransformOriginCenter
     prop2 transform_origin, CSS::LengthPercentage | CSS::Enums::TransformOriginX | CSS::Enums::TransformOriginCenter, CSS::LengthPercentage | CSS::Enums::TransformOriginY | CSS::Enums::TransformOriginCenter

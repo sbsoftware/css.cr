@@ -20,13 +20,13 @@ Status legend:
 | Metric | Count |
 | --- | --- |
 | MDN standard properties | 486 |
-| Properties: supported | 226 |
-| Properties: unsupported | 214 |
+| Properties: supported | 227 |
+| Properties: unsupported | 213 |
 | Properties: missing | 46 |
-| Enum-applicable properties | 140 |
-| Enum coverage: supported | 136 |
+| Enum-applicable properties | 141 |
+| Enum coverage: supported | 137 |
 | Enum coverage: partial | 4 |
-| Enum coverage: n/a | 346 |
+| Enum coverage: n/a | 345 |
 
 ## Missing Properties
 
@@ -276,7 +276,6 @@ These properties are currently not practically usable and need implementation wi
 | text-wrap | &lt;'text-wrap-mode'&gt; \|\| &lt;'text-wrap-style'&gt; |
 | text-wrap-mode | wrap \| nowrap |
 | text-wrap-style | auto \| balance \| stable \| pretty |
-| touch-action | auto \| none \| [ [ pan-x \| pan-left \| pan-right ] \|\| [ pan-y \| pan-up \| pan-down ] \|\| pinch-zoom ] \| manipulation |
 | transform-box | content-box \| border-box \| fill-box \| stroke-box \| view-box |
 | transform-style | flat \| preserve-3d |
 | transition | &lt;single-transition&gt;# |
@@ -411,6 +410,7 @@ These properties are currently not practically usable and need implementation wi
 | TextOverflow | used | text-overflow |
 | TextTransform | used | text-transform |
 | TextTransformMathAuto | used | text-transform |
+| TouchAction | used | touch-action |
 | TransformOriginCenter | used | transform-origin |
 | TransformOriginX | used | transform-origin |
 | TransformOriginY | used | transform-origin |
@@ -875,7 +875,7 @@ These properties are currently not practically usable and need implementation wi
 | timeline-trigger-name | missing | property not implemented | n/a | not evaluated because property is missing | none \| &lt;dashed-ident&gt;# |
 | timeline-trigger-source | missing | property not implemented | n/a | not evaluated because property is missing | &lt;single-animation-timeline&gt;# |
 | top | supported | typed overloads | supported | typed enums | auto \| &lt;length-percentage&gt; \| &lt;anchor()&gt; \| &lt;anchor-size()&gt; |
-| touch-action | unsupported | raw String-only overloads emit quoted values | n/a | not tracked as a required enum gap | auto \| none \| [ [ pan-x \| pan-left \| pan-right ] \|\| [ pan-y \| pan-up \| pan-down ] \|\| pinch-zoom ] \| manipulation |
+| touch-action | supported | typed overloads | supported | typed enums | auto \| none \| [ [ pan-x \| pan-left \| pan-right ] \|\| [ pan-y \| pan-up \| pan-down ] \|\| pinch-zoom ] \| manipulation |
 | transform | supported | typed overloads | n/a | not tracked as a required enum gap | none \| &lt;transform-list&gt; |
 | transform-box | unsupported | raw String-only overloads emit quoted values | n/a | not tracked as a required enum gap | content-box \| border-box \| fill-box \| stroke-box \| view-box |
 | transform-origin | supported | typed overloads | supported | typed enums | [ &lt;length-percentage&gt; \| left \| center \| right \| top \| bottom ] \| [ [ &lt;length-percentage&gt; \| left \| center \| right ] &amp;&amp; [ &lt;length-percentage&gt; \| top \| center \| bottom ] ] &lt;length&gt;? |
