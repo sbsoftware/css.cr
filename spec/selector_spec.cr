@@ -2,6 +2,8 @@ require "./spec_helper"
 
 module CSS::SelectorSpec
   css_class Test
+  css_class Child
+  css_class Grandchild
   css_id Banner
 
   class Style < CSS::Stylesheet
@@ -19,6 +21,18 @@ module CSS::SelectorSpec
 
     rule div > Test do
       display :block
+    end
+
+    rule Test > has(Child) do
+      color :red
+    end
+
+    rule Test >> has(Child) do
+      color :blue
+    end
+
+    rule Test > has(Child) > has(Grandchild) do
+      color :green
     end
 
     rule Banner do
@@ -116,6 +130,18 @@ module CSS::SelectorSpec
         display: block;
       }
 
+      .css--selector-spec--test > :has(.css--selector-spec--child) {
+        color: red;
+      }
+
+      .css--selector-spec--test :has(.css--selector-spec--child) {
+        color: blue;
+      }
+
+      .css--selector-spec--test > :has(.css--selector-spec--child) > :has(.css--selector-spec--grandchild) {
+        color: green;
+      }
+
       #css--selector-spec--banner {
         display: grid;
       }
@@ -199,6 +225,30 @@ module CSS::SelectorSpec
       CSS
 
       MultiSelectorStyle.to_s.should eq(expected)
+    end
+  end
+
+  describe "has selector macro validation" do
+    it "requires an explicit combinator before has" do
+      sample = <<-CRYSTAL
+      require "./src/css"
+
+      css_class Parent
+      css_class Child
+
+      class InvalidHasStyle < CSS::Stylesheet
+        rule has(Child) do
+          color :red
+        end
+      end
+
+      InvalidHasStyle.to_s
+      CRYSTAL
+
+      output = IO::Memory.new
+      status = Process.run("crystal", ["eval", sample], output: output, error: output)
+      status.success?.should be_false
+      output.to_s.should contain("has(selector) must be preceded by an explicit combinator")
     end
   end
 end
