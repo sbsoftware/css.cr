@@ -1208,7 +1208,9 @@ module CSS
     prop2 justify_items, CSS::Enums::Safety, CSS::Enums::JustifyItemsPositional
     prop2 justify_items, CSS::Enums::FirstLast, CSS::Enums::AlignmentBaseline
     prop2 justify_items, CSS::Enums::JustifyItemsLegacy, CSS::Enums::JustifyItemsLegacyPositional
-    prop justify_self, String
+    prop justify_self, CSS::Enums::Auto | CSS::Enums::JustifyItems | CSS::Enums::JustifyItemsPositional | CSS::Enums::AlignmentBaseline
+    prop2 justify_self, CSS::Enums::Safety, CSS::Enums::JustifyItemsPositional
+    prop2 justify_self, CSS::Enums::FirstLast, CSS::Enums::AlignmentBaseline
     prop left, CSS::LengthPercentage | CSS::Enums::Auto
     prop letter_spacing, CSS::Length | CSS::Enums::LetterSpacing
     prop lighting_color, String
