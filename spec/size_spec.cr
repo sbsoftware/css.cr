@@ -16,6 +16,13 @@ module CSS::SizeSpec
       max_block_size 100.em
       max_inline_size 1075.ex
     end
+
+    rule span do
+      max_width :none
+      max_height :none
+      max_block_size :none
+      max_inline_size :none
+    end
   end
 
   describe "Style.to_s" do
@@ -34,6 +41,13 @@ module CSS::SizeSpec
         max-height: 100vh;
         max-block-size: 100em;
         max-inline-size: 1075ex;
+      }
+
+      span {
+        max-width: none;
+        max-height: none;
+        max-block-size: none;
+        max-inline-size: none;
       }
       CSS
 
