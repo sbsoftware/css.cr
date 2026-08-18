@@ -1271,10 +1271,10 @@ module CSS
     prop mask_type, String
     prop math_depth, String
     prop math_style, String
-    prop max_block_size, CSS::LengthPercentage | CSS::Enums::Size
-    prop max_height, CSS::LengthPercentage | CSS::Enums::Size
-    prop max_inline_size, CSS::LengthPercentage | CSS::Enums::Size
-    prop max_width, CSS::LengthPercentage | CSS::Enums::Size
+    prop max_block_size, CSS::LengthPercentage | CSS::Enums::Size | CSS::Enums::None
+    prop max_height, CSS::LengthPercentage | CSS::Enums::Size | CSS::Enums::None
+    prop max_inline_size, CSS::LengthPercentage | CSS::Enums::Size | CSS::Enums::None
+    prop max_width, CSS::LengthPercentage | CSS::Enums::Size | CSS::Enums::None
     prop min_block_size, CSS::LengthPercentage | CSS::Enums::Size | CSS::Enums::Auto
     prop min_height, CSS::LengthPercentage | CSS::Enums::Size | CSS::Enums::Auto
     prop min_inline_size, CSS::LengthPercentage | CSS::Enums::Size | CSS::Enums::Auto

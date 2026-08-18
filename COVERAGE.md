@@ -383,7 +383,7 @@ These properties are currently not practically usable and need implementation wi
 | Masonry | used | grid-template-columns, grid-template-rows |
 | Math | used | font-size |
 | NamedColor | unused | - |
-| None | used | box-shadow, font-optical-sizing, font-size-adjust, font-synthesis, font-synthesis-small-caps, font-synthesis-style, font-synthesis-weight, grid-template-columns, grid-template-rows, list-style-image, text-decoration, text-decoration-line, text-transform |
+| None | used | box-shadow, font-optical-sizing, font-size-adjust, font-synthesis, font-synthesis-small-caps, font-synthesis-style, font-synthesis-weight, grid-template-columns, grid-template-rows, list-style-image, max-block-size, max-height, max-inline-size, max-width, text-decoration, text-decoration-line, text-transform |
 | ObjectFit | used | object-fit |
 | Oblique | used | font-style |
 | OutlineStyle | used | outline, outline-style |
