@@ -669,7 +669,7 @@ These properties are currently not practically usable and need implementation wi
 | isolation | unsupported | raw String-only overloads emit quoted values | n/a | not tracked as a required enum gap | auto \| isolate |
 | justify-content | supported | typed overloads | supported | typed enums | normal \| &lt;content-distribution&gt; \| &lt;overflow-position&gt;? [ &lt;content-position&gt; \| left \| right ] |
 | justify-items | supported | typed overloads | supported | typed enums | normal \| stretch \| &lt;baseline-position&gt; \| &lt;overflow-position&gt;? [ &lt;self-position&gt; \| left \| right ] \| legacy \| legacy &amp;&amp; [ left \| right \| center ] \| anchor-center |
-| justify-self | unsupported | raw String-only overloads emit quoted values | n/a | not tracked as a required enum gap | auto \| normal \| stretch \| &lt;baseline-position&gt; \| &lt;overflow-position&gt;? [ &lt;self-position&gt; \| left \| right ] \| anchor-center |
+| justify-self | supported | typed overloads | supported | typed enums | auto \| normal \| stretch \| &lt;baseline-position&gt; \| &lt;overflow-position&gt;? [ &lt;self-position&gt; \| left \| right ] \| anchor-center |
 | left | supported | typed overloads | supported | typed enums | auto \| &lt;length-percentage&gt; \| &lt;anchor()&gt; \| &lt;anchor-size()&gt; |
 | letter-spacing | supported | typed overloads | supported | typed enums | normal \| &lt;length&gt; |
 | lighting-color | unsupported | raw String-only overloads emit quoted values | n/a | not tracked as a required enum gap | &lt;color&gt; |
