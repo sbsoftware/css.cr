@@ -1,4 +1,5 @@
 require "./function_call"
+require "./env_function_call"
 require "./min_function_call"
 
 module CSS
@@ -23,8 +24,8 @@ module CSS
   end
 
   alias GridLengthUnit = CmValue | MmValue | InValue | PxValue | PtValue | PcValue | EmValue | RemValue | ExValue | ChValue | LhValue | RlhValue | VhValue | VwValue | VmaxValue | VminValue | SvwValue | SvhValue | LvwValue | LvhValue | DvwValue | DvhValue
-  alias GridLength = GridLengthUnit | Int32 | CalcFunctionCall
-  alias GridLengthPercentage = GridLength | PercentValue | CalcFunctionCall | MinFunctionCall
+  alias GridLength = GridLengthUnit | Int32 | CalcFunctionCall | EnvFunctionCall
+  alias GridLengthPercentage = GridLength | PercentValue | CalcFunctionCall | MinFunctionCall | EnvFunctionCall
 
   alias GridTrackBreadth = GridLengthPercentage | CSS::FrValue | CSS::Enums::GridTrackKeyword
   alias GridInflexibleBreadth = GridLengthPercentage | CSS::Enums::GridTrackKeyword

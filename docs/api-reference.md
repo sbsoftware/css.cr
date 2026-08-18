@@ -12,7 +12,7 @@ This is a concise map of the public DSL surface. Use this file as the first stop
 - Rule composition: `rule`, `embed`
 - Media queries: `media`
 - Properties: generated via `prop`, `prop2`, `prop3`, `prop4`, `prop5`, `prop6`
-- CSS function/value helpers: `calc`, `min`, `minmax`, `repeat`, `fit_content`, `line_names`, `rgb`, `url`, `linear_gradient`, `radial_gradient`, `at`, `ratio`
+- CSS function/value helpers: `calc`, `env`, `min`, `minmax`, `repeat`, `fit_content`, `line_names`, `rgb`, `url`, `linear_gradient`, `radial_gradient`, `at`, `ratio`
 - Font embedding: `font_face`
 - Transform helper: `transform`
 - Low-level escape hatch used by helpers: `property(name, value, important: false)`
@@ -43,6 +43,7 @@ This is a concise map of the public DSL surface. Use this file as the first stop
 
 - Property methods are defined in `src/stylesheet.cr`
 - Method names mirror CSS property names in snake_case (`font_size`, `background_color`, `grid_template_columns`)
+- Typed enum properties accept symbol literals matching enum values, including validated multi-value declarations such as `touch_action :pan_x, :pan_y`
 - Most methods support `important: true`
 
 ## Coverage and support status

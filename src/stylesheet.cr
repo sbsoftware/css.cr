@@ -2,6 +2,7 @@ require "./css/any_selector"
 require "./css/string_selector"
 require "./css/descendant_selector"
 require "./css/child_selector"
+require "./css/has_selector"
 require "./css/combined_selector"
 require "./css/attr_selector"
 require "./css/pseudoclass_selector"
@@ -16,11 +17,14 @@ require "./css/radial_gradient_at"
 require "./css/radial_gradient_function_call"
 require "./css/conic_gradient_from"
 require "./css/conic_gradient_function_call"
+require "./css/env_function_call"
 require "./css/min_function_call"
 require "./css/clamp_function_call"
 require "./css/url_function_call"
 require "./css/animation_name"
 require "./css/animation_timing_function"
+require "./css/filter_functions"
+require "./css/filter_function_call"
 require "./css/transform_functions"
 require "./css/transform_function_call"
 require "./css/ratio"
@@ -54,6 +58,33 @@ module CSS
       CSS::ClampFunctionCall.new(min, preferred, max)
     end
 
+    macro env(variable, *indices, fallback = nil)
+      {% viewport_segment_variables = [:viewport_segment_width, :viewport_segment_height, :viewport_segment_top, :viewport_segment_right, :viewport_segment_bottom, :viewport_segment_left] %}
+      {% if variable.is_a?(SymbolLiteral) && viewport_segment_variables.includes?(variable) %}
+        {% if indices.size != 2 %}
+          {{ variable.raise "#{variable} requires exactly two non-negative indices" }}
+        {% end %}
+      {% elsif variable.is_a?(SymbolLiteral) && indices.size > 0 %}
+        {{ variable.raise "#{variable} does not accept indices" }}
+      {% end %}
+
+      {% for index in indices %}
+        {% if index.is_a?(NumberLiteral) && index < 0 %}
+          {{ index.raise "env indices must be non-negative" }}
+        {% end %}
+      {% end %}
+
+      _env({{variable}}{% for index in indices %}, {{index}}{% end %}, fallback: {{fallback}})
+    end
+
+    def self._env(variable : CSS::Enums::EnvVariable, fallback = nil)
+      CSS::EnvFunctionCall.new(variable, fallback: fallback)
+    end
+
+    def self._env(variable : CSS::Enums::EnvVariable, index1 : Int32, index2 : Int32, fallback = nil)
+      CSS::EnvFunctionCall.new(variable, index1, index2, fallback: fallback)
+    end
+
     macro rule(*selector_expressions, &blk)
       def self.to_s(io : IO)
         {% if @type.class.methods.map(&.name.stringify).includes?("to_s") %}
@@ -65,11 +96,13 @@ module CSS
       end
     end
 
-    macro make_selector(expr, nested = false)
+    macro make_selector(expr)
       {% if expr.is_a?(Call) && expr.name == "any".id %}
         CSS::AnySelector.new
       {% elsif expr.is_a?(Call) && CSS::HTML_TAG_NAMES.includes?(expr.name.stringify) %}
         CSS::StringSelector.new({{expr.name.stringify}})
+      {% elsif expr.is_a?(Call) && expr.name == "has".id %}
+        {{expr.raise "has(selector) must be preceded by an explicit combinator, for example: Parent > has(Child) or Parent >> has(Child)"}}
       {% elsif expr.is_a?(Call) && expr.name == "<=".id %}
         CSS::PseudoclassSelector.new(make_selector({{expr.receiver}}), {{expr.args.first.expressions.last}})
       {% elsif expr.is_a?(Call) && expr.name == "&&".id %}
@@ -77,21 +110,47 @@ module CSS
       {% elsif expr.is_a?(And) %}
         # This will occurr when multiple `>` calls are concatenated.
         # The Crystal compiler transforms `x > y > z` into `x > (__temp_136 = y) && __temp_136 > z`
-        make_selector({{expr.left}}).combine(make_selector({{expr.right}}, true))
+        make_selector({{expr.left}}).combine(make_nested_child_selector({{expr.right}}))
       {% elsif expr.is_a?(Assign) %}
         # This can occur via Crystal's internal transformations of `x > y > z`, for example
         make_selector({{expr.value}})
       {% elsif expr.is_a?(Call) && expr.name == ">".id %}
-        {% if nested %}
-          CSS::NestedChildSelector.new(make_selector({{expr.args.first}}))
-        {% else %}
-          CSS::ChildSelector.new(make_selector({{expr.receiver}}), make_selector({{expr.args.first}}))
-        {% end %}
+        CSS::ChildSelector.new(make_selector({{expr.receiver}}), make_selector_after_combinator({{expr.args.first}}))
+      {% elsif expr.is_a?(Call) && expr.name == ">>".id %}
+        CSS::DescendantSelector.new(make_selector({{expr.receiver}}), make_selector_after_combinator({{expr.args.first}}))
       {% elsif expr.is_a?(Expressions) %}
         make_selector({{expr.expressions.last}})
       {% else %}
         {{expr}}.to_css_selector
       {% end %}
+    end
+
+    macro make_nested_child_selector(expr)
+      {% if expr.is_a?(Call) && expr.name == ">".id %}
+        CSS::NestedChildSelector.new(make_selector_after_combinator({{expr.args.first}}))
+      {% else %}
+        make_selector({{expr}})
+      {% end %}
+    end
+
+    macro make_selector_after_combinator(expr)
+      {% if expr.is_a?(Call) && expr.name == "has".id %}
+        make_has_selector({{expr}})
+      {% elsif expr.is_a?(Assign) %}
+        make_selector_after_combinator({{expr.value}})
+      {% elsif expr.is_a?(Expressions) %}
+        make_selector_after_combinator({{expr.expressions.last}})
+      {% else %}
+        make_selector({{expr}})
+      {% end %}
+    end
+
+    macro make_has_selector(expr)
+      {% if expr.args.size != 1 %}
+        {{expr.raise "has(selector) requires exactly one selector argument"}}
+      {% end %}
+
+      CSS::HasSelector.new({{expr.args.first}}.to_css_selector)
     end
 
     macro make_rule(io, selectors, level = 0, &blk)
@@ -166,7 +225,7 @@ module CSS
         _{{name.id}}(\{{value}}, important: \{{important}})
       end
 
-      def self._{{name.id}}(value : {{type}} | CSS::Enums::Global, *, important = false)
+      def self._{{name.id}}(value : {{type}} | CSS::EnvFunctionCall | CSS::Enums::Global, *, important = false)
         %value = nil
 
         {% if transform_string %}
@@ -196,7 +255,7 @@ module CSS
         _{{name.id}}(\{{value1}}, \{{value2}}, important: \{{important}})
       end
 
-      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, *, important = false)
+      def self._{{name.id}}(value1 : {{type1}} | CSS::EnvFunctionCall, value2 : {{type2}} | CSS::EnvFunctionCall, *, important = false)
         %value1 = %value2 = nil
 
         {% if transform_string1 %}
@@ -238,7 +297,7 @@ module CSS
         _{{name.id}}(\{{value1}}, \{{value2}}, \{{value3}}, important: \{{important}})
       end
 
-      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, *, important = false)
+      def self._{{name.id}}(value1 : {{type1}} | CSS::EnvFunctionCall, value2 : {{type2}} | CSS::EnvFunctionCall, value3 : {{type3}} | CSS::EnvFunctionCall, *, important = false)
         %value1 = %value2 = %value3 = nil
 
         {% if transform_string1 %}
@@ -292,7 +351,7 @@ module CSS
         _{{name.id}}(\{{value1}}, \{{value2}}, \{{value3}}, \{{value4}}, important: \{{important}})
       end
 
-      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}}, *, important = false)
+      def self._{{name.id}}(value1 : {{type1}} | CSS::EnvFunctionCall, value2 : {{type2}} | CSS::EnvFunctionCall, value3 : {{type3}} | CSS::EnvFunctionCall, value4 : {{type4}} | CSS::EnvFunctionCall, *, important = false)
         %value1 = %value2 = %value3 = %value4 = nil
 
         {% if transform_string1 %}
@@ -358,7 +417,7 @@ module CSS
         _{{name.id}}(\{{value1}}, \{{value2}}, \{{value3}}, \{{value4}}, \{{value5}}, important: \{{important}})
       end
 
-      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}}, value5 : {{type5}}, *, important = false)
+      def self._{{name.id}}(value1 : {{type1}} | CSS::EnvFunctionCall, value2 : {{type2}} | CSS::EnvFunctionCall, value3 : {{type3}} | CSS::EnvFunctionCall, value4 : {{type4}} | CSS::EnvFunctionCall, value5 : {{type5}} | CSS::EnvFunctionCall, *, important = false)
         %value1 = %value2 = %value3 = %value4 = %value5 = nil
 
         {% if transform_string1 %}
@@ -436,7 +495,7 @@ module CSS
         _{{name.id}}(\{{value1}}, \{{value2}}, \{{value3}}, \{{value4}}, \{{value5}}, \{{value6}}, important: \{{important}})
       end
 
-      def self._{{name.id}}(value1 : {{type1}}, value2 : {{type2}}, value3 : {{type3}}, value4 : {{type4}}, value5 : {{type5}}, value6 : {{type6}}, *, important = false)
+      def self._{{name.id}}(value1 : {{type1}} | CSS::EnvFunctionCall, value2 : {{type2}} | CSS::EnvFunctionCall, value3 : {{type3}} | CSS::EnvFunctionCall, value4 : {{type4}} | CSS::EnvFunctionCall, value5 : {{type5}} | CSS::EnvFunctionCall, value6 : {{type6}} | CSS::EnvFunctionCall, *, important = false)
         %value1 = %value2 = %value3 = %value4 = %value5 = %value6 = nil
 
         {% if transform_string1 %}
@@ -503,6 +562,7 @@ module CSS
     alias TextDecoration = CSS::Enums::TextDecorationLine | CSS::Enums::SpellingError | CSS::Enums::GrammarError | CSS::Enums::TextDecorationStyle | CSS::Enums::FromFont | CSS::Enums::Auto | CSS::LengthPercentage | Color
     alias ListStyle = CSS::Enums::ListStyleType | String | CSS::Enums::ListStylePosition | ImageFunction
     alias AspectRatio = CSS::Ratio | CSS::RatioNumber | CSS::Enums::Auto
+    alias FilterValue = CSS::FilterFunctionCall | CSS::Enums::None
     alias TransformValue = CSS::TransformFunctionCall | CSS::Enums::None
     alias AnimationNameValue = CSS::AnimationName | String | CSS::Enums::None
     alias AnimationTimingFunctionValue = CSS::Enums::AnimationTimingFunction | CSS::CubicBezierFunctionCall | CSS::StepsFunctionCall
@@ -539,7 +599,23 @@ module CSS
     prop animation_timing_function, AnimationTimingFunctionValue
     prop appearance, String
     prop aspect_ratio, AspectRatio, enforce_unit: false
-    prop backdrop_filter, String
+
+    macro backdrop_filter(*values, important = false)
+      {% if values.empty? %}
+        {{ raise "backdrop_filter requires at least one value" }}
+      {% end %}
+
+      _backdrop_filter(
+        {% for value, i in values %}
+          CSS::FilterFunctions.dispatch({{value}}){% if i < values.size - 1 %}, {% else %}, important: {{important}}{% end %}
+        {% end %}
+      )
+    end
+
+    def self._backdrop_filter(*values : FilterValue, important = false)
+      property("backdrop-filter", values.map(&.to_css_value).join(" "), important: important)
+    end
+
     prop backface_visibility, String
 
     prop background, BackgroundTypes, transform_string: CSS::ColorString
@@ -964,11 +1040,11 @@ module CSS
     prop fill_opacity, String
     prop fill_rule, String
     prop filter, String
-    prop flex, CSS::Enums::Flex # keyword or global value
-    prop flex, Number, enforce_unit: false # flex-grow only
-    prop flex, CSS::LengthPercentage | CSS::Enums::FlexBasis | CSS::Enums::Auto # flex-basis only
-    prop2 flex, Number, CSS::LengthPercentage | CSS::Enums::FlexBasis | CSS::Enums::Auto, enforce_unit1: false # flex-grow and flex-basis
-    prop2 flex, Number, Number, enforce_unit1: false, enforce_unit2: false # flex-grow and flex-shrink
+    prop flex, CSS::Enums::Flex                                                                                                              # keyword or global value
+    prop flex, Number, enforce_unit: false                                                                                                   # flex-grow only
+    prop flex, CSS::LengthPercentage | CSS::Enums::FlexBasis | CSS::Enums::Auto                                                              # flex-basis only
+    prop2 flex, Number, CSS::LengthPercentage | CSS::Enums::FlexBasis | CSS::Enums::Auto, enforce_unit1: false                               # flex-grow and flex-basis
+    prop2 flex, Number, Number, enforce_unit1: false, enforce_unit2: false                                                                   # flex-grow and flex-shrink
     prop3 flex, Number, Number, CSS::LengthPercentage | CSS::Enums::FlexBasis | CSS::Enums::Auto, enforce_unit1: false, enforce_unit2: false # flex-grow, flex-shrink and flex-basis
     prop flex_basis, CSS::LengthPercentage | CSS::Enums::FlexBasis | CSS::Enums::Auto
     prop flex_direction, CSS::Enums::FlexDirection
@@ -1132,7 +1208,9 @@ module CSS
     prop2 justify_items, CSS::Enums::Safety, CSS::Enums::JustifyItemsPositional
     prop2 justify_items, CSS::Enums::FirstLast, CSS::Enums::AlignmentBaseline
     prop2 justify_items, CSS::Enums::JustifyItemsLegacy, CSS::Enums::JustifyItemsLegacyPositional
-    prop justify_self, String
+    prop justify_self, CSS::Enums::Auto | CSS::Enums::JustifyItems | CSS::Enums::JustifyItemsPositional | CSS::Enums::AlignmentBaseline
+    prop2 justify_self, CSS::Enums::Safety, CSS::Enums::JustifyItemsPositional
+    prop2 justify_self, CSS::Enums::FirstLast, CSS::Enums::AlignmentBaseline
     prop left, CSS::LengthPercentage | CSS::Enums::Auto
     prop letter_spacing, CSS::Length | CSS::Enums::LetterSpacing
     prop lighting_color, String
@@ -1193,10 +1271,10 @@ module CSS
     prop mask_type, String
     prop math_depth, String
     prop math_style, String
-    prop max_block_size, CSS::LengthPercentage | CSS::Enums::Size
-    prop max_height, CSS::LengthPercentage | CSS::Enums::Size
-    prop max_inline_size, CSS::LengthPercentage | CSS::Enums::Size
-    prop max_width, CSS::LengthPercentage | CSS::Enums::Size
+    prop max_block_size, CSS::LengthPercentage | CSS::Enums::Size | CSS::Enums::None
+    prop max_height, CSS::LengthPercentage | CSS::Enums::Size | CSS::Enums::None
+    prop max_inline_size, CSS::LengthPercentage | CSS::Enums::Size | CSS::Enums::None
+    prop max_width, CSS::LengthPercentage | CSS::Enums::Size | CSS::Enums::None
     prop min_block_size, CSS::LengthPercentage | CSS::Enums::Size | CSS::Enums::Auto
     prop min_height, CSS::LengthPercentage | CSS::Enums::Size | CSS::Enums::Auto
     prop min_inline_size, CSS::LengthPercentage | CSS::Enums::Size | CSS::Enums::Auto
@@ -1382,17 +1460,63 @@ module CSS
     prop text_overflow, CSS::Enums::TextOverflow | String
     prop2 text_overflow, CSS::Enums::TextOverflow | String, CSS::Enums::TextOverflow | String
     prop text_rendering, String
-    prop text_shadow, String
+    prop text_shadow, CSS::Enums::None
+    prop3 text_shadow, Color, CSS::Length, CSS::Length, transform_string1: CSS::ColorString
+    prop4 text_shadow, Color, CSS::Length, CSS::Length, CSS::Length, transform_string1: CSS::ColorString
     prop text_transform, CSS::Enums::None | CSS::Enums::TextTransform | CSS::Enums::TextTransformMathAuto
     prop2 text_transform, CSS::Enums::TextTransform, CSS::Enums::TextTransform
     prop3 text_transform, CSS::Enums::TextTransform, CSS::Enums::TextTransform, CSS::Enums::TextTransform
-    prop text_underline_offset, String
+    prop text_underline_offset, CSS::LengthPercentage | CSS::Enums::Auto
     prop text_underline_position, String
     prop text_wrap, String
     prop text_wrap_mode, String
     prop text_wrap_style, String
     prop top, CSS::LengthPercentage | CSS::Enums::Auto
-    prop touch_action, String
+
+    macro touch_action(*values, important = false)
+      {% if values.empty? %}
+        {{ raise "touch_action requires at least one value" }}
+      {% end %}
+
+      {% horizontal = 0 %}
+      {% vertical = 0 %}
+      {% symbols = [] of SymbolLiteral %}
+
+      {% for value in values %}
+        {% if value.is_a?(StringLiteral) %}
+          {{ value.raise "touch_action does not accept raw String values; use typed enum symbols" }}
+        {% elsif value.is_a?(SymbolLiteral) %}
+          {% symbols << value %}
+          {% if [:auto, :none, :manipulation, :initial, :inherit, :unset, :revert, :revert_layer].includes?(value) && values.size > 1 %}
+            {{ value.raise "#{value.id.stringify.gsub(/_/, "-")} cannot be combined with other touch-action values" }}
+          {% end %}
+          {% if [:pan_x, :pan_left, :pan_right].includes?(value) %}
+            {% horizontal += 1 %}
+          {% elsif [:pan_y, :pan_up, :pan_down].includes?(value) %}
+            {% vertical += 1 %}
+          {% end %}
+        {% end %}
+      {% end %}
+
+      {% if symbols.uniq.size != symbols.size %}
+        {{ values.first.raise "touch-action values must not be duplicated" }}
+      {% elsif horizontal > 1 %}
+        {{ values.first.raise "touch-action accepts at most one horizontal pan value" }}
+      {% elsif vertical > 1 %}
+        {{ values.first.raise "touch-action accepts at most one vertical pan value" }}
+      {% end %}
+
+      _touch_action({{values.splat}}, important: {{important}})
+    end
+
+    def self._touch_action(value : CSS::Enums::Global, *, important = false)
+      property("touch-action", value.to_css_value, important: important)
+    end
+
+    def self._touch_action(*values : CSS::Enums::TouchAction, important = false)
+      property("touch-action", values.map(&.to_css_value).join(" "), important: important)
+    end
+
     prop transform_box, String
     prop transform_origin, CSS::LengthPercentage | CSS::Enums::TransformOriginX | CSS::Enums::TransformOriginY | CSS::Enums::TransformOriginCenter
     prop2 transform_origin, CSS::LengthPercentage | CSS::Enums::TransformOriginX | CSS::Enums::TransformOriginCenter, CSS::LengthPercentage | CSS::Enums::TransformOriginY | CSS::Enums::TransformOriginCenter

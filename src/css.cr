@@ -1,6 +1,7 @@
 require "./ext/**"
 require "./macros"
 require "./html_tag_names"
+require "./css/env_function_call"
 require "./units"
 require "./css/calc_function_call"
 require "./css/calculation"
