@@ -23,7 +23,7 @@ module CSS
     end
   end
 
-  alias GridLengthUnit = CmValue | MmValue | InValue | PxValue | PtValue | PcValue | EmValue | RemValue | ExValue | ChValue | LhValue | RlhValue | VhValue | VwValue | VmaxValue | VminValue | SvwValue | SvhValue | LvwValue | LvhValue | DvwValue | DvhValue
+  alias GridLengthUnit = CmValue | MmValue | InValue | PxValue | PtValue | PcValue | EmValue | RemValue | ExValue | ChValue | LhValue | RlhValue | VhValue | VwValue | VmaxValue | VminValue | SvwValue | SvhValue | LvwValue | LvhValue | DvwValue | DvhValue | CqwValue | CqhValue | CqiValue | CqbValue | CqminValue | CqmaxValue
   alias GridLength = GridLengthUnit | Int32 | CalcFunctionCall | EnvFunctionCall
   alias GridLengthPercentage = GridLength | PercentValue | CalcFunctionCall | MinFunctionCall | EnvFunctionCall
 
