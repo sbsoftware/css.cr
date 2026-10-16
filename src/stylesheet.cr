@@ -28,6 +28,7 @@ require "./css/filter_function_call"
 require "./css/transform_functions"
 require "./css/transform_function_call"
 require "./css/ratio"
+require "./css/text_combine_upright_digits"
 require "./css/grid_template_columns"
 require "./font_face"
 
@@ -1032,7 +1033,7 @@ module CSS
     prop cx, String
     prop cy, String
     prop d, String
-    prop direction, String
+    prop direction, CSS::Enums::Direction
     prop display, CSS::Enums::Display
     prop dominant_baseline, String
     prop empty_cells, String
@@ -1434,7 +1435,7 @@ module CSS
     prop text_box, String
     prop text_box_edge, String
     prop text_box_trim, String
-    prop text_combine_upright, String
+    prop text_combine_upright, CSS::Enums::TextCombineUpright | CSS::TextCombineUprightDigits
 
     prop text_decoration, CSS::Enums::None | TextDecoration, transform_string: CSS::ColorString
     prop2 text_decoration, TextDecoration, TextDecoration, transform_string1: CSS::ColorString, transform_string2: CSS::ColorString
@@ -1456,7 +1457,7 @@ module CSS
     prop text_emphasis_style, String
     prop text_indent, String
     prop text_justify, String
-    prop text_orientation, String
+    prop text_orientation, CSS::Enums::TextOrientation
     prop text_overflow, CSS::Enums::TextOverflow | String
     prop2 text_overflow, CSS::Enums::TextOverflow | String, CSS::Enums::TextOverflow | String
     prop text_rendering, String
@@ -1531,7 +1532,7 @@ module CSS
     prop transition_property, String
     prop transition_timing_function, String
     prop translate, String
-    prop unicode_bidi, String
+    prop unicode_bidi, CSS::Enums::UnicodeBidi
     prop user_select, CSS::Enums::UserSelect
     prop vector_effect, String
     prop vertical_align, CSS::LengthPercentage | CSS::Enums::VerticalAlign
@@ -1546,7 +1547,7 @@ module CSS
     prop word_break, String
     prop word_spacing, String
     prop word_wrap, CSS::Enums::OverflowWrap
-    prop writing_mode, String
+    prop writing_mode, CSS::Enums::WritingMode
     prop x, String
     prop y, String
     prop z_index, Int, enforce_unit: false
@@ -1554,6 +1555,10 @@ module CSS
 
     def self.ratio(numerator, denominator = nil)
       Ratio.new(numerator, denominator)
+    end
+
+    def self.digits(count : CSS::TextCombineUprightDigitCount? = nil)
+      TextCombineUprightDigits.new(count)
     end
 
     macro min(*values)
