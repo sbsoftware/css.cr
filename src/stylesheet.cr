@@ -22,6 +22,7 @@ require "./css/min_function_call"
 require "./css/clamp_function_call"
 require "./css/url_function_call"
 require "./css/animation_name"
+require "./css/container_name"
 require "./css/animation_timing_function"
 require "./css/filter_functions"
 require "./css/filter_function_call"
@@ -1020,9 +1021,10 @@ module CSS
     prop contain_intrinsic_inline_size, String
     prop contain_intrinsic_size, String
     prop contain_intrinsic_width, String
-    prop container, String
-    prop container_name, String
-    prop container_type, String
+    prop container, String, transform_string: CSS::ContainerName
+    prop2 container, String, CSS::Enums::ContainerType, transform_string1: CSS::ContainerName, separator: " / "
+    prop container_name, String | CSS::Enums::None, transform_string: CSS::ContainerName
+    prop container_type, CSS::Enums::ContainerType
     prop content, String
     prop content_visibility, String
     prop counter_increment, Int | String
