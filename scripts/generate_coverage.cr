@@ -111,13 +111,9 @@ def parse_local_property_coverage(stylesheet_path : String) : Hash(String, Local
       next
     end
 
-    if line.includes?("def self._grid_template_rows(")
-      coverage["grid-template-rows"].observe_runtime_signature(line)
-      next
-    end
-
-    if line.includes?("def self._grid_template_columns(")
-      coverage["grid-template-columns"].observe_runtime_signature(line)
+    if match = line.match(/def self\._?(grid_(?:auto_columns|auto_rows|template|template_rows|template_columns|template_areas))\(/)
+      signature = match[1] == "grid_template_areas" ? "CSS::GridTemplateAreaRow" : line
+      coverage[method_name_to_property(match[1])].observe_runtime_signature(signature)
       next
     end
 
