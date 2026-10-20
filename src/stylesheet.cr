@@ -1557,7 +1557,7 @@ module CSS
       Ratio.new(numerator, denominator)
     end
 
-    def self.digits(count : CSS::TextCombineUprightDigitCount? = nil)
+    def self.digits(count : Int::Primitive? = nil)
       TextCombineUprightDigits.new(count)
     end
 
