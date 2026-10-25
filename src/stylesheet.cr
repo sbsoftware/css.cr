@@ -31,6 +31,7 @@ require "./css/transform_function_call"
 require "./css/ratio"
 require "./css/text_combine_upright_digits"
 require "./css/grid_template_columns"
+require "./css/grid"
 require "./font_face"
 
 module CSS
@@ -1104,19 +1105,102 @@ module CSS
     prop forced_color_adjust, String
     prop gap, CSS::Enums::Gap | CSS::LengthPercentage
     prop2 gap, CSS::Enums::Gap | CSS::LengthPercentage, CSS::Enums::Gap | CSS::LengthPercentage
-    prop grid, String
-    prop grid_area, String
-    prop grid_auto_columns, String
-    prop grid_auto_flow, String
-    prop grid_auto_rows, String
-    prop grid_column, Int
-    prop grid_column_end, Int
-    prop grid_column_start, Int
-    prop grid_row, Int
-    prop grid_row_end, Int
-    prop grid_row_start, Int
-    prop grid_template, String
-    prop grid_template_areas, String
+    prop grid_auto_flow, CSS::Enums::GridAutoFlow | CSS::Enums::GridAutoFlowDensity
+    prop2 grid_auto_flow, CSS::Enums::GridAutoFlow, CSS::Enums::GridAutoFlowDensity
+
+    macro grid_auto_columns(*values, important = false)
+      {% if values.empty? %}
+        {{ raise "grid_auto_columns requires at least one value" }}
+      {% end %}
+      _grid_auto_columns({{values.splat}}, important: {{important}})
+    end
+
+    def self._grid_auto_columns(*values : CSS::GridTrackSize, important = false)
+      property("grid-auto-columns", values.map(&.to_css_value).join(" "), important: important)
+    end
+
+    def self._grid_auto_columns(value : CSS::Enums::Global, important = false)
+      property("grid-auto-columns", value.to_css_value, important: important)
+    end
+
+    macro grid_auto_rows(*values, important = false)
+      {% if values.empty? %}
+        {{ raise "grid_auto_rows requires at least one value" }}
+      {% end %}
+      _grid_auto_rows({{values.splat}}, important: {{important}})
+    end
+
+    def self._grid_auto_rows(*values : CSS::GridTrackSize, important = false)
+      property("grid-auto-rows", values.map(&.to_css_value).join(" "), important: important)
+    end
+
+    def self._grid_auto_rows(value : CSS::Enums::Global, important = false)
+      property("grid-auto-rows", value.to_css_value, important: important)
+    end
+
+    prop grid_area, CSS::GridLine, enforce_unit: false
+    prop2 grid_area, CSS::GridLine, CSS::GridLine, enforce_unit1: false, enforce_unit2: false, separator: " / "
+    prop3 grid_area, CSS::GridLine, CSS::GridLine, CSS::GridLine, enforce_unit1: false, enforce_unit2: false, enforce_unit3: false, separator: " / "
+    prop4 grid_area, CSS::GridLine, CSS::GridLine, CSS::GridLine, CSS::GridLine, enforce_unit1: false, enforce_unit2: false, enforce_unit3: false, enforce_unit4: false, separator: " / "
+    prop grid_column, CSS::GridLine, enforce_unit: false
+    prop2 grid_column, CSS::GridLine, CSS::GridLine, enforce_unit1: false, enforce_unit2: false, separator: " / "
+    prop grid_column_end, CSS::GridLine, enforce_unit: false
+    prop grid_column_start, CSS::GridLine, enforce_unit: false
+    prop grid_row, CSS::GridLine, enforce_unit: false
+    prop2 grid_row, CSS::GridLine, CSS::GridLine, enforce_unit1: false, enforce_unit2: false, separator: " / "
+    prop grid_row_end, CSS::GridLine, enforce_unit: false
+    prop grid_row_start, CSS::GridLine, enforce_unit: false
+
+    macro grid_template_areas(*rows, important = false)
+      {% if rows.empty? %}
+        {{ raise "grid_template_areas requires at least one row" }}
+      {% end %}
+      _grid_template_areas({{rows.splat}}, important: {{important}})
+    end
+
+    def self._grid_template_areas(value : CSS::Enums::None | CSS::Enums::Global, important = false)
+      property("grid-template-areas", value.to_css_value, important: important)
+    end
+
+    def self._grid_template_areas(*rows : String, important = false)
+      property("grid-template-areas", rows.map(&.dump).join(" "), important: important)
+    end
+
+    macro grid_template(*values, columns = nil, important = false)
+      {% if values.empty? %}
+        {{ raise "grid_template requires at least one value" }}
+      {% end %}
+      _grid_template({{values.splat}}, columns: {{columns}}, important: {{important}})
+    end
+
+    def self._grid_template(value : CSS::Enums::None | CSS::Enums::Global, *, columns : Nil = nil, important = false)
+      property("grid-template", value.to_css_value, important: important)
+    end
+
+    def self._grid_template(rows : CSS::GridTrackList, columns_value : CSS::GridTrackList, *, columns : Nil = nil, important = false)
+      property("grid-template", "#{rows.to_css_value} / #{columns_value.to_css_value}", important: important)
+    end
+
+    def self._grid_template(*rows : CSS::GridTemplateAreaRow, columns : CSS::GridTrackList? = nil, important = false)
+      value = rows.map(&.to_css_value).join(" ")
+      value += " / #{columns.to_css_value}" if columns
+      property("grid-template", value, important: important)
+    end
+
+    prop grid, CSS::Enums::Global
+    prop2 grid, CSS::GridTrackList, CSS::GridTrackList, separator: " / "
+
+    def self.grid(rows : CSS::GridTrackList, flow : CSS::GridAutoFlowShorthand, columns : CSS::GridAutoTrackList? = nil, important = false)
+      value = "#{rows.to_css_value} / #{flow.to_css_value}"
+      value += " #{columns.to_css_value}" if columns
+      property("grid", value, important: important)
+    end
+
+    def self.grid(flow : CSS::GridAutoFlowShorthand, rows : CSS::GridAutoTrackList?, columns : CSS::GridTrackList, important = false)
+      value = flow.to_css_value
+      value += " #{rows.to_css_value}" if rows
+      property("grid", "#{value} / #{columns.to_css_value}", important: important)
+    end
 
     macro grid_template_rows(*values, important = false)
       {% if values.empty? %}
@@ -1583,6 +1667,38 @@ module CSS
 
     def self.line_names(*names : CSS::GridLineName)
       CSS::GridLineNames.new(*names)
+    end
+
+    def self.span(count : Int32? = nil, name : CSS::GridLineNameValue? = nil)
+      CSS::GridSpan.new(count, name)
+    end
+
+    def self.grid_line(name : CSS::GridLineNameValue)
+      CSS::GridLineIdentifier.new(name)
+    end
+
+    def self.grid_tracks(*values : CSS::GridTrackListValue)
+      CSS::GridTrackList.new(*values)
+    end
+
+    def self.grid_tracks(value : CSS::Enums::None | CSS::Enums::Masonry | CSS::Enums::Global)
+      CSS::GridTrackList.new(value)
+    end
+
+    def self.grid_tracks(value : CSS::Enums::Subgrid, *names : CSS::GridLineNameListItem)
+      CSS::GridTrackList.new(value, *names)
+    end
+
+    def self.grid_auto_tracks(*values : CSS::GridTrackSize)
+      CSS::GridAutoTrackList.new(*values)
+    end
+
+    def self.auto_flow(*, dense = false)
+      CSS::GridAutoFlowShorthand.new(dense)
+    end
+
+    def self.grid_area_row(areas : String, size : CSS::GridTrackSize? = nil, *, before : CSS::GridLineNames? = nil, after : CSS::GridLineNames? = nil)
+      CSS::GridTemplateAreaRow.new(areas, size, before, after)
     end
 
     macro fit_content(value)
