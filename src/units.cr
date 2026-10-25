@@ -1,4 +1,4 @@
-{% for unit_name in ["cm", "mm", "in", "px", "pt", "pc", "em", "rem", "ex", "ch", "lh", "rlh", "vh", "vw", "vmax", "vmin", "svw", "svh", "lvw", "lvh", "dvw", "dvh", "deg", "rad", "grad", "turn", "Hz", "kHz", "dpi", "dpcm", "dppx", "fr"] %}
+{% for unit_name in ["cm", "mm", "in", "px", "pt", "pc", "em", "rem", "ex", "ch", "lh", "rlh", "vh", "vw", "vmax", "vmin", "svw", "svh", "lvw", "lvh", "dvw", "dvh", "cqw", "cqh", "cqi", "cqb", "cqmin", "cqmax", "deg", "rad", "grad", "turn", "Hz", "kHz", "dpi", "dpcm", "dppx", "fr"] %}
   module CSS
     struct {{unit_name.capitalize.id}}Value
       getter value : (Int8 | Int16 | Int32 | Int128 | Float32 | Float64)
@@ -166,12 +166,12 @@ end
 
 module CSS
   alias CalcNumeric = Int8 | Int16 | Int32 | Int64 | Int128 | Float32 | Float64
-  alias CalcUnit = CmValue | MmValue | InValue | PxValue | PtValue | PcValue | EmValue | RemValue | ExValue | ChValue | LhValue | RlhValue | VhValue | VwValue | VmaxValue | VminValue | SvwValue | LvwValue | LvhValue | DvwValue | DvhValue | FrValue
+  alias CalcUnit = CmValue | MmValue | InValue | PxValue | PtValue | PcValue | EmValue | RemValue | ExValue | ChValue | LhValue | RlhValue | VhValue | VwValue | VmaxValue | VminValue | SvwValue | LvwValue | LvhValue | DvwValue | DvhValue | CqwValue | CqhValue | CqiValue | CqbValue | CqminValue | CqmaxValue | FrValue
   alias MathFunctionCall = CalcFunctionCall | ClampFunctionCall | MinFunctionCall | EnvFunctionCall
   alias CalcOperand = CalcNumeric | PercentValue | CalcUnit | Calculation | MathFunctionCall
   alias CalcNonNumeric = Calculation | PercentValue | CalcUnit | MathFunctionCall
 
-  alias Length = CmValue | MmValue | InValue | PxValue | PtValue | PcValue | EmValue | RemValue | ExValue | ChValue | LhValue | RlhValue | VhValue | VwValue | VmaxValue | VminValue | SvwValue | LvwValue | LvhValue | DvwValue | DvhValue | FrValue | Int32 | MathFunctionCall
+  alias Length = CmValue | MmValue | InValue | PxValue | PtValue | PcValue | EmValue | RemValue | ExValue | ChValue | LhValue | RlhValue | VhValue | VwValue | VmaxValue | VminValue | SvwValue | LvwValue | LvhValue | DvwValue | DvhValue | CqwValue | CqhValue | CqiValue | CqbValue | CqminValue | CqmaxValue | FrValue | Int32 | MathFunctionCall
   alias LengthPercentage = Length | PercentValue | MathFunctionCall
   alias Angle = DegValue | RadValue | GradValue | TurnValue | MathFunctionCall
   alias Time = ::Time::Span | Int32
