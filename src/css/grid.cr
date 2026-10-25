@@ -1,6 +1,22 @@
 module CSS
   alias GridLineNameValue = String | Symbol
 
+  struct GridLineIdentifier
+    getter value : String
+
+    def initialize(value : String)
+      @value = value
+    end
+
+    def initialize(value : Symbol)
+      @value = value.to_s.gsub('_', '-')
+    end
+
+    def to_css_value
+      value
+    end
+  end
+
   # A `span` grid line. Components are emitted in the canonical integer-then-name form.
   struct GridSpan
     getter count : Int32?
@@ -9,7 +25,7 @@ module CSS
     def initialize(@count = nil, name : GridLineNameValue? = nil)
       raise ArgumentError.new("grid span requires a positive count") if @count.try(&.<= 0)
       raise ArgumentError.new("grid span requires a count or name") unless @count || name
-      @name = name.try(&.to_s)
+      @name = name.try { |value| GridLineIdentifier.new(value).to_css_value }
     end
 
     def to_css_value
@@ -21,7 +37,7 @@ module CSS
     end
   end
 
-  alias GridLine = Int32 | Symbol | GridSpan | CSS::Enums::Auto | CSS::Enums::Global
+  alias GridLine = Int32 | GridLineIdentifier | GridSpan | CSS::Enums::Auto | CSS::Enums::Global
 
   struct GridAutoFlowShorthand
     getter dense : Bool

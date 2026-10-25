@@ -1671,6 +1671,10 @@ module CSS
       CSS::GridSpan.new(count, name)
     end
 
+    def self.grid_line(name : CSS::GridLineNameValue)
+      CSS::GridLineIdentifier.new(name)
+    end
+
     def self.grid_tracks(*values : CSS::GridTrackListValue)
       CSS::GridTrackList.new(*values)
     end

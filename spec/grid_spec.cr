@@ -7,7 +7,7 @@ module CSS::GridSpec
       grid_auto_flow :column, :dense
       grid_auto_columns 120.px, minmax(10.em, 1.fr)
       grid_auto_rows :auto, 1.fr
-      grid_area 1, 2, span(3), :auto
+      grid_area 1, grid_line(:content_start), span(3, :content_end), :auto
       grid_column 2, span(2)
       grid_row :auto
       grid_template_areas "header header", "main sidebar"
@@ -28,7 +28,7 @@ module CSS::GridSpec
         grid-auto-flow: column dense;
         grid-auto-columns: 120px minmax(10em, 1fr);
         grid-auto-rows: auto 1fr;
-        grid-area: 1 / 2 / span 3 / auto;
+        grid-area: 1 / content-start / span 3 content-end / auto;
         grid-column: 2 / span 2;
         grid-row: auto;
         grid-template-areas: "header header" "main sidebar";
