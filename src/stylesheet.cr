@@ -23,6 +23,8 @@ require "./css/clamp_function_call"
 require "./css/url_function_call"
 require "./css/animation_name"
 require "./css/container_name"
+require "./css/anchor_name"
+require "./css/anchor_function_call"
 require "./css/animation_timing_function"
 require "./css/filter_functions"
 require "./css/filter_function_call"
@@ -36,6 +38,14 @@ require "./font_face"
 
 module CSS
   class Stylesheet
+    def self.anchor(side : CSS::Enums::AnchorSide | CSS::PercentValue, fallback : CSS::LengthPercentage? = nil)
+      CSS::AnchorFunctionCall.new(nil, side, fallback)
+    end
+
+    def self.anchor(name : Symbol | String | CSS::AnchorName, side : CSS::Enums::AnchorSide | CSS::PercentValue, fallback : CSS::LengthPercentage? = nil)
+      CSS::AnchorFunctionCall.new(name.is_a?(CSS::AnchorName) ? name : CSS::AnchorName.new(name), side, fallback)
+    end
+
     def self.calc(calculation : CSS::Calculation)
       CSS::CalcFunctionCall.new(calculation)
     end
@@ -576,6 +586,12 @@ module CSS
     alias AnimationValue = CSS::Time | AnimationNameValue | CSS::Keyframes.class | AnimationTimingFunctionValue | AnimationIterationCountValue | AnimationDirectionValue | AnimationFillModeValue | AnimationPlayStateValue
 
     prop accent_color, String
+
+    prop anchor_name, CSS::AnchorName | CSS::Enums::None, transform_string: CSS::AnchorName
+
+    def self._anchor_name(value : Symbol, *, important = false)
+      property("anchor-name", CSS::AnchorName.new(value).to_css_value, important: important)
+    end
 
     prop align_content, CSS::Enums::AlignContent | CSS::Enums::AlignContentPositional | CSS::Enums::AlignmentBaseline
     prop2 align_content, CSS::Enums::Safety, CSS::Enums::AlignContentPositional
@@ -1452,6 +1468,29 @@ module CSS
     prop place_self, String
     prop pointer_events, CSS::Enums::PointerEvents
     prop position, CSS::Enums::Position
+    prop position_anchor, CSS::AnchorName | CSS::Enums::Auto, transform_string: CSS::AnchorName
+
+    def self._position_anchor(value : Symbol, *, important = false)
+      property("position-anchor", CSS::AnchorName.new(value).to_css_value, important: important)
+    end
+
+    prop position_area, CSS::Enums::PositionArea | CSS::Enums::None
+    prop2 position_area, CSS::Enums::PositionArea, CSS::Enums::PositionArea
+    prop position_try_order, CSS::Enums::PositionTryOrder
+    prop position_visibility, CSS::Enums::PositionVisibility
+
+    macro position_try_fallbacks(*values, important = false)
+      {% if values.empty? %}
+        {{ raise "position_try_fallbacks requires at least one value" }}
+      {% end %}
+
+      _position_try_fallbacks({% for value, i in values %}{{value}}{% if i < values.size - 1 %}, {% else %}, important: {{important}}{% end %}{% end %})
+    end
+
+    def self._position_try_fallbacks(*values : CSS::AnchorName | CSS::Enums::PositionTryFallback | CSS::Enums::None, important = false)
+      property("position-try-fallbacks", values.join(", ", &.to_css_value), important: important)
+    end
+
     prop print_color_adjust, String
     prop quotes, String
     prop r, String
@@ -2004,6 +2043,28 @@ module CSS
       end
 
       embed({{klass_name}})
+    end
+
+    macro position_try(name, &blk)
+      def self.to_s(io : IO)
+        {% if @type.class.methods.map(&.name.stringify).includes?("to_s") %}
+          previous_def
+          io << "\n\n"
+        {% end %}
+
+        io << "@position-try " << CSS::AnchorName.new({{name}}) << " {\n"
+        {% if blk.body.is_a?(Expressions) %}
+          {% for exp, i in blk.body.expressions %}
+            io << "  " << {{exp}}
+            {% if i < blk.body.expressions.size - 1 %}
+              io << "\n"
+            {% end %}
+          {% end %}
+        {% else %}
+          io << "  " << {{blk.body}}
+        {% end %}
+        io << "\n}"
+      end
     end
 
     macro font_face(klass_name, *, name, &blk)

@@ -28,6 +28,17 @@ Status legend:
 | Enum coverage: partial | 4 |
 | Enum coverage: n/a | 335 |
 
+## Anchor Positioning
+
+| Feature | Status |
+| --- | --- |
+| `anchor-name`, `position-anchor` | supported |
+| `position-area` | supported |
+| `position-try-fallbacks`, `position-try-order` | supported |
+| `position-visibility` | supported |
+| `anchor()` inset values | supported |
+| `@position-try` | supported |
+
 ## Missing Properties
 
 | Property |

@@ -172,7 +172,7 @@ module CSS
   alias CalcNonNumeric = Calculation | PercentValue | CalcUnit | MathFunctionCall
 
   alias Length = CmValue | MmValue | InValue | PxValue | PtValue | PcValue | EmValue | RemValue | ExValue | ChValue | LhValue | RlhValue | VhValue | VwValue | VmaxValue | VminValue | SvwValue | LvwValue | LvhValue | DvwValue | DvhValue | CqwValue | CqhValue | CqiValue | CqbValue | CqminValue | CqmaxValue | FrValue | Int32 | MathFunctionCall
-  alias LengthPercentage = Length | PercentValue | MathFunctionCall
+  alias LengthPercentage = Length | PercentValue | MathFunctionCall | AnchorFunctionCall
   alias Angle = DegValue | RadValue | GradValue | TurnValue | MathFunctionCall
   alias Time = ::Time::Span | Int32
   alias NumberPercentage = CalcNumeric | PercentValue | MathFunctionCall

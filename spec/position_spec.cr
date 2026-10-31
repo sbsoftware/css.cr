@@ -33,6 +33,26 @@ module CSS::PositionSpec
       position :sticky
       inset 10.px
     end
+
+    rule button do
+      anchor_name CSS::AnchorName.new(:context_menu)
+    end
+
+    rule ".popup" do
+      position :absolute
+      position_anchor :context_menu
+      position_area :block_end, :span_inline_end
+      top anchor(:context_menu, :bottom, 8.px)
+      left anchor(:right)
+      position_try_fallbacks CSS::AnchorName.new(:above), :flip_block, :flip_inline
+      position_try_order :most_block_size
+      position_visibility :anchors_visible
+    end
+
+    position_try :above do
+      position_area :block_start
+      margin_bottom 8.px
+    end
   end
 
   describe "Style.to_s" do
@@ -68,6 +88,26 @@ module CSS::PositionSpec
       header {
         position: sticky;
         inset: 10px;
+      }
+
+      button {
+        anchor-name: --context-menu;
+      }
+
+      .popup {
+        position: absolute;
+        position-anchor: --context-menu;
+        position-area: block-end span-inline-end;
+        top: anchor(--context-menu bottom, 8px);
+        left: anchor(right);
+        position-try-fallbacks: --above, flip-block, flip-inline;
+        position-try-order: most-block-size;
+        position-visibility: anchors-visible;
+      }
+
+      @position-try --above {
+        position-area: block-start;
+        margin-bottom: 8px;
       }
       CSS
 
