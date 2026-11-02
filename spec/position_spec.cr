@@ -35,7 +35,7 @@ module CSS::PositionSpec
     end
 
     rule button do
-      anchor_name CSS::AnchorName.new(:context_menu)
+      anchor_name :context_menu
     end
 
     rule ".popup" do
