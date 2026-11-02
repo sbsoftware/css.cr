@@ -2046,25 +2046,24 @@ module CSS
     end
 
     macro position_try(name, &blk)
-      def self.to_s(io : IO)
-        {% if @type.class.methods.map(&.name.stringify).includes?("to_s") %}
-          previous_def
-          io << "\n\n"
-        {% end %}
-
-        io << "@position-try " << CSS::AnchorName.new({{name}}) << " {\n"
-        {% if blk.body.is_a?(Expressions) %}
-          {% for exp, i in blk.body.expressions %}
-            io << "  " << {{exp}}
-            {% if i < blk.body.expressions.size - 1 %}
-              io << "\n"
+      class PositionTryStyle{{@caller.first.line_number}} < CSS::Stylesheet
+        def self.to_s(io : IO)
+          io << "@position-try " << CSS::AnchorName.new({{name}}) << " {\n"
+          {% if blk.body.is_a?(Expressions) %}
+            {% for exp, i in blk.body.expressions %}
+              io << "  " << {{exp}}
+              {% if i < blk.body.expressions.size - 1 %}
+                io << "\n"
+              {% end %}
             {% end %}
+          {% else %}
+            io << "  " << {{blk.body}}
           {% end %}
-        {% else %}
-          io << "  " << {{blk.body}}
-        {% end %}
-        io << "\n}"
+          io << "\n}"
+        end
       end
+
+      embed PositionTryStyle{{@caller.first.line_number}}
     end
 
     macro font_face(klass_name, *, name, &blk)
