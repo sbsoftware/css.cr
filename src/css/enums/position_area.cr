@@ -1,0 +1,28 @@
+css_enum PositionArea do
+  Top
+  Left
+  Right
+  Bottom
+  Start
+  End
+  BlockStart
+  BlockEnd
+  InlineStart
+  InlineEnd
+  SelfStart
+  SelfEnd
+  Center
+  SpanAll
+  SpanTop
+  SpanLeft
+  SpanRight
+  SpanBottom
+  SpanStart
+  SpanEnd
+  SpanBlockStart
+  SpanBlockEnd
+  SpanInlineStart
+  SpanInlineEnd
+  SpanSelfStart
+  SpanSelfEnd
+end
