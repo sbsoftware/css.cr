@@ -593,6 +593,20 @@ module CSS
       property("anchor-name", CSS::AnchorName.new(value).to_css_value, important: important)
     end
 
+    prop anchor_scope, String | CSS::AnchorName | CSS::Enums::AnchorScope | CSS::Enums::None, transform_string: CSS::AnchorName
+
+    def self._anchor_scope(value : Symbol, *, important = false)
+      css_value = case value
+                  when :all
+                    CSS::Enums::AnchorScope::All.to_css_value
+                  when :none
+                    CSS::Enums::None::None.to_css_value
+                  else
+                    CSS::AnchorName.new(value).to_css_value
+                  end
+      property("anchor-scope", css_value, important: important)
+    end
+
     prop align_content, CSS::Enums::AlignContent | CSS::Enums::AlignContentPositional | CSS::Enums::AlignmentBaseline
     prop2 align_content, CSS::Enums::Safety, CSS::Enums::AlignContentPositional
     prop2 align_content, CSS::Enums::FirstLast, CSS::Enums::AlignmentBaseline
@@ -1487,8 +1501,22 @@ module CSS
       _position_try_fallbacks({% for value, i in values %}{{value}}{% if i < values.size - 1 %}, {% else %}, important: {{important}}{% end %}{% end %})
     end
 
-    def self._position_try_fallbacks(*values : CSS::AnchorName | CSS::Enums::PositionTryFallback | CSS::Enums::None, important = false)
-      property("position-try-fallbacks", values.join(", ", &.to_css_value), important: important)
+    def self._position_try_fallbacks(*values : Symbol | CSS::AnchorName | CSS::Enums::PositionTryFallback | CSS::Enums::None, important = false)
+      # Symbol fallbacks use enum keywords when known and dashed identifiers otherwise.
+      property("position-try-fallbacks", values.join(", ") do |value|
+        if value.is_a?(Symbol)
+          case value
+          when :flip_block, :flip_inline, :flip_start, :flip_block_flip_inline, :flip_inline_flip_block, :flip_start_flip_block, :flip_start_flip_inline
+            CSS::Enums::PositionTryFallback.parse(value.to_s.camelcase).to_css_value
+          when :none
+            CSS::Enums::None::None.to_css_value
+          else
+            CSS::AnchorName.new(value).to_css_value
+          end
+        else
+          value.to_css_value
+        end
+      end, important: important)
     end
 
     prop print_color_adjust, String

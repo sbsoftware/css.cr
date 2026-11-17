@@ -36,6 +36,16 @@ module CSS::PositionSpec
 
     rule button do
       anchor_name :context_menu
+      anchor_scope :my_anchor
+    end
+
+    rule nav do
+      anchor_scope "other-anchor"
+    end
+
+    rule main do
+      anchor_scope :all
+      anchor_scope :none
     end
 
     rule ".popup" do
@@ -44,7 +54,8 @@ module CSS::PositionSpec
       position_area :block_end, :span_inline_end
       top anchor(:context_menu, :bottom, 8.px)
       left anchor(:right)
-      position_try_fallbacks CSS::AnchorName.new(:above), :flip_block, :flip_inline
+      position_try_fallbacks :flip_block, :flip_inline, :flip_block_flip_inline
+      position_try_fallbacks :my_fallback, :flip_block_flip_inline, important: true
       position_try_order :most_block_size
       position_visibility :anchors_visible
     end
@@ -92,6 +103,16 @@ module CSS::PositionSpec
 
       button {
         anchor-name: --context-menu;
+        anchor-scope: --my-anchor;
+      }
+
+      nav {
+        anchor-scope: --other-anchor;
+      }
+
+      main {
+        anchor-scope: all;
+        anchor-scope: none;
       }
 
       .popup {
@@ -100,7 +121,8 @@ module CSS::PositionSpec
         position-area: block-end span-inline-end;
         top: anchor(--context-menu bottom, 8px);
         left: anchor(right);
-        position-try-fallbacks: --above, flip-block, flip-inline;
+        position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+        position-try-fallbacks: --my-fallback, flip-block flip-inline !important;
         position-try-order: most-block-size;
         position-visibility: anchors-visible;
       }
